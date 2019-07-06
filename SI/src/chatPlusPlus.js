@@ -34,35 +34,26 @@ window.addEventListener("load", function ()
 // Hiding unrelevant text
     !function ()
     {
+        const chattxt = document.getElementById("chattxt")
+        const classesToHide = ["clant", "syst", "priv", "priv2", "sys_info", "team"]
+
         let textHide = false
 
         function toggleHide()
         {
-            switch (textHide)
-            {
-                case true:
-                    $('.clant').removeClass('texthide')
-                    $('.syst').removeClass('texthide')
-                    $('.priv').removeClass('texthide')
-                    $('.sys_info').removeClass('texthide')
-                    $('.priv2').removeClass('texthide')
-                    $('.team').removeClass('texthide')
-                    break
-                case false:
-                    $('.clant').addClass('texthide')
-                    $('.syst').addClass('texthide')
-                    $('.priv').addClass('texthide')
-                    $('.sys_info').addClass('texthide')
-                    $('.priv2').addClass('texthide')
-                    $('.team').addClass('texthide')
-                    break
-            }
+            const display = textHide ? "unset" : "none"
+
+            const len = chattxt.children.length
+            for (let i = 0; i < len; i++)
+                if (classesToHide.indexOf(chattxt.children[i].className) >= 0)
+                    chattxt.children[i].style.display = display
+
             textHide = !textHide
         }
 
 
         const style = document.createElement("style")
-        style.innerText = "#msghider-button{position:'absolute';width:17px;height:21px;textAlign:center; cursor:cell}.texthide{display: none}"
+        style.innerText = "#msghider-button{position:'absolute';width:17px;height:21px;textAlign:center;cursor:cell}"
         document.head.appendChild(style)
 
         const hideButton = document.createElement("div")

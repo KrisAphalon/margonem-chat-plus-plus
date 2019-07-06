@@ -1,7 +1,7 @@
 window.addEventListener("load", function ()
 {
 
-    //options
+    // Options
     !function ()
     {
         window.chatPlusPlus = {
@@ -31,7 +31,7 @@ window.addEventListener("load", function ()
     }()
 
 
-// Hiding unrelevant text
+    // Hiding unrelevant text
     !function ()
     {
         const chattxt = document.getElementById("chattxt")
@@ -62,57 +62,42 @@ window.addEventListener("load", function ()
         document.getElementById("lagmeter").appendChild(hideButton)
     }()
 
-// Correct amount of max letters in message && better chat
+    // Correct amount of max letters in message && better chat
     !function ()
     {
+        const bottombar = document.getElementById("bottombar")
         const inpchat = document.getElementById("inpchat")
         inpchat.parentNode.removeChild(inpchat)
 
+
+        const background = document.createElement("div")
+        background.id = "textarea-background"
+        bottombar.appendChild(background)
+
         const textarea = document.createElement("textarea")
         textarea.id = "inpchat"
-        if (!window.chatPlusPlus.options.multiMsg)
-            textarea.maxLength = 199
+        bottombar.appendChild(textarea)
+
+        // This listener makes sure that unfolded textarea does not close immediately when clicked on.
         textarea.addEventListener("click", function (e)
         {
             e.stopPropagation()
-            e.target.focus()
         }, true)
+        // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
         textarea.addEventListener("mousedown", function (e)
         {
             e.stopPropagation()
-            e.target.focus()
         }, true)
-        document.getElementById("bottombar").appendChild(textarea)
-
-        function createTextareaBackground()
-        {
-
-            let bg = document.getElementById("textarea-background")
-            let insert = false
-            if (!bg)
-            {
-                insert = true
-                bg = document.createElement("div")
-                bg.id = "textarea-background"
-            }
-            const chat = document.createElement("div")
-            chat.id = "chat"
-            chat.className = "left"
-            chat.style.display = "none"
-            document.body.appendChild(chat)
-            const newImg = window.getComputedStyle(chat, null).backgroundImage
-            document.body.removeChild(chat)
-            if (bg.style.backgroundImage !== newImg)
-                bg.style.backgroundImage = newImg
-            if (insert)
-                document.getElementById("bottombar").insertBefore(bg, document.getElementById("inpchat"))
-        }
-
-        createTextareaBackground()
 
 
+        // Fix for last available version of Firefox on Windows XP.
+        // This fix is one of a kind, this script is not designed to work on older web browsers
+        // It's only implemented because it's quick, easy and fixes massive problem.
+        // (scrollbar that makes writing impossible)
         if (navigator.userAgent.endsWith("Firefox/52.0"))
-            document.getElementById("inpchat").style.overflowX = "hidden"
+            textarea.style.overflowX = "hidden"
+
+
         const css = `
             #inpchat {
                 bottom: 0;
@@ -185,78 +170,64 @@ window.addEventListener("load", function ()
         style.appendChild(document.createTextNode(css))
         document.head.appendChild(style)
 
-
-        function checkColors()
+        //todo change name
+        let realCollors = {
+            priv: "#fc0",
+            clant: "#ffa500",
+            team: "#b554ff",
+            sys_comm: "#f33"
+        }
+        // Recolors textarea to match it's color with color of command it starts with
+        // If textarea doesn't start with any valid command, then it resets color to default
+        function recolorTextarea()
         {
-            const input = document.getElementById("inpchat")
+            const value = textarea.value.trim()
 
-            const value = input.value.trim()
+            const command = value.split(" ")[0]
 
-            const arr = value.split(" ")
-
-            if (input.classList.contains("unfolded"))
-                input.className = "unfolded"
+            if (textarea.classList.contains("unfolded"))
+                textarea.className = "unfolded"
             else
-                input.className = ""
-            input.style.color = ""
-            if (arr[0][0] === "@")
-                input.style.color = realCollors.priv
-            else switch (arr[0])
+                textarea.className = ""
+            textarea.style.color = ""
+            if (command[0] === "@")
+                textarea.style.color = realCollors.priv
+            else switch (command)
             {
                 case "/g":
-                {
-                    input.style.color = realCollors.team
+                    textarea.style.color = realCollors.team
                     break
-                }
                 case "/k":
-                {
-                    input.style.color = realCollors.clant
+                    textarea.style.color = realCollors.clant
                     break
-                }
                 case "*me":
                 case "/me":
-                {
-                    input.classList.add("me")
+                    textarea.classList.add("me")
                     break
-                }
                 case "*nar":
                 case "*nar1":
                 case "/nar":
-                {
-                    input.classList.add("nar")
+                    textarea.classList.add("nar")
                     break
-                }
                 case "*nar2":
-                {
-                    input.classList.add("nar2")
+                    textarea.classList.add("nar2")
                     break
-                }
                 case "*nar3":
-                {
-                    input.classList.add("nar3")
+                    textarea.classList.add("nar3")
                     break
-                }
                 case "*dial":
                 case "*dial1":
-                {
-                    input.classList.add("dial1")
+                    textarea.classList.add("dial1")
                     break
-                }
                 case "*dial2":
-                {
-                    input.classList.add("dial2")
+                    textarea.classList.add("dial2")
                     break
-                }
                 case "*dial3":
-                {
-                    input.classList.add("dial3")
+                    textarea.classList.add("dial3")
                     break
-                }
                 case "*dial666":
-                {
-                    input.classList.add("dial666")
+                    textarea.classList.add("dial666")
                     break
-                }
                 case "*sys":
                 case "*map":
                 case "*light":
@@ -264,43 +235,11 @@ window.addEventListener("load", function ()
                 case "*delGraf":
                 case "*hide":
                 case "*weather":
-                {
-                    input.style.color = realCollors.sys_comm
+                    textarea.style.color = realCollors.sys_comm
                     break
-                }
             }
         }
 
-
-        const realCollors = {
-            priv: "#fc0",
-            clant: "#ffa500",
-            team: "#b554ff",
-            sys_comm: "#f33"
-        }
-
-        function getRealCollors()
-        {
-            const chat = document.createElement("div")
-            chat.id = "chattxt"
-            chat.style.display = "none"
-            const msg = document.createElement("div")
-            chat.appendChild(msg)
-            const chatmsg = document.createElement("span")
-            chatmsg.className = "chatmsg"
-            msg.appendChild(chatmsg)
-            document.body.appendChild(chat)
-
-            msg.className = "priv"
-            realCollors.priv = window.getComputedStyle(chatmsg, null).color
-            msg.className = "sys_comm"
-            realCollors.sys_comm = window.getComputedStyle(chatmsg, null).color
-            msg.className = "clant"
-            realCollors.clant = window.getComputedStyle(chatmsg, null).color
-            msg.className = "team"
-            realCollors.team = window.getComputedStyle(chatmsg, null).color
-            document.body.removeChild(chat)
-        }
 
         const style2 = document.createElement("style")
         document.head.appendChild(style2)
@@ -336,22 +275,25 @@ window.addEventListener("load", function ()
             }
         }
 
+        //todo rename
         function checkMaxLength()
         {
-            const input = document.getElementById("inpchat")
-            if (input.value.length > 199)
-                input.value = input.value.substr(0, 199)
-            const polishLetters = /[ąćęłńóśźż*@,. _]/gi
-            let polishLettersCount = 0
+            //cut text when it was pasted
+            if (textarea.value.length > 199)
+                textarea.value = textarea.value.substr(0, 199)
 
-            //calculate length every time, because we can change it inside
-            for (let i = 0; i < input.value.length; i++)
-                if (input.value[i].match(polishLetters))
+            //letters and symbols that count as two when sending message to server
+            const polishLetters = /[ąćęłńóśźż*@,. _]/gi
+
+            let polishLettersCount = 0
+            //calculate length every time, because we can change it inside for()
+            for (let i = 0; i < textarea.value.length; i++)
+                if (textarea.value[i].match(polishLetters))
                 {
                     polishLettersCount++
-                    input.value = input.value.substr(0, 199 - polishLettersCount)
+                    textarea.value = textarea.value.substr(0, 199 - polishLettersCount)
                 }
-            input.maxLength = 199 - polishLettersCount
+            textarea.maxLength = 199 - polishLettersCount
         }
 
         function checkInputMsg()
@@ -368,7 +310,7 @@ window.addEventListener("load", function ()
             else
                 input.removeAttribute('maxLength')
             //check colors
-            checkColors()
+            recolorTextarea()
             //check length
             if (g.chat.state === 3 || g.chat.state === "3")
             {
@@ -433,8 +375,8 @@ window.addEventListener("load", function ()
         }
 
 
-        getRealCollors()
-        checkColors()
+        getCommandsColors()
+        recolorTextarea()
 
         if (g.chat.state === 3 || g.chat.state === "3")
             makeChatScalable()
@@ -462,7 +404,72 @@ window.addEventListener("load", function ()
         }, false)
 
 
-        //this whole shit because shair is dumb
+
+
+        // Returns colors that are set for different commands.
+        function getCommandsColors()
+        {
+            const chat = document.createElement("div")
+            chat.id = "chattxt"
+            chat.style.display = "none"
+            const msg = document.createElement("div")
+            chat.appendChild(msg)
+            const chatmsg = document.createElement("span")
+            chatmsg.className = "chatmsg"
+            msg.appendChild(chatmsg)
+            document.body.appendChild(chat)
+
+            const messageColors = {}
+
+            const classList = ["priv", "sys_comm", "clant", "team"]
+            const classListLength = classList.length
+            for (let i = 0; i < classListLength; i++)
+            {
+                const className = classList[i]
+                msg.className = className
+                messageColors[className] = window.getComputedStyle(chatmsg, null).color
+            }
+            document.body.removeChild(chat)
+
+            return messageColors
+        }
+
+        // Takes part of image that is used for chat and creates image for background.
+        // With this function textarea's background should look nice on all user themes.
+        function applyCustomTextareaBackground()
+        {
+            const chat = document.createElement("div")
+            chat.id = "chat"
+            chat.className = "left"
+            chat.style.display = "none"
+            document.body.appendChild(chat)
+            const newImg = window.getComputedStyle(chat, null).backgroundImage
+            document.body.removeChild(chat)
+            if (background.style.backgroundImage !== newImg)
+                background.style.backgroundImage = newImg
+        }
+
+
+        if (!window.chatPlusPlus.options.multiMsg)
+            textarea.maxLength = 199
+
+
+        // I haven't found a great way of knowing if user theme has loaded.
+        // For now it just checks stuff that it requires in one and two seconds after start
+        setTimeout(function ()
+        {
+            realCollors = getCommandsColors()
+            recolorTextarea()
+            applyCustomTextareaBackground()
+        }, 1000)
+        setTimeout(function ()
+        {
+            realCollors = getCommandsColors()
+            recolorTextarea()
+            applyCustomTextareaBackground()
+        }, 2000)
+
+        // "Shair" theme is known for loading really long, so I added extra checks
         if (typeof window.shairModuleLoader === "function" || document.getElementById('loading'))
         {
             const loading = document.getElementById('loading')
@@ -473,37 +480,25 @@ window.addEventListener("load", function ()
                 document.getElementById("inpchat").style.left = "65px"
                 setTimeout(function ()
                 {
-                    getRealCollors()
-                    checkColors()
-                    createTextareaBackground()
+                    realCollors = getCommandsColors()
+                    recolorTextarea()
+                    applyCustomTextareaBackground()
                 }, 3000)
                 setTimeout(function ()
                 {
-                    getRealCollors()
-                    checkColors()
-                    createTextareaBackground()
+                    realCollors = getCommandsColors()
+                    recolorTextarea()
+                    applyCustomTextareaBackground()
                 }, 5000)
                 setTimeout(function ()
                 {
-                    getRealCollors()
-                    checkColors()
-                    createTextareaBackground()
+                    realCollors = getCommandsColors()
+                    recolorTextarea()
+                    applyCustomTextareaBackground()
                 }, 20000)
             }
         }
-        //every motyw is dumb
-        setTimeout(function ()
-        {
-            getRealCollors()
-            checkColors()
-            createTextareaBackground()
-        }, 1000)
-        setTimeout(function ()
-        {
-            getRealCollors()
-            checkColors()
-            createTextareaBackground()
-        }, 2000)
+
     }()
 
 //multiple msgs

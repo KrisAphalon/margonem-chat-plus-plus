@@ -1,15 +1,16 @@
 window.addEventListener("load", function ()
 {
+    window.chatPlusPlus = {
+        options: {
+            multiMsg: true,
+            justifyChat: false
+        },
+        sendArr: []
+    }
 
     // Options
     !function ()
     {
-        window.chatPlusPlus = {
-            options: {
-                multiMsg: true,
-                justifyChat: false
-            }
-        }
         const rawData = localStorage.getItem("chatPlusPlus")
         if (rawData)
         {
@@ -302,13 +303,13 @@ window.addEventListener("load", function ()
             const len = input.value.length
 
             //fixes bug when clicking enter to start chatting
-            input.value = input.value.replace(/\r?\n/gi, '')
+            input.value = input.value.replace(/\r?\n/gi, "")
 
             //check maxLength
             if (!window.chatPlusPlus.options.multiMsg)
                 checkMaxLength()
             else
-                input.removeAttribute('maxLength')
+                input.removeAttribute("maxLength")
             //check colors
             recolorTextarea()
             //check length
@@ -404,8 +405,6 @@ window.addEventListener("load", function ()
         }, false)
 
 
-
-
         // Returns colors that are set for different commands.
         function getCommandsColors()
         {
@@ -470,10 +469,10 @@ window.addEventListener("load", function ()
         }, 2000)
 
         // "Shair" theme is known for loading really long, so I added extra checks
-        if (typeof window.shairModuleLoader === "function" || document.getElementById('loading'))
+        if (typeof window.shairModuleLoader === "function" || document.getElementById("loading"))
         {
-            const loading = document.getElementById('loading')
-            if (window.getComputedStyle(loading, null).backgroundImage === 'url("https://i.imgur.com/1en4JTp.png")')
+            const loading = document.getElementById("loading")
+            if (window.getComputedStyle(loading, null).backgroundImage === "url(\"https://i.imgur.com/1en4JTp.png\")")
             {
 
                 document.getElementById("textarea-background").style.left = "146px"
@@ -556,7 +555,7 @@ window.addEventListener("load", function ()
         const start = function ()
         {
 
-            if (typeof (window.chatSendMsg) === "function")
+            if (typeof (window.chatSendMsg) === "function" && typeof window.chatPlusPlus.sendArr === "object")
             {
                 const oldSendMsg = window.chatSendMsg
 
@@ -569,7 +568,10 @@ window.addEventListener("load", function ()
 
                         const addOnStart = calculateAddOnStart(msg)
 
-                        const sendArr = []
+                        //delete old sendArr if there was some problem (e.g. lost group chat)
+                        window.chatPlusPlus.sendArr = []
+                        const sendArr = window.chatPlusPlus.sendArr
+                        console.log(sendArr)
                         const len = msg.length
                         let last_slice = 0
                         let current = 0
@@ -656,41 +658,86 @@ window.addEventListener("load", function ()
 
                         console.log(sendArr)
                         console.log(sendArr.length)
-                        const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
-
-                        function sendPart(sendArray, number)
-                        {
-                            if (number === 0)
-                            {
-                                if (sendArray[number].match(not_only_dots))
-                                    oldSendMsg(sendArray[number])
-
-                                //fix to not folding textarea
-                                setTimeout(function ()
-                                {
-                                    document.getElementById("inpchat").focus()
-                                    document.getElementById("inpchat").blur()
-                                }, 100)
-                                sendPart(sendArray, number + 1)
-                            }
-                            else if (number < sendArray.length)
-                                setTimeout(function ()
-                                {
-                                    if (sendArray[number].match(not_only_dots))
-                                        oldSendMsg(sendArray[number])
-                                    sendPart(sendArray, number + 1)
-                                }, 2000)
-
-                        }
 
                         if (sendArr.length > 0)
-                            sendPart(sendArr, 0)
+                            oldSendMsg(sendArr[0])
                         document.getElementById("inpchat").blur()
+
+                        //fix to not folding textarea
+                        setTimeout(function ()
+                        {
+                            document.getElementById("inpchat").focus()
+                            document.getElementById("inpchat").blur()
+                        }, 100)
 
                     }
                     else
                         oldSendMsg(msg)
                 }
+
+                function parseMessageToChatfrom(message)
+                {
+
+                    message = message.trim()
+
+                    if (message[0] === "/")
+                    {
+                        const split = message.split(" ")
+                        let command = message.split(" ", 1)[0]
+                        switch (command)
+                        {
+                            case "/me":
+                                command = hero.nick
+                                break
+                            case "/nar":
+                            case "/g":
+                            case "/k":
+                                command = ""
+                                break
+
+                        }
+                        split.shift()
+                        split.unshift(command)
+                        message = split.join(" ")
+                    }
+                    else if (message[0] === "@")
+                    {
+                        const split = message.split(" ")
+                        split.shift()
+                        message = split.join(" ")
+                    }
+                    return message
+                }
+
+                const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
+
+                const chattxt = document.getElementById("chattxt")
+                const mutation_config = {attributes: false, childList: true, subtree: false}
+                const callback = function (mutationsList, observer)
+                {
+                    for (const mutation of mutationsList)
+                    {
+                        const len = mutation.addedNodes.length
+                        for (let i = 0; i < len; i++)
+                        {
+                            const message = mutation.addedNodes[0].children[1].innerText.trim()
+                            if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
+                                if (message === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
+                                {
+                                    window.chatPlusPlus.sendArr.shift()
+                                    if (window.chatPlusPlus.sendArr.length > 0)
+                                        setTimeout(function ()
+                                        {
+                                            if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                                oldSendMsg(window.chatPlusPlus.sendArr[0])
+                                        }, 1500)
+                                }
+
+                        }
+                    }
+                }
+                const observer = new MutationObserver(callback)
+                observer.observe(chattxt, mutation_config)
             }
             else
                 setTimeout(start, 1000)
@@ -781,7 +828,8 @@ window.addEventListener("load", function ()
             "dzi w kr",
             "jak",
             "podsłuchuje",
-            "ci pan"
+            "ci pan",
+            "sc i przet"
         ]
 
 
@@ -841,7 +889,7 @@ window.addEventListener("load", function ()
 
                     //delete innocent Words
                     for (const e of innocentWords)
-                        copy = copy.split(e).join('X')
+                        copy = copy.split(e).join("X")
 
                     //check for naughty phrases that require space
                     for (const e of badWordsSpaceOnly)

@@ -42,7 +42,7 @@ window.addEventListener("load", function ()
 
         function toggleHide()
         {
-            const display = textHide ? "unset" : "none"
+            const display = textHide ? "block" : "none"
 
             const len = chattxt.children.length
             for (let i = 0; i < len; i++)

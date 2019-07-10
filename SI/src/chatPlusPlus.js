@@ -3,7 +3,8 @@ window.addEventListener("load", function ()
     window.chatPlusPlus = {
         options: {
             multiMsg: true,
-            justifyChat: false
+            justifyChat: false,
+            messageTimeout: 1600
         },
         sendArr: []
     }
@@ -672,41 +673,84 @@ window.addEventListener("load", function ()
 
                     }
                     else
+                    {
                         oldSendMsg(msg)
+                        //fix to not folding textarea
+                        setTimeout(function ()
+                        {
+                            document.getElementById("inpchat").focus()
+                            document.getElementById("inpchat").blur()
+                        }, 100)
+                    }
                 }
 
-                function parseMessageToChatfrom(message)
+                function parseMessageToChatfrom(message)  //todo *dial
                 {
 
                     message = message.trim()
+                    const split = message.split(" ")
 
-                    if (message[0] === "/")
+                    let retry = false
+                    if (message[0] === "/" || message[0] === "*")
                     {
-                        const split = message.split(" ")
+                        console.log(split)
                         let command = message.split(" ", 1)[0]
                         switch (command)
                         {
                             case "/me":
                                 command = hero.nick
                                 break
-                            case "/nar":
                             case "/g":
                             case "/k":
+                                retry = true
+                            case "/nar":
+                            case "*me":
+                            case "*nar":
+                            case "*nar1":
+                            case "*nar2":
+                            case "*nar3":
+                            case "*sys":
                                 command = ""
                                 break
-
+                            case "*dial":
+                            case "*dial1":
+                            case "*dial2":
+                            case "*dial3":
+                            case "*dial666":
+                                const npcNameSplit = split[1].split(",")
+                                console.log(npcNameSplit)
+                                const npcName = npcNameSplit[0]
+                                command = "«" + npcName + "»"
+                                //message = message.split()
+                                npcNameSplit.shift()
+                                split[1] = npcNameSplit.join(",")
+                                split[1] = split[1].trim()
+                                break
                         }
                         split.shift()
-                        split.unshift(command)
-                        message = split.join(" ")
+                        if (command !== "")
+                            split.unshift(command)
+
+
                     }
                     else if (message[0] === "@")
                     {
-                        const split = message.split(" ")
                         split.shift()
                         message = split.join(" ")
                     }
-                    return message
+                    message = ""
+                    //.join would sometimes produce multiple spaces in a row when messages can have only 1
+                    const len = split.length
+                    console.log(split)
+                    for (let i = 0; i < len; i++)
+                        if (split[i] !== "")
+                            message += split[i] + " "
+                    message = message.trim()
+
+                    if (retry)
+                        return parseMessageToChatfrom(message)
+                    else
+                        return message
                 }
 
                 const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
@@ -722,7 +766,7 @@ window.addEventListener("load", function ()
                         {
                             const message = mutation.addedNodes[0].children[1].innerText.trim()
                             if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
-                                if (message === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
+                                if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                 {
                                     window.chatPlusPlus.sendArr.shift()
                                     if (window.chatPlusPlus.sendArr.length > 0)
@@ -730,7 +774,7 @@ window.addEventListener("load", function ()
                                         {
                                             if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
                                                 oldSendMsg(window.chatPlusPlus.sendArr[0])
-                                        }, 1500)
+                                        }, window.chatPlusPlus.options.messageTimeout)
                                 }
 
                         }
@@ -1048,6 +1092,8 @@ window.addEventListener("load", function ()
                 //TODO me
                 // const allowed = ["me", "nar", "nar1", "nar2", "nar3", "sys"]
                 const allowed = ["nar", "nar1", "nar2", "nar3", "sys", "me"]
+                const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
+
                 //if command is in allowed
                 if (allowed.indexOf(match[1]) > -1)
                 {
@@ -1090,6 +1136,16 @@ window.addEventListener("load", function ()
                                             NerthusAddonUtils.log("[" + tab + "] " + nick + " -> " + text)
                                         else
                                             log("[" + tab + "] " + nick + " -> " + text)
+
+                                        if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
+                                            window.chatPlusPlus.sendArr.shift()
+                                        if (window.chatPlusPlus.sendArr.length > 0)
+                                            setTimeout(function ()
+                                            {
+                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                                    window.chatSendMsg(window.chatPlusPlus.sendArr[0])
+                                            }, window.chatPlusPlus.options.messageTimeout)
+
 
                                         return true
                                     }

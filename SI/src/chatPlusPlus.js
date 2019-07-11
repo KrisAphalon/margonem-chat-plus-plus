@@ -684,7 +684,7 @@ window.addEventListener("load", function ()
                     }
                 }
 
-                function parseMessageToChatfrom(message)  //todo *dial
+                function parseMessageToChatfrom(message)
                 {
 
                     message = message.trim()

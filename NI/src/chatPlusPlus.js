@@ -1,17 +1,18 @@
 window.addEventListener("load", function ()
 {
+    window.chatPlusPlus = {
+        options: {
+            multiMsg: true,
+            justifyChat: false,
+            messageTimeout: 1600
+        },
+        sendArr: [],
+        blockTextareaChanging: false
+    }
 
-
-//options
+    //options
     !function ()
     {
-        window.chatPlusPlus = {
-            options: {
-                multiMsg: true,
-                justifyChat: false
-            },
-            blockTextareaChanging: false
-        }
         const rawData = localStorage.getItem("chatPlusPlus")
         if (rawData)
         {
@@ -91,7 +92,7 @@ window.addEventListener("load", function ()
     }()
 
 
-    //multiple msgs
+    // Multiple msgs
     !function ()
     {
         const polishLetters = /[ąćęłńóśźż*@,. _]/gi
@@ -174,7 +175,9 @@ window.addEventListener("load", function ()
 
                     const addOnStart = calculateAddOnStart(msg)
 
-                    const sendArr = []
+                    //delete old sendArr if there was some problem (e.g. lost group chat)
+                    window.chatPlusPlus.sendArr = []
+                    const sendArr = window.chatPlusPlus.sendArr
                     const len = msg.length
                     let last_slice = 0
                     let current = 0
@@ -261,40 +264,134 @@ window.addEventListener("load", function ()
 
                     console.log(sendArr)
                     console.log(sendArr.length)
-                    const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
 
-                    function sendPart(sendArray, number)
+
+                    function parseMessageToChatfrom(message)
                     {
-                        if (number === 0)
+
+                        message = message.trim()
+                        const split = message.split(" ")
+
+                        let retry = false
+                        if (message[0] === "/" || message[0] === "*")
                         {
-                            if (sendArray[number].match(not_only_dots))
-                                oldSendMsg(sendArray[number])
-
-                            //fix to not folding textarea
-                            setTimeout(function ()
+                            console.log(split)
+                            let command = message.split(" ", 1)[0]
+                            switch (command)
                             {
-                                document.getElementById("inpchat").focus()
-                                document.getElementById("inpchat").blur()
-                            }, 100)
-                            sendPart(sendArray, number + 1)
+                                case "/me":
+                                    command = Engine.hero.nick
+                                    break
+                                case "/g":
+                                case "/k":
+                                    retry = true
+                                case "/nar":
+                                case "*me":
+                                case "*nar":
+                                case "*nar1":
+                                case "*nar2":
+                                case "*nar3":
+                                case "*sys":
+                                    command = ""
+                                    break
+                                case "*dial":
+                                case "*dial1":
+                                case "*dial2":
+                                case "*dial3":
+                                case "*dial666":
+                                    const npcNameSplit = split[1].split(",")
+                                    console.log(npcNameSplit)
+                                    const npcName = npcNameSplit[0]
+                                    command = "«" + npcName + "»"
+                                    //message = message.split()
+                                    npcNameSplit.shift()
+                                    split[1] = npcNameSplit.join(",")
+                                    split[1] = split[1].trim()
+                                    break
+                            }
+                            split.shift()
+                            if (command !== "")
+                                split.unshift(command)
+
+
                         }
-                        else if (number < sendArray.length)
-                            setTimeout(function ()
-                            {
-                                if (sendArray[number].match(not_only_dots))
-                                    oldSendMsg(sendArray[number])
-                                sendPart(sendArray, number + 1)
-                            }, 2000)
+                        else if (message[0] === "@")
+                        {
+                            split.shift()
+                            message = split.join(" ")
+                        }
+                        message = ""
+                        //.join would sometimes produce multiple spaces in a row when messages can have only 1
+                        const len = split.length
+                        console.log(split)
+                        for (let i = 0; i < len; i++)
+                            if (split[i] !== "")
+                                message += split[i] + " "
+                        message = message.trim()
 
+                        if (retry)
+                            return parseMessageToChatfrom(message)
+                        else
+                            return message
                     }
 
+
+
+                    const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
+
+                    const chattxt = document.querySelector(".chat-tpl .messages-wrapper .scroll-pane")
+                    const mutation_config = {attributes: false, childList: true, subtree: false}
+                    const callback = function (mutationsList, observer)
+                    {
+                        for (const mutation of mutationsList)
+                        {
+                            const len = mutation.addedNodes.length
+                            for (let i = 0; i < len; i++)
+                            {
+                                const message = mutation.addedNodes[i].children[2].innerText.trim()
+                                if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
+                                    if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
+                                    {
+                                        window.chatPlusPlus.sendArr.shift()
+                                        if (window.chatPlusPlus.sendArr.length > 0)
+                                            setTimeout(function ()
+                                            {
+                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                                    oldSendMsg(window.chatPlusPlus.sendArr[0])
+                                            }, window.chatPlusPlus.options.messageTimeout)
+                                    }
+
+
+
+                            }
+                        }
+                    }
+                    const observer = new MutationObserver(callback)
+                    observer.observe(chattxt, mutation_config)
+
                     if (sendArr.length > 0)
-                        sendPart(sendArr, 0)
+                        oldSendMsg(sendArr[0])
                     document.getElementById("inpchat").blur()
+
+                    //fix to not folding textarea
+                    setTimeout(function ()
+                    {
+                        document.getElementById("inpchat").focus()
+                        document.getElementById("inpchat").blur()
+                    }, 100)
+
 
                 }
                 else
-                    oldSendMsg(msg)
+                    {
+                        oldSendMsg(msg)
+                        //fix to not folding textarea
+                        setTimeout(function ()
+                        {
+                            document.getElementById("inpchat").focus()
+                            document.getElementById("inpchat").blur()
+                        }, 100)
+                    }
             }
 
         }

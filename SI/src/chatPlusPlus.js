@@ -735,6 +735,7 @@ window.addEventListener("load", function ()
                     }
                     else if (message[0] === "@")
                     {
+                        retry = true
                         split.shift()
                         message = split.join(" ")
                     }
@@ -766,16 +767,25 @@ window.addEventListener("load", function ()
                         {
                             const message = mutation.addedNodes[i].children[1].innerText.trim()
                             if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
+                            {
+                                //console.log(parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
+                                //console.log(message.trim())
+                                //console.log(message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                 if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                 {
+
                                     window.chatPlusPlus.sendArr.shift()
                                     if (window.chatPlusPlus.sendArr.length > 0)
+                                    {
+                                        console.log("adding next")
                                         setTimeout(function ()
                                         {
-                                            if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                            if (window.chatPlusPlus.sendArr[0].match(not_only_dots).length > 0)
                                                 oldSendMsg(window.chatPlusPlus.sendArr[0])
                                         }, window.chatPlusPlus.options.messageTimeout)
+                                    }
                                 }
+                            }
 
                         }
                     }
@@ -1137,12 +1147,13 @@ window.addEventListener("load", function ()
                                         else
                                             log("[" + tab + "] " + nick + " -> " + text)
 
+                                        console.log("adding next")
                                         if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
                                             window.chatPlusPlus.sendArr.shift()
                                         if (window.chatPlusPlus.sendArr.length > 0)
                                             setTimeout(function ()
                                             {
-                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots).length > 0)
                                                     window.chatSendMsg(window.chatPlusPlus.sendArr[0])
                                             }, window.chatPlusPlus.options.messageTimeout)
 

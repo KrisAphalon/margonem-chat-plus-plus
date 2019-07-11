@@ -764,7 +764,7 @@ window.addEventListener("load", function ()
                         const len = mutation.addedNodes.length
                         for (let i = 0; i < len; i++)
                         {
-                            const message = mutation.addedNodes[0].children[1].innerText.trim()
+                            const message = mutation.addedNodes[i].children[1].innerText.trim()
                             if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
                                 if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                 {

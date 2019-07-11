@@ -33,6 +33,63 @@ window.addEventListener("load", function ()
 
     }()
 
+    // Hiding unrelevant text
+    !function ()
+    {
+        const chat = document.getElementsByClassName("section chat-tpl")[0]
+        const scroll_pane = chat.children[4].children[1]
+
+        const classesToHide = ["sys_info"]
+        const classesToHide2 = ["priv-in-general", "group-in-general", "clan-in-general", "system-in-general"]
+        const classes2Length = classesToHide2.length
+        const classesToNotHide = ["me", "nar", "nar2", "nar3", "dial1", "dial2", "dial3", "dial666"]
+        let textHide = false
+
+        function toggleHide()
+        {
+            const allchat_button = document.getElementsByClassName("tabs-wrapper connectedSortable ui-sortable")[0].children[0]
+            if (allchat_button.classList.contains("active"))
+            {
+                const display = textHide ? "" : "none"
+
+                const len = scroll_pane.children.length
+                for (let i = 0; i < len; i++)
+                {
+                    if (classesToNotHide.indexOf(scroll_pane.children[i].classList[1]) < 0
+                        && classesToNotHide.indexOf(scroll_pane.children[i].classList[2]) < 0
+                        && classesToNotHide.indexOf(scroll_pane.children[i].classList[3]) < 0
+                    )
+                    {
+                        if (classesToHide.indexOf(scroll_pane.children[i].classList[1]) >= 0)
+                            scroll_pane.children[i].style.display = display
+                        else
+                        {
+                            const len2 = scroll_pane.children[i].children.length
+                            for (let j = 0; j < len2; j++)
+                            {
+                                for (let k = 0; k < classes2Length; k++)
+                                {
+                                    if (scroll_pane.children[i].children[j].classList.contains(classesToHide2[k]))
+                                    {
+                                        scroll_pane.children[i].style.display = display
+                                        break
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                textHide = !textHide
+            }
+        }
+
+        const lagmeter = document.getElementsByClassName("lagmeter")[0]
+        lagmeter.addEventListener("click", toggleHide)
+        lagmeter.style.cursor = "cell"
+    }()
+
 
     //multiple msgs
     !function ()
@@ -412,7 +469,7 @@ window.addEventListener("load", function ()
 
                 //delete innocent Words
                 for (const e of innocentWords)
-                    copy = copy.split(e).join('X')
+                    copy = copy.split(e).join("X")
 
                 //check for naughty phrases that require space
                 for (const e of badWordsSpaceOnly)
@@ -724,13 +781,13 @@ window.addEventListener("load", function ()
             const len = textarea.value.length
 
             //fixes bug when clicking enter to start chatting
-            textarea.value = textarea.value.replace(/\r?\n/gi, '')
+            textarea.value = textarea.value.replace(/\r?\n/gi, "")
 
             //check maxLength
             if (!window.chatPlusPlus.options.multiMsg)
                 checkMaxLength()
             else
-                textarea.removeAttribute('maxLength')
+                textarea.removeAttribute("maxLength")
             //check colors
             checkColors()
             //check length
@@ -780,7 +837,7 @@ window.addEventListener("load", function ()
         const callback = function (mutationsList, observer)
         {
             for (const mutation of mutationsList)
-                if (mutation.type === 'attributes')
+                if (mutation.type === "attributes")
                     adjustWidth()
         }
         const observer = new MutationObserver(callback)

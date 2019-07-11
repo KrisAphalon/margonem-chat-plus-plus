@@ -356,7 +356,7 @@ window.addEventListener("load", function ()
                                         if (window.chatPlusPlus.sendArr.length > 0)
                                             setTimeout(function ()
                                             {
-                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots))
+                                                if (window.chatPlusPlus.sendArr[0].match(not_only_dots).length > 0)
                                                     oldSendMsg(window.chatPlusPlus.sendArr[0])
                                             }, window.chatPlusPlus.options.messageTimeout)
                                     }

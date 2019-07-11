@@ -400,7 +400,8 @@ window.addEventListener("load", function ()
             "dzi w kr",
             "jak",
             "podsłuchuje",
-            "ci pan"
+            "ci pan",
+            "sc i przet"
         ]
 
 

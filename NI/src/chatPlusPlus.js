@@ -698,6 +698,21 @@
                     bottom: 60px;
                     pointer-events: none;
                 }
+                
+                .chat-size-1 #textarea-background, .chat-size-1 #textarea-background-up{
+                    width: 33px;
+                }
+                .chat-size-2 #textarea-background, .chat-size-2 #textarea-background-up{
+                    width: 290px;
+                }
+                
+                .chat-size-1 #inpchat{
+                    width: 211px;
+                }
+                .chat-size-2 #inpchat{
+                    width: 463px;
+                }
+
 
                 .section.chat-tpl .send-btn.right {
                     z-index: 201;
@@ -920,29 +935,6 @@
                 localStorage.setItem("lastInputedMsg", textarea.value)
 
             }
-
-
-            //Change textarea width when changing chat width
-            function adjustWidth()
-            {
-                const width = inpchat.style.width
-                const widthNum = parseInt(width.slice(0, -2))
-                textarea.style.width = width
-                background.style.width = widthNum - 176 + "px"
-                backgroundUp.style.width = widthNum - 176 + "px"
-            }
-
-            const mutation_config = {attributes: true, childList: false, subtree: false}
-            const callback = function (mutationsList, observer)
-            {
-                for (const mutation of mutationsList)
-                    if (mutation.type === "attributes")
-                        adjustWidth()
-            }
-            const observer = new MutationObserver(callback)
-            observer.observe(inpchat, mutation_config)
-            adjustWidth()
-
             //Change value of textarea when something changes value of input
             const inpchat_value = inpchat.value
             Object.defineProperty(inpchat, "value", {

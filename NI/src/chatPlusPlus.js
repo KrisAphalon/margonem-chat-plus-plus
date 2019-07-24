@@ -273,7 +273,7 @@
                         {
 
                             message = message.trim()
-                            const split = message.split(" ")
+                            let split = message.split(" ")
 
                             let retry = false
                             if (message[0] === "/" || message[0] === "*")
@@ -302,14 +302,15 @@
                                     case "*dial2":
                                     case "*dial3":
                                     case "*dial666":
-                                        const npcNameSplit = split[1].split(",")
-                                        console.log(npcNameSplit)
-                                        const npcName = npcNameSplit[0]
-                                        command = "«" + npcName + "»"
-                                        //message = message.split()
+                                        const npcNameSplit = message.split(",")
+                                        const npcNameSplitSpace = npcNameSplit[0].split(" ")
                                         npcNameSplit.shift()
-                                        split[1] = npcNameSplit.join(",")
-                                        split[1] = split[1].trim()
+                                        const newSplit = npcNameSplit.join(",").split(" ")
+                                        split = newSplit
+                                        npcNameSplitSpace.shift()
+                                        const npcName = npcNameSplitSpace.join(" ")
+                                        console.log("NPC name: " + npcName)
+                                        command = "«" + npcName + "»"
                                         break
                                 }
                                 split.shift()

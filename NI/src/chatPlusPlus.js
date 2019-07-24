@@ -9,7 +9,8 @@
                 messageTimeout: 1600
             },
             sendArr: [],
-            blockTextareaChanging: false
+            blockTextareaChanging: false,
+            sendTimeout: {}
         }
 
         //options
@@ -98,6 +99,80 @@
         // Multiple msgs
         !function ()
         {
+
+
+            function deconstructSendArrPart(part)
+            {
+                if (part[0] === "/" || part[0] === "@" || part[0] === "*")
+                {
+                    if (part[0] === "/" || part[0] === "@")
+                    {
+                        const split = part.split(" ")
+                        split.shift()
+                        if (part[0] === "@")
+                            return deconstructSendArrPart(split.join(" "))
+                        else
+                            return split.join(" ")
+                    }
+                    else
+                    {
+                        const split = part.split(" ")
+                        switch (split[0])
+                        {
+                            case "*me":
+                            case "*nar":
+                            case "*nar1":
+                            case "*nar2":
+                            case "*nar3":
+                            case "*sys":
+                                split.shift()
+                                return split.join(" ")
+                            case "*dial":
+                            case "*dial1":
+                            case "*dial2":
+                            case "*dial3":
+                            case "*dial666":
+                                const npcSplit = part.split(",")
+                                npcSplit.shift()
+                                return npcSplit.join(",")
+                        }
+                    }
+
+
+                }
+                return part
+            }
+
+            document.querySelector(".chat-tpl .send-btn").addEventListener("contextmenu", function (e)
+            {
+                e.preventDefault()
+                const inpchat = document.getElementById("inpchat")
+                const sendArr = window.chatPlusPlus.sendArr
+                let newChatValue = ""
+                const len = sendArr.length
+                if (len === 0)
+                    return false
+                else if (len >= 1)
+                {
+                    window.message("Przywracanie wiadomości...")
+                    newChatValue = sendArr[0].trim()
+                }
+                if (len > 1)
+                    for (let i = 1; i < len; i++)
+                    {
+                        const part = deconstructSendArrPart(sendArr[i]).trim()
+                        newChatValue += " " + part
+                    }
+                console.log(newChatValue)
+                inpchat.value = newChatValue
+                return false
+            })
+
+            function handleNoAnwser()
+            {
+                window.message("Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na strzałkę wysyłania wiadomości by przywrócić resztę niewysłanej wiadomości.")
+            }
+
             const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 
             function calculateAddOnStart(msg)
@@ -355,13 +430,19 @@
                                     if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
                                         if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                         {
+                                            clearTimeout(window.chatPlusPlus.sendTimeout)
                                             window.chatPlusPlus.sendArr.shift()
                                             if (window.chatPlusPlus.sendArr.length > 0)
+                                            {
                                                 setTimeout(function ()
                                                 {
                                                     if (window.chatPlusPlus.sendArr[0].match(not_only_dots).length > 0)
                                                         oldSendMsg(window.chatPlusPlus.sendArr[0])
                                                 }, window.chatPlusPlus.options.messageTimeout)
+                                                if (window.chatPlusPlus.sendArr.length > 1)
+                                                    window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                                            }
+
                                         }
 
 
@@ -372,7 +453,10 @@
                         observer.observe(chattxt, mutation_config)
 
                         if (sendArr.length > 0)
+                        {
                             oldSendMsg(sendArr[0])
+                            window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                        }
                         document.getElementById("inpchat").blur()
 
                         //fix to not folding textarea
@@ -420,6 +504,7 @@
             }
 
             const badWords = [
+                "suscipit",
                 "kurw",
                 "gówno",
                 "pedał",
@@ -448,7 +533,7 @@
                 "zje. by",
                 "zje b",
                 "zje. b",
-                "zje, b"
+                "zje, b",
             ]
             const innocentWords = [ //TODO zrób no z tego regexpy ;v
                 "ości p",
@@ -938,6 +1023,7 @@
                 localStorage.setItem("lastInputedMsg", textarea.value)
 
             }
+
             //Change value of textarea when something changes value of input
             const inpchat_value = inpchat.value
             Object.defineProperty(inpchat, "value", {

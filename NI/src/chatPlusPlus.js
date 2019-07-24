@@ -500,7 +500,9 @@
                 "jak",
                 "podsłuchuje",
                 "ci pan",
-                "sc i przet"
+                "sc i przet",
+                "c i po",
+                "ęk urwał"
             ]
 
 

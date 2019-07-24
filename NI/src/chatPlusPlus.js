@@ -170,7 +170,7 @@
 
             function handleNoAnwser()
             {
-                window.message("Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na strzałkę wysyłania wiadomości by przywrócić resztę niewysłanej wiadomości.")
+                window.message("Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na strzałkę wysyłania wiadomości by przywrócić resztę niewysłanej wiadomości.<br> Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.")
             }
 
             const polishLetters = /[ąćęłńóśźż*@,. _]/gi
@@ -440,7 +440,7 @@
                                                         oldSendMsg(window.chatPlusPlus.sendArr[0])
                                                 }, window.chatPlusPlus.options.messageTimeout)
                                                 if (window.chatPlusPlus.sendArr.length > 1)
-                                                    window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                                                    window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
                                             }
 
                                         }
@@ -455,7 +455,7 @@
                         if (sendArr.length > 0)
                         {
                             oldSendMsg(sendArr[0])
-                            window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                            window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
                         }
                         document.getElementById("inpchat").blur()
 

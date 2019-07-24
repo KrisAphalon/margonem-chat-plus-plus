@@ -511,11 +511,8 @@
 
             function deconstructSendArrPart(part)
             {
-                console.log(part)
                 if (part[0] === "/" || part[0] === "@" || part[0] === "*")
                 {
-
-
                     if (part[0] === "/" || part[0] === "@")
                     {
                         const split = part.split(" ")

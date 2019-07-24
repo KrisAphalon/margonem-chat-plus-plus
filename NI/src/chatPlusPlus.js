@@ -320,8 +320,8 @@
                             }
                             else if (message[0] === "@")
                             {
+                                retry = true
                                 split.shift()
-                                message = split.join(" ")
                             }
                             message = ""
                             //.join would sometimes produce multiple spaces in a row when messages can have only 1
@@ -737,17 +737,17 @@
                     textarea.className = ""
                 textarea.style.color = ""
                 if (arr[0][0] === "@")
-                    textarea.style.color = realCollors.priv
+                    textarea.style.color = realColors.priv
                 else switch (arr[0])
                 {
                     case "/g":
                     {
-                        textarea.style.color = realCollors.team
+                        textarea.style.color = realColors.team
                         break
                     }
                     case "/k":
                     {
-                        textarea.style.color = realCollors.clant
+                        textarea.style.color = realColors.clant
                         break
                     }
                     case "*me":
@@ -802,14 +802,14 @@
                     case "*hide":
                     case "*weather":
                     {
-                        textarea.style.color = realCollors.sys_comm
+                        textarea.style.color = realColors.sys_comm
                         break
                     }
                 }
             }
 
 
-            const realCollors = {
+            const realColors = {
                 priv: "#fc0",
                 clant: "#ffa500",
                 team: "#b554ff",
@@ -827,13 +827,13 @@
                 document.body.appendChild(chat)
 
                 msg.className = "priv-in-general"
-                realCollors.priv = window.getComputedStyle(msg, null).color
+                realColors.priv = window.getComputedStyle(msg, null).color
                 msg.className = "chat-message sys_red"
-                realCollors.sys_comm = window.getComputedStyle(msg, null).color
+                realColors.sys_comm = window.getComputedStyle(msg, null).color
                 msg.className = "clan-message"
-                realCollors.clant = window.getComputedStyle(msg, null).color
+                realColors.clant = window.getComputedStyle(msg, null).color
                 msg.className = "group-message"
-                realCollors.team = window.getComputedStyle(msg, null).color
+                realColors.team = window.getComputedStyle(msg, null).color
                 document.body.removeChild(chat)
             }
 

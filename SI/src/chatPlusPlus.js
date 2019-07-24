@@ -175,7 +175,7 @@
             document.head.appendChild(style)
 
             //todo change name
-            let realCollors = {
+            let realColors = {
                 priv: "#fc0",
                 clant: "#ffa500",
                 team: "#b554ff",
@@ -195,14 +195,14 @@
                     textarea.className = ""
                 textarea.style.color = ""
                 if (command[0] === "@")
-                    textarea.style.color = realCollors.priv
+                    textarea.style.color = realColors.priv
                 else switch (command)
                 {
                     case "/g":
-                        textarea.style.color = realCollors.team
+                        textarea.style.color = realColors.team
                         break
                     case "/k":
-                        textarea.style.color = realCollors.clant
+                        textarea.style.color = realColors.clant
                         break
                     case "*me":
                     case "/me":
@@ -239,7 +239,7 @@
                     case "*delGraf":
                     case "*hide":
                     case "*weather":
-                        textarea.style.color = realCollors.sys_comm
+                        textarea.style.color = realColors.sys_comm
                         break
                 }
             }
@@ -460,13 +460,13 @@
             // For now it just checks stuff that it requires in one and two seconds after start
             setTimeout(function ()
             {
-                realCollors = getCommandsColors()
+                realColors = getCommandsColors()
                 recolorTextarea()
                 applyCustomTextareaBackground()
             }, 1000)
             setTimeout(function ()
             {
-                realCollors = getCommandsColors()
+                realColors = getCommandsColors()
                 recolorTextarea()
                 applyCustomTextareaBackground()
             }, 2000)
@@ -482,19 +482,19 @@
                     document.getElementById("inpchat").style.left = "65px"
                     setTimeout(function ()
                     {
-                        realCollors = getCommandsColors()
+                        realColors = getCommandsColors()
                         recolorTextarea()
                         applyCustomTextareaBackground()
                     }, 3000)
                     setTimeout(function ()
                     {
-                        realCollors = getCommandsColors()
+                        realColors = getCommandsColors()
                         recolorTextarea()
                         applyCustomTextareaBackground()
                     }, 5000)
                     setTimeout(function ()
                     {
-                        realCollors = getCommandsColors()
+                        realColors = getCommandsColors()
                         recolorTextarea()
                         applyCustomTextareaBackground()
                     }, 20000)

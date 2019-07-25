@@ -740,7 +740,7 @@
                             if (sendArr.length > 0)
                             {
                                 oldSendMsg(sendArr[0])
-                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
+                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
                             }
                             document.getElementById("inpchat").blur()
 
@@ -866,7 +866,7 @@
                                             }, window.chatPlusPlus.options.messageTimeout)
 
                                             if (window.chatPlusPlus.sendArr.length > 1)
-                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
+                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
                                         }
                                     }
                                 }
@@ -1245,7 +1245,7 @@
                                                         window.chatSendMsg(window.chatPlusPlus.sendArr[0])
                                                 }, window.chatPlusPlus.options.messageTimeout)
                                             if (window.chatPlusPlus.sendArr.length > 1)
-                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
+                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
 
                                             return true
                                         }

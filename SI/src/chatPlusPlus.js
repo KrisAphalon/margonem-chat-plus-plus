@@ -854,7 +854,7 @@
                                     //console.log(message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                     if (message.trim() === parseMessageToChatfrom(window.chatPlusPlus.sendArr[0]))
                                     {
-                                        clearTimeout(window.chatPlusPlus.sendTimeout)
+                                        window.clearTimeout(window.chatPlusPlus.sendTimeout)
                                         window.chatPlusPlus.sendArr.shift()
                                         if (window.chatPlusPlus.sendArr.length > 0)
                                         {
@@ -1235,6 +1235,7 @@
                                                 log("[" + tab + "] " + nick + " -> " + text)
 
                                             console.log("adding next")
+                                            window.clearTimeout(window.chatPlusPlus.sendTimeout)
                                             if (typeof window.chatPlusPlus.sendArr[0] !== "undefined")
                                                 window.chatPlusPlus.sendArr.shift()
                                             if (window.chatPlusPlus.sendArr.length > 0)
@@ -1243,7 +1244,8 @@
                                                     if (window.chatPlusPlus.sendArr[0].match(not_only_dots).length > 0)
                                                         window.chatSendMsg(window.chatPlusPlus.sendArr[0])
                                                 }, window.chatPlusPlus.options.messageTimeout)
-
+                                            if (window.chatPlusPlus.sendArr.length > 1)
+                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 3)
 
                                             return true
                                         }

@@ -651,9 +651,7 @@
                             const addOnStart = calculateAddOnStart(msg)
 
                             //delete old sendArr if there was some problem (e.g. lost group chat)
-                            window.chatPlusPlus.sendArr = []
-                            const sendArr = window.chatPlusPlus.sendArr
-                            console.log(sendArr)
+
                             const len = msg.length
                             let last_slice = 0
                             let current = 0
@@ -671,6 +669,11 @@
                             console.log(msg)
                             console.log(len)
                             if (calcMargoLength(msg) > maxLen)
+                            {
+                                window.chatPlusPlus.sendArr = []
+                                const sendArr = window.chatPlusPlus.sendArr
+                                console.log(sendArr)
+
                                 for (let i = 0; i < len; i++)
                                 {
                                     if (msg[i].match(polishLetters))
@@ -732,14 +735,14 @@
                                         console.log(sendArr)
                                     }
                                 }
-                            if (msg !== "")
-                                if (last_slice === 0)
-                                    sendArr.push(msg)
-                                else if (msg.slice(last_slice) !== "")
-                                    sendArr.push(addOnStart + msg.slice(last_slice))
+                                if (msg !== "")
+                                    if (last_slice === 0)
+                                        sendArr.push(msg)
+                                    else if (msg.slice(last_slice) !== "")
+                                        sendArr.push(addOnStart + msg.slice(last_slice))
 
-                            console.log(sendArr)
-                            console.log(sendArr.length)
+                                console.log(sendArr)
+                                console.log(sendArr.length)
 
                             if (sendArr.length > 0)
                             {
@@ -748,12 +751,23 @@
                             }
                             document.getElementById("inpchat").blur()
 
-                            //fix to not folding textarea
-                            setTimeout(function ()
+                                //fix to not folding textarea
+                                setTimeout(function ()
+                                {
+                                    document.getElementById("inpchat").focus()
+                                    document.getElementById("inpchat").blur()
+                                }, 100)
+                            }
+                            else
                             {
-                                document.getElementById("inpchat").focus()
-                                document.getElementById("inpchat").blur()
-                            }, 100)
+                                oldSendMsg(msg)
+                                //fix to not folding textarea
+                                setTimeout(function ()
+                                {
+                                    document.getElementById("inpchat").focus()
+                                    document.getElementById("inpchat").blur()
+                                }, 100)
+                            }
 
                         }
                         else

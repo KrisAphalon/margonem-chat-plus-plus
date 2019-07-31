@@ -744,12 +744,12 @@
                                 console.log(sendArr)
                                 console.log(sendArr.length)
 
-                            if (sendArr.length > 0)
-                            {
-                                oldSendMsg(sendArr[0])
-                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
-                            }
-                            document.getElementById("inpchat").blur()
+                                if (sendArr.length > 0)
+                                {
+                                    oldSendMsg(sendArr[0])
+                                    window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnswer, window.chatPlusPlus.options.messageTimeout * 3)
+                                }
+                                document.getElementById("inpchat").blur()
 
                                 //fix to not folding textarea
                                 setTimeout(function ()
@@ -884,7 +884,7 @@
                                             }, window.chatPlusPlus.options.messageTimeout)
 
                                             if (window.chatPlusPlus.sendArr.length > 1)
-                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnswer, window.chatPlusPlus.options.messageTimeout * 3)
                                         }
                                     }
                                 }
@@ -1263,7 +1263,7 @@
                                                         window.chatSendMsg(window.chatPlusPlus.sendArr[0])
                                                 }, window.chatPlusPlus.options.messageTimeout)
                                             if (window.chatPlusPlus.sendArr.length > 1)
-                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnwser, window.chatPlusPlus.options.messageTimeout * 2)
+                                                window.chatPlusPlus.sendTimeout = setTimeout(handleNoAnswer, window.chatPlusPlus.options.messageTimeout * 3)
 
                                             return true
                                         }

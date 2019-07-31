@@ -1,5 +1,13 @@
 !function ()
 {
+    function handleNoAnswer()
+    {
+        if (!sessionStorage.noAnwserMsgDisplayed)
+        {
+            window.message("Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na koordynaty by przywrócić resztę niewysłanej wiadomości.<br> Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.")
+            sessionStorage.noAnwserMsgDisplayed = true
+        }
+    }
 
     function start()
     {
@@ -576,10 +584,6 @@
                 return false
             })
 
-            function handleNoAnwser()
-            {
-                window.message("Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na koordynaty by przywrócić resztę niewysłanej wiadomości.<br> Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.")
-            }
 
             const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 

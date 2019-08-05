@@ -524,10 +524,12 @@
                 "pizd",
                 "suko",
                 "dupek",
-                "gnoju"
+                "gnoju",
+                "ciul"
             ]
             const badWordsSpaceOnly = [
                 "daj coś",
+                "daj cos",
                 "zje by",
                 "zje, by",
                 "zje. by",

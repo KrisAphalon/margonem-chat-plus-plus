@@ -1046,34 +1046,40 @@
 
                         let innocent = true
 
-                        //delete innocent Words
-                        for (const e of innocentWords)
-                            copy = copy.split(e).join("X")
-
-                        //check for naughty phrases that require space
+                        //check for known phrases that get flagged as swear words
                         for (const e of badWordsSpaceOnly)
+                        {
                             if (copy.includes(e))
                             {
-                                /*wykryj zwroty które wymagają spacji*/
+                                console.log("Wykryto zwrot który jest niemiły: " + e)
                                 copy = copy.split(e).join("<span style='color: red; font-weight: bold'>" + e + "</span>")
                                 innocent = false
+                                break
                             }
-
-
-                        //delete characters that aren't used to create words
-                        copy = copy.replace(/[^a-zńąćśźżóęł]/g, "")
-                        copy = removeDuplicates(copy)
-
-                        for (const e of badWords)
-                            if (copy.includes(e))
-                            {
-                                copy = copy.split(e).join("<span style='color: red; font-weight: bold'>" + e + "</span>")
-                                innocent = false
-                            }
-
+                        }
                         if (innocent)
-                            oldSendMsg(msg)
+                        {
+                            //delete innocent phrases
+                            for (const e of innocentWords)
+                                copy = copy.split(e).join("X")
 
+                            //delete characters that aren't used to create words
+                            copy = copy.replace(/[^a-zńąćśźżóęł]/g, "")
+                            copy = removeDuplicates(copy)
+
+                            for (const e of badWords)
+                                if (copy.includes(e))
+                                {
+                                    console.log("Wykryto zwrot który jest niemiły: " + e)
+                                    copy = copy.split(e).join("<span style='color: red; font-weight: bold'>" + e + "</span>")
+                                    innocent = false
+                                    break
+                                }
+                            if (innocent)
+                                oldSendMsg(msg)
+                            else
+                                alertUser(msg, copy)
+                        }
                         else
                             alertUser(msg, copy)
                     }

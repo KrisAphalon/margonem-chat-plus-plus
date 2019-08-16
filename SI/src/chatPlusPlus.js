@@ -936,7 +936,8 @@
                 "zje. by",
                 "zje b",
                 "zje. b",
-                "zje, b"
+                "zje, b",
+                "ch. ują"
             ]
             const innocentWords = [ //TODO zrób no z tego regexpy ;v
                 "ości p",
@@ -990,7 +991,12 @@
                 "ci pan",
                 "sc i przet",
                 "c i po",
-                "ęk urwał"
+                "ęk urwał",
+                "uzje. barw",
+                "uzje, barw",
+                "uzje barw",
+                "ch ują",
+                "ch, ują"
             ]
 
 

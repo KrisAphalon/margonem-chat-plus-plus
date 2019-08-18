@@ -926,6 +926,7 @@
                 "pizd",
                 "suko",
                 "dupek",
+                "dupęk",
                 "gnoju",
                 "ciul"
             ]

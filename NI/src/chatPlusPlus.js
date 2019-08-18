@@ -382,6 +382,7 @@
                                         npcNameSplit.shift()
                                         const newSplit = npcNameSplit.join(",").split(" ")
                                         split = newSplit
+                                        split.unshift("")
                                         npcNameSplitSpace.shift()
                                         const npcName = npcNameSplitSpace.join(" ")
                                         console.log("NPC name: " + npcName)

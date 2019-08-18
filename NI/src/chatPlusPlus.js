@@ -527,7 +527,8 @@
                 "dupek",
                 "dupęk",
                 "gnoju",
-                "ciul"
+                "ciul",
+                "kórwa"
             ]
             const badWordsSpaceOnly = [
                 "daj coś",

@@ -906,52 +906,48 @@
         !function ()
         {
             const badWords = [
-                "suscipit",
                 "kurw",
-                "gówno",
-                "pedał",
+                "gowno",
+                "pedal",
                 "cwel",
                 "dziwk",
                 "pierdo",
                 "huj",
-                "hój",
+                "hoj",      //alert, 'ahoj' is ok
                 "zjeb",
                 "jeb",
                 "fuck",
                 "kutas",
                 "cip",      //alert, 'cip cip' is ok
-                "hoj",      //alert, 'ahoj' is ok
                 "walkonia",
-                "wałkonia",
                 "pizd",
                 "suko",
                 "dupek",
-                "dupęk",
                 "gnoju",
                 "ciul",
-                "kórwa"
+                "korwa"
             ]
             const badWordsSpaceOnly = [
-                "daj coś",
                 "daj cos",
                 "zje by",
-                "zje, by",
-                "zje. by",
                 "zje b",
                 "zje. b",
                 "zje, b",
-                "ch. ują"
+                "ch. uja"
+            ]
+            const innocentWordsWithPolishLetters = [
+                "ci pó",
             ]
             const innocentWords = [ //TODO zrób no z tego regexpy ;v
-                "ości p",
+                "osci p",
                 "hojn",
-                "łuchanie",
-                "przesłuchuj",
-                "nasłuchuj",
-                "ci poszło",
+                "luchanie",
+                "przesluchuj",
+                "nasluchuj",
+                "ci poszlo",
                 "ahoj",
-                "gów nowa",
-                "migów no",
+                "gow nowa",
+                "migow no",
                 "ci poz",
                 "ci pot",
                 "ci pi",
@@ -971,7 +967,7 @@
                 "je. b",
                 "je, b",
                 "ho ja",
-                "ęc welp",
+                "ec welp",
                 ":p",
                 "cip cip cip cip",
                 "cip cip cip",
@@ -979,7 +975,6 @@
                 "wymachuj",
                 "je bo",
                 //"c w elen", //it is bad word
-                "ci pó",
                 "ci, pi",
                 "ci pos",
                 "ach u jeg",
@@ -990,16 +985,16 @@
                 "ci pam",
                 "dzi w kr",
                 "jak",
-                "podsłuchuje",
+                "podsluchuje",
                 "ci pan",
                 "sc i przet",
                 "c i po",
-                "ęk urwał",
+                "ek urwal",
                 "uzje. barw",
                 "uzje, barw",
                 "uzje barw",
-                "ch ują",
-                "ch, ują"
+                "ch uja",
+                "ch, uja"
             ]
 
 
@@ -1057,6 +1052,22 @@
 
                         let innocent = true
 
+                        //delete innocent phrases
+                        for (const e of innocentWordsWithPolishLetters)
+                            copy = copy.split(e).join("X")
+
+                        //delete characters that aren't used to create words
+                        copy = copy.replace(/[^a-zńąćśźżóęł ]/g, "")
+                        .replace(/ą/g, "a")
+                        .replace(/ą/g, "a")
+                        .replace(/ę/g, "e")
+                        .replace(/ł/g, "l")
+                        .replace(/[żź]/g, "z")
+                        .replace(/ó/g, "o")
+                        .replace(/ń/g, "n")
+                        .replace(/ć/g, "ć")
+                        .replace(/ś/g, "ś")
+
                         //check for known phrases that get flagged as swear words
                         for (const e of badWordsSpaceOnly)
                         {
@@ -1074,8 +1085,8 @@
                             for (const e of innocentWords)
                                 copy = copy.split(e).join("X")
 
-                            //delete characters that aren't used to create words
-                            copy = copy.replace(/[^a-zńąćśźżóęł]/g, "")
+
+                            copy = copy.replace(/ /g, "")
                             copy = removeDuplicates(copy)
 
                             for (const e of badWords)

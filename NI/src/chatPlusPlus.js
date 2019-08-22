@@ -593,7 +593,8 @@
                 "uzje, barw",
                 "uzje barw",
                 "ch uja",
-                "ch, uja"
+                "ch, uja",
+                "ci pou"
             ]
 
 

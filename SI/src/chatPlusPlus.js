@@ -999,7 +999,7 @@
                 "ch, uja",
                 "ci pou",
                 "ach u jed",
-                "chu? jego"
+                "chu jego"
             ]
 
 

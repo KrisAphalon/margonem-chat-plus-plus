@@ -998,7 +998,8 @@
                 "ch uja",
                 "ch, uja",
                 "ci pou",
-                "ach u jed"
+                "ach u jed",
+                "chu? jego"
             ]
 
 

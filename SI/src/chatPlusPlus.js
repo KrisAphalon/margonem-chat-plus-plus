@@ -644,6 +644,9 @@
 
                     window.chatSendMsg = function (msg)
                     {
+                        // replace hard spaces (alt + space) with normal one
+                        msg = msg.replace(/ /g, " ")
+
                         if (window.chatPlusPlus.options.multiMsg && msg !== "")
                         {
                             msg = msg.trim()

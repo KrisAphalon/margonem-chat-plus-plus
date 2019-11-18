@@ -1068,14 +1068,13 @@
                         //delete characters that aren't used to create words
                         copy = copy.replace(/[^a-zńąćśźżóęł ]/g, "")
                         .replace(/ą/g, "a")
-                        .replace(/ą/g, "a")
                         .replace(/ę/g, "e")
                         .replace(/ł/g, "l")
                         .replace(/[żź]/g, "z")
                         .replace(/ó/g, "o")
                         .replace(/ń/g, "n")
-                        .replace(/ć/g, "ć")
-                        .replace(/ś/g, "ś")
+                        .replace(/ć/g, "c")
+                        .replace(/ś/g, "s")
 
                         //check for known phrases that get flagged as swear words
                         for (const e of badWordsSpaceOnly)

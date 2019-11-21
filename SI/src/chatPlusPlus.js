@@ -1003,7 +1003,8 @@
                 "ci pou",
                 "ach u jed",
                 "chu jego",
-                "ci pl"
+                "ci pl",
+                "chu je"
             ]
 
 

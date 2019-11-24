@@ -691,7 +691,7 @@
                     const ahojRegex = /a(?=(?:.)*ahoj)(?!hoj.*ahoj)/g
                     if (ahojRegex.test(copy))
                     {
-                        window.mAlert("Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br> " +
+                        window.mAlert("Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;D <br> " +
                             "<span style='color:red'>Zawiera ona zwrot \"ahoj\", który poprzedzony jest przez" +
                             "dowolną literę 'a'. Tak, w ten sposób automute sprawdza czy jest to 'przekleństwo'. " +
                             "Jeżeli chcesz wysłać tak czy siak, droga wolna. " +

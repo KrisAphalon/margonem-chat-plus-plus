@@ -603,7 +603,8 @@
                 "ach u jed",
                 "chu jego",
                 "ci pl",
-                "chu je"
+                "chu je",
+                "ahoj" //proper checks are down the line
             ]
 
 

@@ -950,7 +950,6 @@
                 "przesluchuj",
                 "nasluchuj",
                 "ci poszlo",
-                "ahoj",
                 "gow nowa",
                 "migow no",
                 "ci poz",
@@ -1077,28 +1076,29 @@
                         .replace(/ć/g, "c")
                         .replace(/ś/g, "s")
 
-                        //check for known phrases that get flagged as swear words
-                        for (const e of badWordsSpaceOnly)
+
+                        //check weird 'ahoj'
+                        const ahojRegex = /a(?=(?:.)*ahoj)(?!hoj.*ahoj)/g
+                        if (ahojRegex.test(copy))
                         {
-                            if (copy.includes(e))
-                            {
-                                console.log("Wykryto zwrot który jest niemiły: " + e)
-                                copy = copy.split(e).join("<span style='color: red; font-weight: bold'>" + e + "</span>")
-                                innocent = false
-                                break
-                            }
+                            window.mAlert("Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br> " +
+                                "<span style='color:red'>Zawiera ona zwrot \"ahoj\", który poprzedzony jest przez" +
+                                "dowolną literę 'a'. Tak, w ten sposób automute sprawdza czy jest to 'przekleństwo'. " +
+                                "Jeżeli chcesz wysłać tak czy siak, droga wolna. " +
+                                "Wiedz jednak, że akurat w tym przypadku nie ma pomyłek.</span>",
+                                2, [function ()
+                                {
+                                    oldSendMsg(msg)
+                                }, function ()
+                                {
+                                    document.getElementById("inpchat").focus()
+                                    return false
+                                }])
                         }
-                        if (innocent)
-                        {
-                            //delete innocent phrases
-                            for (const e of innocentWords)
-                                copy = copy.split(e).join("X")
-
-
-                            copy = copy.replace(/ /g, "")
-                            copy = removeDuplicates(copy)
-
-                            for (const e of badWords)
+                        else {
+                            //check for known phrases that get flagged as swear words
+                            for (const e of badWordsSpaceOnly)
+                            {
                                 if (copy.includes(e))
                                 {
                                     console.log("Wykryto zwrot który jest niemiły: " + e)
@@ -1106,13 +1106,33 @@
                                     innocent = false
                                     break
                                 }
+                            }
                             if (innocent)
-                                oldSendMsg(msg)
+                            {
+                                //delete innocent phrases
+                                for (const e of innocentWords)
+                                    copy = copy.split(e).join("X")
+
+
+                                copy = copy.replace(/ /g, "")
+                                copy = removeDuplicates(copy)
+
+                                for (const e of badWords)
+                                    if (copy.includes(e))
+                                    {
+                                        console.log("Wykryto zwrot który jest niemiły: " + e)
+                                        copy = copy.split(e).join("<span style='color: red; font-weight: bold'>" + e + "</span>")
+                                        innocent = false
+                                        break
+                                    }
+                                if (innocent)
+                                    oldSendMsg(msg)
+                                else
+                                    alertUser(msg, copy)
+                            }
                             else
                                 alertUser(msg, copy)
                         }
-                        else
-                            alertUser(msg, copy)
                     }
                 }
                 else

@@ -1004,7 +1004,8 @@
                 "chu jego",
                 "ci pl",
                 "chu je",
-                "ahoj" //proper checks are down the line
+                "ahoj", //proper checks are down the line
+                "eciu le"
             ]
 
 

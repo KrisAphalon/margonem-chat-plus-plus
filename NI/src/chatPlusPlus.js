@@ -528,7 +528,9 @@
                 "dupek",
                 "gnoju",
                 "ciul",
-                "korwa"
+                "korwa",
+                "cioto",
+                "ciota"
             ]
             const badWordsSpaceOnly = [
                 "daj cos",

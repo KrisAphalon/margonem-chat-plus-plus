@@ -47,3 +47,4 @@ Installation
  - Install [Tampermonkey](https://www.tampermonkey.net/) or similar browser extension that allows for external scripts.
  - Head to [install page](https://krisaphalon.github.io/margonem-chatPlusPlus/chatPlusPlus.user.js) and click install.
  - Installation should work regardless of interface type.
+ 

@@ -1008,7 +1008,9 @@
                 "ci pl",
                 "chu je",
                 "ahoj", //proper checks are down the line
-                "eciu le"
+                "eciu le",
+                "dzi w ka",
+                "udziw ka"
             ]
 
 

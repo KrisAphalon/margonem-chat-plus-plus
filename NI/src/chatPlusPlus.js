@@ -530,7 +530,8 @@
                 "ciul",
                 "korwa",
                 "cioto",
-                "ciota"
+                "ciota",
+                "sukinsyn"
             ]
             const badWordsSpaceOnly = [
                 "daj cos",

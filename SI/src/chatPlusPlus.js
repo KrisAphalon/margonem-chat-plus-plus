@@ -944,7 +944,9 @@
             const innocentWordsWithPolishLetters = [
                 "ci pó",
                 "rękach. u jed",
-                "rękach, u jed"
+                "rękach, u jed",
+                "ć ip",
+                "ć i p"
             ]
             const innocentWords = [ //TODO zrób no z tego regexpy ;v
                 "osci p",

@@ -532,7 +532,9 @@
                 "cioto",
                 "ciota",
                 "sukinsyn",
-                "spierd"
+                "spierd",
+                "chodzi. w każdym",
+                "poszła po te ciuchy. ja" // it can't be shorter somehow
             ]
             const badWordsSpaceOnly = [
                 "daj cos",
@@ -612,7 +614,7 @@
                 "chu je",
                 "ahoj", //proper checks are down the line
                 "eciu le",
-                "dzi w ka",
+                //"dzi w ka", // there is a mute with dzi. w ka,
                 "udziw ka"
             ]
 

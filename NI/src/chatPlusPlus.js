@@ -615,7 +615,10 @@
                 "ahoj", //proper checks are down the line
                 "eciu le",
                 //"dzi w ka", // there is a mute with dzi. w ka,
-                "udziw ka"
+                "udziw ka",
+                "ci pac",
+                "bo ci pa",
+                "o ci p"
             ]
 
 

@@ -777,6 +777,7 @@
         // Correct amount of max letters in message && better chat
         !function ()
         {
+            const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
             const inputWrapper = document.getElementsByClassName("chat-tpl")[0].children[5]
             inputWrapper.style.zIndex = "200"
             const inpchat = inputWrapper.children[0]
@@ -889,7 +890,11 @@
 
                 .section.chat-tpl .send-btn.right {
                     z-index: 201;
-                    }
+                }
+                
+                .input-unfolded {
+                    height: calc(100% - 105px) !important;
+                }
 
             `
 
@@ -1019,6 +1024,7 @@
                 textarea.classList.remove("unfolded")
                 background.style.display = "none"
                 backgroundUp.style.display = "none"
+                scrollPanel.classList.remove("input-unfolded")
                 // bg.classList.remove("unfolded")
 
                 style2.innerText = " #input {-ms-overflow-style: none;} #inpchat::-webkit-scrollbar { display: none;}"
@@ -1040,6 +1046,12 @@
                     textarea.classList.add("unfolded")
                     background.style.display = "block"
                     backgroundUp.style.display = "block"
+                    let scroll = false
+                    if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight) scroll = true
+                    scrollPanel.classList.add("input-unfolded")
+                    if (scroll) scrollPanel.scrollTop = scrollPanel.scrollHeight
+
+
                     // bg.classList.add("unfolded")
 
                     style2.innerText = ""

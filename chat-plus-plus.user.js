@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Plus Plus
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.0.1
 // @description  Makes game chat 200% better
 // @author       Kris Aphalon
 // @match        http://*.margonem.pl/
@@ -36,7 +36,7 @@
     }
 
     if (getCookie("interface") === "ni")
-        loadScript("https://krisaphalon.github.io/margonem-chatPlusPlus/NI/src/chatPlusPlus.js")
+        loadScript("https://krisaphalon.github.io/margonem-chat-plus-plus/NI/src/chatPlusPlus.js")
     else
-        loadScript("https://krisaphalon.github.io/margonem-chatPlusPlus/SI/src/chatPlusPlus.js")
+        loadScript("https://krisaphalon.github.io/margonem-chat-plus-plus/SI/src/chatPlusPlus.js")
 })()

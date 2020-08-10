@@ -246,10 +246,10 @@
 }
 
 #cpp-panel .settings-box {
-  height: 100px;
+  height: 75px;
   display: grid;
   grid-template-columns: 50% auto;
-  grid-template-rows: 33% 33% auto;
+  grid-template-rows: 50% auto;
   justify-items: center;
   align-items: center;
   padding-top: 10px;
@@ -260,10 +260,15 @@
   height: 24px;
   position: relative;
   width: 155px;
+  user-select: none;
 }
 
 #cpp-panel .setting-label-text {
-  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == 'NI' {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  } @else {
+    cursor: pointer;
+  }
   left: 25px;
   line-height: 28px;
   position: relative;
@@ -277,7 +282,11 @@
   border: 2px solid #6e644b;
   border-radius: 2px;
   box-sizing: border-box;
-  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == 'NI' {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  } @else {
+    cursor: pointer;
+  }
   display: inline-block;
   height: 18px;
   left: 0;
@@ -368,7 +377,11 @@
   box-shadow: inset 0 0 1px 1px #cecece, inset 0 0 0 3px #0c0d0d;
   box-sizing: border-box;
   color: #E6D6BF;
-  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == 'NI' {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  } @else {
+    cursor: pointer;
+  }
   display: inline-block;
   height: 42px;
   line-height: 34px;

@@ -1,0 +1,34 @@
+{
+  "name": "margonem-chat-plus-plus",
+  "version": "2.0.0",
+  "main": "/src/main.js",
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not IE_Mob 11",
+    "firefox 52"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "webpack": "^5.0.0-beta.24",
+    "webpack-cli": "^4.0.0-beta.8",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.6.0",
+    "node-sass": "^4.14.1"
+  },
+  "scripts": {
+    "Build webpack": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KrisAphalon/margonem-chat-plus-plus.git"
+  },
+  "author": "Kris Aphalon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KrisAphalon/margonem-chat-plus-plus/issues"
+  },
+  "homepage": "https://github.com/KrisAphalon/margonem-chat-plus-plus#readme"
+}

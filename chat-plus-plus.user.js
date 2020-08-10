@@ -1,42 +1,54 @@
 // ==UserScript==
 // @name         Chat Plus Plus
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      2.0.0
 // @description  Makes game chat 200% better
 // @author       Kris Aphalon
 // @match        http://*.margonem.pl/
 // ==/UserScript==
 
-
 (function ()
 {
-    "use strict"
-
-    function getCookie(cname)
+    function start(version)
     {
-        const name = cname + "="
-        const ca = document.cookie.split(';')
-        for (let i = 0; i < ca.length; i++)
+        const arr = /interface=(..)/.exec(document.cookie)
+        if (arr)
         {
-            let c = ca[i]
-            while (c.charAt(0) === ' ')
-                c = c.substring(1)
-            if (c.indexOf(name) === 0)
-                return c.substring(name.length, c.length)
+            const gameInterface = arr[1]
+            let src
+            if (gameInterface === 'ni') src = 'https://cdn.jsdelivr.net/gh/KrisAphalon/margonem-chat-plus-plus@' + version + '/dist/chat-plus-plus-NI.js'
+            else if (gameInterface === 'si') src = 'https://cdn.jsdelivr.net/gh/KrisAphalon/margonem-chat-plus-plus@' + version + '/dist/chat-plus-plus-SI.js'
+            else
+            {
+                const errorMsg = 'Chat Plus Plus couldn\'t detect your interface.'
+                error(errorMsg)
+                console.error(errorMsg)
+            }
+
+            if (src)
+            {
+                let logText = 'Chat Plus Plus version: ' + version
+                if (gameInterface === 'si') logText = '<span style="color:lime">' + logText + '</span>'
+                log(logText)
+                const script = document.createElement('script')
+                script.src = src
+                document.head.appendChild(script)
+            }
         }
-        return ""
+        else setTimeout(start, 500)
     }
 
-    function loadScript(scriptSrc)
+    const request = new XMLHttpRequest()
+    request.open('GET', 'https://raw.githubusercontent.com/KrisAphalon/margonem-chat-plus-plus/production/version', true)
+    request.onload = function ()
     {
-        const script = document.createElement("script")
-        script.src = scriptSrc
-        script.async = false
-        document.head.appendChild(script)
+        if (this.status >= 200 && this.status < 400) start(JSON.parse(this.response))
+        else console.error('Chat Plus Plus version check returned error: ' + this.status)
+    }
+    request.onerror = function ()
+    {
+        console.error('Chat Plus Plus version check returned error (connection)')
     }
 
-    if (getCookie("interface") === "ni")
-        loadScript("https://krisaphalon.github.io/margonem-chat-plus-plus/NI/src/chatPlusPlus.js")
-    else
-        loadScript("https://krisaphalon.github.io/margonem-chat-plus-plus/SI/src/chatPlusPlus.js")
+    request.send()
 })()

@@ -1,0 +1,437 @@
+@if $INTERFACE == 'NI' {
+  #inpchat {
+    background: 0 0;
+    border: 0;
+    bottom: 2px;
+    color: #fff;
+    height: 19px;
+    left: -94px;
+    margin: 0;
+    outline: 0;
+    overflow-x: scroll;
+    padding: 0;
+    position: absolute;
+    resize: none;
+    scrollbar-width: none;
+    white-space: nowrap;
+    width: 205px;
+  }
+
+  #inpchat.unfolded {
+    height: 124px;
+    line-height: 25.6px;
+    overflow-x: hidden;
+    padding: 4px;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+  }
+
+  #textarea-background {
+    background-color: #233316;
+    border-image: url(/img/gui/chat-srodek-powtarzalny.png) 0 111 0 104 round round;
+    border-style: solid;
+    border-width: 0 111px 0 104px;
+    bottom: 18px;
+    height: 50px;
+    left: -104px;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  #textarea-background-up {
+    border-image: url(/img/gui/chat-up.png) 14 111 0 104 fill repeat round;
+    border-style: solid;
+    border-width: 14px 111px 0 104px;
+    bottom: 60px;
+    height: 60px;
+    left: -104px;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .chat-size-1 #textarea-background, .chat-size-1 #textarea-background-up {
+    width: 33px;
+  }
+
+  .chat-size-2 #textarea-background, .chat-size-2 #textarea-background-up {
+    width: 290px;
+  }
+
+  .chat-size-1 #inpchat {
+    width: 211px;
+  }
+
+  .chat-size-2 #inpchat {
+    width: 463px;
+  }
+
+
+  .section.chat-tpl .send-btn.right {
+    z-index: 201;
+  }
+
+  .input-unfolded {
+    height: calc(100% - 105px) !important;
+  }
+} @else {
+  #inpchat {
+    background-image: unset;
+    background-position-y: -8px;
+    background-repeat: repeat-y;
+    bottom: 0;
+    display: inline;
+    font-size: 12px;
+    height: 17px;
+    left: 90px;
+    line-height: 17px;
+    margin: 0;
+    overflow-x: scroll;
+    padding: 0;
+    position: absolute;
+    resize: none;
+    scrollbar-width: none;
+    top: unset !important;
+    white-space: nowrap;
+    width: 312px;
+  }
+
+  #lastmsg {
+    pointer-events: none;
+  }
+
+  #inpchat.unfolded {
+    background-position-y: 0;
+    height: 150px;
+    line-height: 25.6px;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+  }
+
+  #inpchat::-webkit-scrollbar {
+    display: none;
+  }
+
+  #inpchat.unfolded::-webkit-scrollbar {
+    display: block;
+  }
+
+  #bottombar {
+    overflow: visible;
+    z-index: 362;
+  }
+
+  #textarea-background {
+    background-position-y: -98px;
+    bottom: -84px;
+    display: none;
+    height: 318px;
+    left: 171px;
+    position: absolute;
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 150px;
+  }
+
+  #textarea-background.unfolded {
+    display: block;
+  }
+
+  #lagmeter, #botloc, #bchat, #pvpmode {
+    z-index: 363;
+  }
+}
+
+
+/* Panel */
+#cpp-panel {
+  animation: fade 0.5s;
+  border-image: url(http://cronus.margonem.com/img/gui/tmp/window-frame.png) 32 20 repeat;
+  border-style: solid;
+  border-width: 34px 13px 10px 13px;
+  color: #000;
+  @if $INTERFACE == 'NI' {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/1.png), url(http://nerthus.margonem.pl/img/gui/cursor/1.cur), auto;
+  }
+  left: calc(50% - 204px);
+  pointer-events: auto;
+  position: fixed;
+  top: calc(50% - 150px);
+  transition: opacity 0.35s ease-in-out;
+  width: 380px;
+  z-index: 499;
+}
+
+#cpp-panel > .background {
+  background-color: #f1deaa;
+  background-image: url(http://cronus.margonem.com/img/gui/content-redleather.jpg);
+}
+
+/* Panel - nav */
+#cpp-panel > .header-label-positioner {
+  left: 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 10px;
+  text-align: center;
+  top: -35px;
+}
+
+#cpp-panel .header-label {
+  background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi-naglowek.png);
+  display: inline-block;
+  height: 28px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#cpp-panel .header-label > .right-decor,
+#cpp-panel .header-label > .left-decor {
+  background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi.png) -38px -2px;
+  height: 28px;
+  left: -52px;
+  position: absolute;
+  top: 0;
+  width: 52px;
+}
+
+#cpp-panel .header-label > .right-decor {
+  background-position: -91px -2px;
+  left: auto;
+  right: -52px;
+}
+
+#cpp-panel .header-label > span {
+  color: #f5f5dc;
+  line-height: 28px;
+  text-align: center;
+}
+
+#cpp-panel .panel-name {
+  transition: width 0.35s ease-in-out;
+}
+
+#cpp-panel > .close-decor {
+  background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -380px -55px;
+  height: 52px;
+  pointer-events: none;
+  position: absolute;
+  right: -15px;
+  top: -35px;
+  width: 51px;
+}
+
+#cpp-panel .close-button {
+  background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -263px -79px;
+  border: 0;
+  @if $INTERFACE == 'NI' {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  } @else {
+    cursor: pointer;
+  }
+  height: 22px;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 22px;
+}
+
+#cpp-panel .close-button:hover {
+  background-position: -286px -79px;
+}
+
+#cpp-panel .settings-box {
+  height: 100px;
+  display: grid;
+  grid-template-columns: 50% auto;
+  grid-template-rows: 33% 33% auto;
+  justify-items: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+#cpp-panel .setting-label {
+  cursor: unset;
+  height: 24px;
+  position: relative;
+  width: 155px;
+}
+
+#cpp-panel .setting-label-text {
+  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  left: 25px;
+  line-height: 28px;
+  position: relative;
+}
+
+#cpp-panel .setting-checkbox {
+  display: none;
+}
+
+#cpp-panel .checkbox-outline {
+  border: 2px solid #6e644b;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  display: inline-block;
+  height: 18px;
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 3px;
+  width: 18px;
+  z-index: 2;
+}
+
+.checkmark {
+  display: none;
+  height: 22px;
+  left: -4px;
+  pointer-events: none;
+  position: relative;
+  top: -2px;
+  transform: rotate(45deg);
+  width: 22px;
+}
+
+.checkmark-stem {
+  background-color: #f1dfa8;
+  height: 13px;
+  left: 10px;
+  position: absolute;
+  top: 2px;
+  width: 2px;
+}
+
+.checkmark-kick {
+  background-color: #f1dfa8;
+  height: 2px;
+  left: 5px;
+  position: absolute;
+  top: 13px;
+  width: 6px;
+}
+
+#cpp-panel .setting-checkbox:checked + .checkbox-outline {
+  background-color: #6e644b;
+}
+
+#cpp-panel .setting-checkbox:checked + .checkbox-outline .checkmark {
+  display: inline-block;
+}
+
+#cpp-panel .save-button {
+  margin-right: 30px;
+}
+
+#cpp-panel .cancel-button {
+  margin-left: 30px;
+}
+
+#cpp-panel .cancel-button:not(:hover) {
+  background-image: linear-gradient(to top, #310b0b, #831f1f);
+}
+
+#cpp-panel .cancel-button:not(:hover)::before {
+  box-shadow: inset 0 0 1px 1px #da6161a6;
+}
+
+
+#cpp-panel .hidden {
+  display: none;
+}
+
+
+//#cpp-panel .button-group {
+//  border: 1px solid #d8c28d;
+//  box-sizing: border-box;
+//  display: flex;
+//  flex-wrap: wrap;
+//  height: 110px;
+//  justify-content: space-evenly;
+//  margin-top: 30px;
+//  padding-top: 10px;
+//  width: 110px;
+//}
+
+
+#cpp-panel .button {
+  background-image: linear-gradient(to top, #12210d, #396b29);
+  border: 1px solid #0c0d0d;
+  border-radius: 4px;
+  box-shadow: inset 0 0 1px 1px #cecece, inset 0 0 0 3px #0c0d0d;
+  box-sizing: border-box;
+  color: #E6D6BF;
+  cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  display: inline-block;
+  height: 42px;
+  line-height: 34px;
+  position: relative;
+  width: 42px;
+}
+
+#cpp-panel.button.blue {
+  background-image: linear-gradient(to top, #081522, #1d4873);
+}
+
+#cpp-panel .button.blue:not(:hover)::before {
+  box-shadow: inset 0 0 1px 1px #5594d4a6;
+}
+
+#cpp-panel .button:before {
+  backface-visibility: hidden;
+  border-radius: 4px;
+  bottom: 3px;
+  box-shadow: inset 0 0 1px 1px #7ec568a6;
+  content: '';
+  left: 3px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  transform: translateZ(0);
+}
+
+#cpp-panel .button:after {
+  border-radius: 3px;
+  bottom: 0;
+  box-shadow: 0 1px 0 1px #0c0d0d;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#cpp-panel .button:hover:before {
+  box-shadow: inset 0 0 1px 1px #909090a6;
+}
+
+#cpp-panel .button:hover {
+  background-image: linear-gradient(to top, #101010, #434343);
+}
+
+#cpp-panel .bottom-box {
+  display: flex;
+  height: 50px;
+  justify-content: center;
+}
+
+#cpp-panel .text-button {
+  border-radius: 6px;
+  height: 28px;
+  line-height: 24px;
+  margin-top: 10px;
+  text-align: center;
+  width: 74px;
+}
+
+#cpp-panel .text-button::before,
+#cpp-panel .text-button::after {
+  content: unset;
+}

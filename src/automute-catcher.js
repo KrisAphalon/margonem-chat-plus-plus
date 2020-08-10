@@ -45,7 +45,7 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
 
     if (INTERFACE === 'NI')
     {
-        window.mAlert(alertMsg, [
+        mAlert(alertMsg, [
             {
                 txt: 'Wyślij',
                 callback: function ()
@@ -66,7 +66,7 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
     }
     else
     {
-        window.mAlert(alertMsg,
+        mAlert(alertMsg,
             2, [function ()
             {
                 oldSendMsg(originalMsg)

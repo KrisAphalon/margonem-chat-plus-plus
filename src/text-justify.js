@@ -72,6 +72,11 @@ export function initTextJustify()
             addCustomStyle('justify', css)
             document.getElementById('chattxt').addEventListener('scroll', onChatScroll)
         }
-        addSettingToPanel('justifyChat', 'Justowanie czatu', '', toggleJustify)
+        addSettingToPanel(
+            'justifyChat',
+            'Justowanie czatu',
+            'Inny wygląd rozszerzonego czatu. Znikający scrollbar oraz wyjustowany text.',
+            toggleJustify
+        )
     }
 }

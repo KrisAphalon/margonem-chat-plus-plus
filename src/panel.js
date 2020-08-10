@@ -74,6 +74,15 @@ export function showPanel(e)
             })
         }
         document.body.appendChild(panel)
+        if (INTERFACE === 'NI')
+        {
+            // set tips the NI way
+            $('[tip]', $(panel)).each(function ()
+            {
+                const $this = $(this)
+                $this.tip($this.attr('tip'))
+            })
+        }
     }
 }
 

@@ -384,6 +384,7 @@ function chatSendMsg(msg)
             document.getElementById('inpchat').blur()
         }, 100)
     }
+    if (INTERFACE === 'NI') document.getElementById('inpchat').value = ''
 }
 
 function toggleMultiMsg()

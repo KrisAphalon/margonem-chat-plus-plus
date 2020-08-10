@@ -60,8 +60,6 @@ function toggleJustify()
     }
 
     saveSettings()
-    message('Przełączono tryb wyrównywania wiadomości na: ' +
-        (settings.justifyChat ? 'justowanie' : 'standardowy'))
     return false
 }
 

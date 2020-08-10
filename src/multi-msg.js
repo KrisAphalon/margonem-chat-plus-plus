@@ -391,8 +391,6 @@ function toggleMultiMsg()
 {
     settings.multiMsg = !settings.multiMsg
     saveSettings()
-    message('Przełączono tryb dodawania wiadomości na: ' +
-        (settings.multiMsg ? 'multiMsg' : 'standardowy'))
     return false
 }
 

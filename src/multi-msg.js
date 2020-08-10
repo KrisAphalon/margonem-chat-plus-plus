@@ -2,8 +2,7 @@ import {saveSettings, settings} from './settings'
 import {common, handleNoAnswer} from './main'
 import {addSettingToPanel} from './panel'
 
-const oldSendMsg = INTERFACE === 'NI' ? Engine.chat.sendMessage : window.chatSendMsg
-
+let oldSendMsg
 
 function deconstructSendArrPart(part)
 {
@@ -406,6 +405,7 @@ export function initMultiMsg()
 
     if (INTERFACE === 'NI')
     {
+        oldSendMsg = Engine.chat.sendMessage
         Engine.chat.sendMessage = chatSendMsg.bind(Engine.chat)
 
         document.querySelector('.chat-tpl .send-btn').addEventListener('contextmenu', restoreMsg)
@@ -413,6 +413,7 @@ export function initMultiMsg()
     }
     else
     {
+        oldSendMsg = window.chatSendMsg
         window.chatSendMsg = chatSendMsg
 
         document.getElementById('botloc').addEventListener('contextmenu', restoreMsg)

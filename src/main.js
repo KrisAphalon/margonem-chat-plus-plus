@@ -48,7 +48,32 @@ function start()
     initPanel()
 }
 
-if (document.readyState === 'complete')
-    start()
+if (INTERFACE === 'NI')
+{
+    if (Engine && Engine.allInit)
+    {
+        start()
+    }
+    else
+    {
+        let _
+        Object.defineProperty(Engine, 'allInit', {
+            set(val)
+            {
+                _ = val
+                if (val === true) start()
+            },
+            get()
+            {
+                return _
+            }
+        })
+    }
+}
 else
-    window.addEventListener('load', start)
+{
+    if (document.readyState === 'complete')
+        start()
+    else
+        window.addEventListener('load', start)
+}

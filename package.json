@@ -19,7 +19,7 @@
     "node-sass": "^4.14.1"
   },
   "scripts": {
-    "Build webpack": "npx webpack"
+    "build": "npx webpack"
   },
   "repository": {
     "type": "git",

@@ -59,6 +59,10 @@ export function showPanel(e)
         }
         panel.querySelector('#cpp-panel .close-button').addEventListener('click', deletePanel)
         panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
+        panel.querySelector('.bottom-close').addEventListener('click', function ()
+        {
+            message('Zapisano!')
+        })
 
         for (const settingName in callbacks)
         {

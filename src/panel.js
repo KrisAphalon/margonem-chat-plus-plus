@@ -28,7 +28,6 @@ export function addSettingToPanel(settingName, translation, tip, callback)
 export function showPanel(e)
 {
     e.preventDefault()
-    console.log('???')
     if (!document.getElementById('cpp-panel'))
     {
         const panel = document.createElement('div')
@@ -50,15 +49,16 @@ export function showPanel(e)
     ${settingsElms.join('')}
     </div>
     <div class="bottom-box">
-        <button class="button text-button save-button">Zapisz</button>
-        <button class="button text-button cancel-button">Anuluj</button>
+        <button class="button text-button bottom-close">OK</button>
     </div>
 </div>
 `
-        panel.querySelector('#cpp-panel .close-button').addEventListener('click', function ()
+        const deletePanel = function ()
         {
             document.body.removeChild(panel)
-        })
+        }
+        panel.querySelector('#cpp-panel .close-button').addEventListener('click', deletePanel)
+        panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
 
         for (const settingName in callbacks)
         {

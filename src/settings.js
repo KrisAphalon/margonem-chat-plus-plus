@@ -1,6 +1,7 @@
 export const settings = {
     multiMsg: true,
     justifyChat: false,
+    mergeMessages: true,
     messageTimeout: 2000
 }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Plus Plus
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.0.1
 // @description  Makes game chat 200% better
 // @author       Kris Aphalon
 // @match        http://*.margonem.pl/
@@ -42,7 +42,7 @@
     request.open('GET', 'https://raw.githubusercontent.com/KrisAphalon/margonem-chat-plus-plus/production/version', true)
     request.onload = function ()
     {
-        if (this.status >= 200 && this.status < 400) start(JSON.parse(this.response))
+        if (this.status >= 200 && this.status < 400) start(this.response.toString())
         else console.error('Chat Plus Plus version check returned error: ' + this.status)
     }
     request.onerror = function ()

@@ -406,7 +406,7 @@ export function initMultiMsg()
 
     if (INTERFACE === 'NI')
     {
-        Engine.chat.sendMessage = chatSendMsg
+        Engine.chat.sendMessage = chatSendMsg.bind(Engine.chat)
 
         document.querySelector('.chat-tpl .send-btn').addEventListener('contextmenu', restoreMsg)
         return Engine.chat.sendMessage

@@ -159,7 +159,7 @@ export function initAutomuteCatcher(sendMsg)
     oldSendMsg = sendMsg
     if (INTERFACE === 'NI')
     {
-        window.Engine.chat.sendMessage = checkForMuteWordsThenSend
+        window.Engine.chat.sendMessage = checkForMuteWordsThenSend.bind(Engine.chat)
     }
     else
     {

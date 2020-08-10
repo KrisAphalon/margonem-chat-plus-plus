@@ -405,7 +405,7 @@ export function initMultiMsg()
 
     if (INTERFACE === 'NI')
     {
-        oldSendMsg = Engine.chat.sendMessage
+        oldSendMsg = Engine.chat.sendMessage.bind(Engine.chat)
         Engine.chat.sendMessage = chatSendMsg.bind(Engine.chat)
 
         document.querySelector('.chat-tpl .send-btn').addEventListener('contextmenu', restoreMsg)

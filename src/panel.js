@@ -50,6 +50,7 @@ export function showPanel(e)
     </div>
     <div class="bottom-box">
         <button class="button text-button bottom-close">OK</button>
+        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Donate Me"><span>♥</span></button></a>
     </div>
 </div>
 `

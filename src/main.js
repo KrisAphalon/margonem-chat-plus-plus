@@ -50,6 +50,7 @@ function start()
 
 if (INTERFACE === 'NI')
 {
+    let started = false
     if (Engine && Engine.allInit)
     {
         start()
@@ -61,7 +62,7 @@ if (INTERFACE === 'NI')
             set(val)
             {
                 _ = val
-                if (val === true) start()
+                if (val === true && !started) start()
             },
             get()
             {

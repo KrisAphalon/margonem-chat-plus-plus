@@ -62,7 +62,11 @@ if (INTERFACE === 'NI')
             set(val)
             {
                 _ = val
-                if (val === true && !started) start()
+                if (val === true && !started)
+                {
+                    start()
+                    started = true
+                }
             },
             get()
             {

@@ -50,13 +50,13 @@ function start()
 
 if (INTERFACE === 'NI')
 {
-    let started = false
     if (Engine && Engine.allInit)
     {
         start()
     }
     else
     {
+        let started = false
         let _
         Object.defineProperty(Engine, 'allInit', {
             set(val)

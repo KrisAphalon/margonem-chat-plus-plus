@@ -110,14 +110,8 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
                 let end = copy.indexOf(arr[1]) + arr[1].length
                 end = end < copy.length + 20 ? end + 20 : copy.length - 1
 
-                console.log(copy.indexOf(arr[1]))
-                console.log(arr[1].length)
-                console.log(copy.length)
-                console.log(end)
-
                 const subMsg = copy.substring(start, end)
 
-                console.log(subMsg)
                 if (INTERFACE === 'NI')
                 {
                     document.querySelector('#inpchat').value = '/g ' + subMsg
@@ -133,10 +127,7 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
                 message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
             }
 
-            if (INTERFACE === 'NI')
-            {
-                document.querySelector('#inpchat').value = inpchatVal
-            }
+            document.querySelector('#inpchat').value = inpchatVal
         })
 
         document.body.appendChild(panel)

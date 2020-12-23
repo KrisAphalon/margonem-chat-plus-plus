@@ -2,6 +2,7 @@ import {default as badWords} from '../res/automute/bad-words.json'
 import {default as badWordsWithSpace} from '../res/automute/bad-words-with-space.json'
 import {default as falsePositivesWithPolishLetters} from '../res/automute/false-positives-with-polish-letters.json'
 import {default as falsePositives} from '../res/automute/false-positives.json'
+import {setDraggable} from './dragging'
 
 let oldSendMsg
 
@@ -37,44 +38,117 @@ Jeżeli chcesz wysłać tak czy siak, droga wolna.
 Wiedz jednak, że akurat w tym przypadku nie ma pomyłek.</span>
 `
         : `
-Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
-Poniżej wiadomość, jaką widzi automute:<hr><span style="word-wrap: break-word">
+Twoja wiadomość prawdopodobnie byłaby wyłapana przez automute, ale masz szczęście ;) <br>
+Poniżej wiadomość, jaką widzi automute:<hr><span style="word-wrap: break-word; text-align: left;">
 ${caughtMsg}</span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość przejdzie bez
 gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrzynkę pocztową
 `
 
-    if (INTERFACE === 'NI')
+    let whereToSend = INTERFACE === 'NI' ? `Wysyła podejrzaną część wiadomości na chat grupowy.
+            Jeżeli wiadomość zostanie zagwiazdkowana, to nie należy jej wysyłać.
+            Testuje tylko pierwsze zaczerwienione słowo w wiadomości.`
+        : `Wysyła podejrzaną część wiadomości do samego siebie.
+            Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b> prawdopodobnie nie należy jej wysyłać.
+            Testuje tylko pierwsze zaczerwienione słowo w wiadomości.`
+
+
+    if (!document.getElementById('cpp-automute-panel'))
     {
-        mAlert(alertMsg, [
+        const panel = document.createElement('div')
+        setDraggable(panel)
+        panel.id = 'cpp-automute-panel'
+        panel.className = 'cpp-panel'
+        panel.innerHTML = `
+<div class="header-label-positioner">
+    <div class="header-label">
+        <div class="left-decor"></div>
+        <div class="right-decor"></div>
+        <span class="panel-name">Automute Catcher</span>
+    </div>
+</div>
+<div class="close-decor">
+    <button class="close-button" tip="Zamknij"/>
+</div>
+<div class="background">
+    <div class="top-box">
+    ${alertMsg}
+    </div>
+    <div class="bottom-box">
+        <button class="button text-button bottom-test" tip="${whereToSend}">Przetestuj</button>
+        <button class="button text-button bottom-send">Wyślij</button>
+        <button class="button text-button bottom-close">Nie wysyłaj</button>
+        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
+    </div>
+</div>
+`
+        const deletePanel = function ()
+        {
+            document.body.removeChild(panel)
+            document.getElementById('inpchat').focus()
+        }
+        panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
+        panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
+        panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
+        panel.querySelector('.bottom-send').addEventListener('click', function ()
+        {
+            oldSendMsg(originalMsg)
+        })
+
+        panel.querySelector('.bottom-test').addEventListener('click', function ()
+        {
+            const inpchatVal = document.querySelector('#inpchat').value
+
+            let copy = originalMsg
+            if (copy[0] === '@')
+                copy = copy.slice(copy.indexOf(' '))
+
+            const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
+            if (arr && arr[1])
             {
-                txt: 'Wyślij',
-                callback: function ()
+                let start = copy.indexOf(arr[1])
+                start = start > 20 ? start - 20 : 0
+                let end = copy.indexOf(arr[1]) + arr[1].length
+                end = end < copy.length + 20 ? end + 20 : copy.length - 1
+
+                console.log(copy.indexOf(arr[1]))
+                console.log(arr[1].length)
+                console.log(copy.length)
+                console.log(end)
+
+                const subMsg = copy.substring(start, end)
+
+                console.log(subMsg)
+                if (INTERFACE === 'NI')
                 {
-                    oldSendMsg(originalMsg)
-                    return true
+                    document.querySelector('#inpchat').value = '/g ' + subMsg
+                    oldSendMsg()
                 }
-            },
-            {
-                txt: 'Nie wysyłaj',
-                callback: function ()
+                else
                 {
-                    document.getElementById('inpchat').focus()
-                    return true
+                    oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
                 }
             }
-        ])
-    }
-    else
-    {
-        mAlert(alertMsg,
-            2, [function ()
+            else
             {
-                oldSendMsg(originalMsg)
-            }, function ()
+                message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
+            }
+
+            if (INTERFACE === 'NI')
             {
-                document.getElementById('inpchat').focus()
-                return false
-            }])
+                document.querySelector('#inpchat').value = inpchatVal
+            }
+        })
+
+        document.body.appendChild(panel)
+        if (INTERFACE === 'NI')
+        {
+            // set tips the NI way
+            $('[tip]', $(panel)).each(function ()
+            {
+                const $this = $(this)
+                $this.tip($this.attr('tip'))
+            })
+        }
     }
 }
 

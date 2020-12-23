@@ -147,7 +147,7 @@
 
 
 /* Panel */
-#cpp-panel {
+.cpp-panel {
   animation: fade 0.5s;
   border-image: url(http://cronus.margonem.com/img/gui/tmp/window-frame.png) 32 20 repeat;
   border-style: solid;
@@ -165,13 +165,13 @@
   z-index: 499;
 }
 
-#cpp-panel > .background {
+.cpp-panel > .background {
   background-color: #f1deaa;
   background-image: url(http://cronus.margonem.com/img/gui/content-redleather.jpg);
 }
 
 /* Panel - nav */
-#cpp-panel > .header-label-positioner {
+.cpp-panel > .header-label-positioner {
   left: 10px;
   pointer-events: none;
   position: absolute;
@@ -180,7 +180,7 @@
   top: -35px;
 }
 
-#cpp-panel .header-label {
+.cpp-panel .header-label {
   background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi-naglowek.png);
   display: inline-block;
   height: 28px;
@@ -188,8 +188,8 @@
   position: relative;
 }
 
-#cpp-panel .header-label > .right-decor,
-#cpp-panel .header-label > .left-decor {
+.cpp-panel .header-label > .right-decor,
+.cpp-panel .header-label > .left-decor {
   background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi.png) -38px -2px;
   height: 28px;
   left: -52px;
@@ -198,23 +198,23 @@
   width: 52px;
 }
 
-#cpp-panel .header-label > .right-decor {
+.cpp-panel .header-label > .right-decor {
   background-position: -91px -2px;
   left: auto;
   right: -52px;
 }
 
-#cpp-panel .header-label > span {
+.cpp-panel .header-label > span {
   color: #f5f5dc;
   line-height: 28px;
   text-align: center;
 }
 
-#cpp-panel .panel-name {
+.cpp-panel .panel-name {
   transition: width 0.35s ease-in-out;
 }
 
-#cpp-panel > .close-decor {
+.cpp-panel > .close-decor {
   background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -380px -55px;
   height: 52px;
   pointer-events: none;
@@ -224,7 +224,7 @@
   width: 51px;
 }
 
-#cpp-panel .close-button {
+.cpp-panel .close-button {
   background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -263px -79px;
   border: 0;
   @if $INTERFACE == 'NI' {
@@ -241,11 +241,11 @@
   width: 22px;
 }
 
-#cpp-panel .close-button:hover {
+.cpp-panel .close-button:hover {
   background-position: -286px -79px;
 }
 
-#cpp-panel .settings-box {
+.cpp-panel .settings-box {
   height: 75px;
   display: grid;
   grid-template-columns: 50% auto;
@@ -255,7 +255,7 @@
   padding-top: 10px;
 }
 
-#cpp-panel .setting-label {
+.cpp-panel .setting-label {
   cursor: unset;
   height: 24px;
   position: relative;
@@ -263,7 +263,7 @@
   user-select: none;
 }
 
-#cpp-panel .setting-label-text {
+.cpp-panel .setting-label-text {
   @if $INTERFACE == 'NI' {
     cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
@@ -274,11 +274,11 @@
   position: relative;
 }
 
-#cpp-panel .setting-checkbox {
+.cpp-panel .setting-checkbox {
   display: none;
 }
 
-#cpp-panel .checkbox-outline {
+.cpp-panel .checkbox-outline {
   border: 2px solid #6e644b;
   border-radius: 2px;
   box-sizing: border-box;
@@ -327,37 +327,37 @@
   width: 6px;
 }
 
-#cpp-panel .setting-checkbox:checked + .checkbox-outline {
+.cpp-panel .setting-checkbox:checked + .checkbox-outline {
   background-color: #6e644b;
 }
 
-#cpp-panel .setting-checkbox:checked + .checkbox-outline .checkmark {
+.cpp-panel .setting-checkbox:checked + .checkbox-outline .checkmark {
   display: inline-block;
 }
 
-#cpp-panel .save-button {
+.cpp-panel .save-button {
   margin-right: 30px;
 }
 
-#cpp-panel .cancel-button {
+.cpp-panel .cancel-button {
   margin-left: 30px;
 }
 
-#cpp-panel .cancel-button:not(:hover) {
+.cpp-panel .cancel-button:not(:hover) {
   background-image: linear-gradient(to top, #310b0b, #831f1f);
 }
 
-#cpp-panel .cancel-button:not(:hover)::before {
+.cpp-panel .cancel-button:not(:hover)::before {
   box-shadow: inset 0 0 1px 1px #da6161a6;
 }
 
 
-#cpp-panel .hidden {
+.cpp-panel .hidden {
   display: none;
 }
 
 
-//#cpp-panel .button-group {
+//.cpp-panel .button-group {
 //  border: 1px solid #d8c28d;
 //  box-sizing: border-box;
 //  display: flex;
@@ -370,7 +370,7 @@
 //}
 
 
-#cpp-panel .button {
+.cpp-panel .button {
   background-image: linear-gradient(to top, #12210d, #396b29);
   border: 1px solid #0c0d0d;
   border-radius: 4px;
@@ -389,15 +389,15 @@
   width: 42px;
 }
 
-#cpp-panel.button.blue {
+.cpp-panel.button.blue {
   background-image: linear-gradient(to top, #081522, #1d4873);
 }
 
-#cpp-panel .button.blue:not(:hover)::before {
+.cpp-panel .button.blue:not(:hover)::before {
   box-shadow: inset 0 0 1px 1px #5594d4a6;
 }
 
-#cpp-panel .button:before {
+.cpp-panel .button:before {
   backface-visibility: hidden;
   border-radius: 4px;
   bottom: 3px;
@@ -410,7 +410,7 @@
   transform: translateZ(0);
 }
 
-#cpp-panel .button:after {
+.cpp-panel .button:after {
   border-radius: 3px;
   bottom: 0;
   box-shadow: 0 1px 0 1px #0c0d0d;
@@ -421,36 +421,43 @@
   top: 0;
 }
 
-#cpp-panel .button:hover:before {
+.cpp-panel .button:hover:before {
   box-shadow: inset 0 0 1px 1px #909090a6;
 }
 
-#cpp-panel .button:hover {
+.cpp-panel .button:hover {
   background-image: linear-gradient(to top, #101010, #434343);
 }
 
-#cpp-panel .bottom-box {
+.cpp-panel .bottom-box {
   display: flex;
   height: 50px;
   justify-content: center;
 }
 
-#cpp-panel .text-button {
+#cpp-automute-panel .bottom-box {
+  justify-content: space-evenly;
+}
+#cpp-automute-panel .text-button {
+  justify-content: space-evenly;
+}
+
+.cpp-panel .text-button {
   border-radius: 6px;
   height: 28px;
   line-height: 24px;
   margin-top: 10px;
   text-align: center;
-  width: 74px;
+  width: 90px;
 }
 
-#cpp-panel .text-button::before,
-#cpp-panel .text-button::after {
+.cpp-panel .text-button::before,
+.cpp-panel .text-button::after {
   content: unset;
 }
 
 /* Donation */
-#cpp-panel .donate-button {
+.cpp-panel .donate-button {
   background-image: linear-gradient(to top, #58310b, #daa520);
   bottom: 6px;
   box-shadow: inset 0 0 1px 1px #cecece, inset 0 0 0 3px #0c0d0d;
@@ -463,16 +470,16 @@
   color: black;
 }
 
-#cpp-panel .donate-button span {
+.cpp-panel .donate-button span {
   top: -2px;
   position: relative;
 }
 
-#cpp-panel .donate-button:hover {
+.cpp-panel .donate-button:hover {
   color: pink;
 }
 
-#cpp-panel .donate-button::before {
+.cpp-panel .donate-button::before {
   content: '';
   position: absolute;
   left: 3px;
@@ -483,4 +490,20 @@
   border-radius: 4px;
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+#cpp-test-button {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 77px;
+}
+
+#cpp-automute-panel .top-box {
+  text-align: center;
+}
+
+#cpp-automute-panel .donate-button {
+  right: 0;
+  bottom: 3px;
 }

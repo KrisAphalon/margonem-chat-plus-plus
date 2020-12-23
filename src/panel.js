@@ -33,6 +33,7 @@ export function showPanel(e)
         const panel = document.createElement('div')
         setDraggable(panel)
         panel.id = 'cpp-panel'
+        panel.className = 'cpp-panel'
         panel.innerHTML = `
 <div class="header-label-positioner">
     <div class="header-label">
@@ -50,7 +51,7 @@ export function showPanel(e)
     </div>
     <div class="bottom-box">
         <button class="button text-button bottom-close">OK</button>
-        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Donate Me"><span>♥</span></button></a>
+        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
     </div>
 </div>
 `

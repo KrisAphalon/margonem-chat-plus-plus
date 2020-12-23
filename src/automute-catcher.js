@@ -128,6 +128,10 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
             }
 
             document.querySelector('#inpchat').value = inpchatVal
+            setTimeout(function ()
+            {
+                document.querySelector('#inpchat').value = inpchatVal
+            }, 501) // workaround for deleting msg on SI
         })
 
         document.body.appendChild(panel)

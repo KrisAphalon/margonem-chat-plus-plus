@@ -48,7 +48,9 @@ jobs:
       - name: Get previous name and title
         run: |
           RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
+          hub release show "${GITHUB_REF#*/*/}" -f %t
           RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
+          hub release show "${GITHUB_REF#*/*/}" -f %b
         env:
           GITHUB_USER: <ORG>
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

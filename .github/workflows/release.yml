@@ -47,11 +47,7 @@ jobs:
 
       - name: Get previous name and title
         run: |
-          hub release show "2.1.6" -f %t
-          hub release show "${GITHUB_REF#*/*/}" -f %t
-
-          RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
-          RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
+          hub release show ${GITHUB_REF#*/*/} -f %t
       
       - name: Change tag
         run: |

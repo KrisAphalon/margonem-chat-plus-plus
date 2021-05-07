@@ -45,10 +45,12 @@ jobs:
         run: |
           git commit -m "Release: ${GITHUB_REF#*/*/}" | echo
 
+      - name: Sync releases data
+        run: |
+          hub sync
+
       - name: Get previous name and title
         run: |
-          echo "${GITHUB_REF#*/*/}"
-          
           RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
           RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
       

@@ -45,19 +45,11 @@ jobs:
         run: |
           git commit -m "Release: ${GITHUB_REF#*/*/}" | echo
 
-      - name: Get previous name and title
-        run: |
-          RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
-          hub release show "${GITHUB_REF#*/*/}" -f %t
-          RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
-          hub release show "${GITHUB_REF#*/*/}" -f %b
-        env:
-          GITHUB_USER: <ORG>
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      
       - name: Change tag
         run: |
+          RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
+          RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
+          
           git tag -d ${GITHUB_REF#*/*/}
           git tag -f -a "${GITHUB_REF#*/*/}" -m "$RELEASE_TITLE\n$RELEASE_DESC"
           git push --set-upstream origin :${GITHUB_REF#*/*/}

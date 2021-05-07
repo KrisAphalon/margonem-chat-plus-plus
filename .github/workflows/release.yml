@@ -48,7 +48,7 @@ jobs:
       - name: Change tag
         run: |
           RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
-          RELEASE_DESCRIPTION=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
+          RELEASE_DESC=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
           
           git tag -d ${GITHUB_REF#*/*/}
           git tag -f -a "${GITHUB_REF#*/*/}" -m "$RELEASE_TITLE" -m "$RELEASE_DESC"

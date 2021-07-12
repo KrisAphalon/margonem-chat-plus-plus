@@ -11,9 +11,8 @@ export function loadSettings()
     if (rawData)
     {
         const data = JSON.parse(rawData)
-        for (const prop in data)
-            if (Object.prototype.hasOwnProperty.call(data, prop))
-                settings[prop] = data[prop]
+        for (const prop of Object.keys(data))
+            settings[prop] = data[prop]
     }
     localStorage.setItem('chatPlusPlus', JSON.stringify(settings))
 }

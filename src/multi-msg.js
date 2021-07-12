@@ -198,6 +198,94 @@ function calculateAddOnStart(msg)
     return addOnStart
 }
 
+function divideMessageToParts(msg, addOnStart, maxLen)
+{
+    let last_slice = 0
+    let current = 0
+    let last_space = 0
+    let last_dot = 0
+
+    //these two are needed to properly calculate char count when slicing message
+    let chars_from_last_space = 0
+    let chars_from_last_dot = 0
+
+    for (let i = 0; i < msg.length; i++)
+    {
+        if (msg[i].match(polishLetters))
+        {
+            chars_from_last_dot += 2
+            chars_from_last_space += 2
+            current += 2
+        }
+        else
+        {
+            chars_from_last_dot++
+            chars_from_last_space++
+            current++
+        }
+
+        if (msg[i] === ' ')
+        {
+            last_space = i
+            chars_from_last_space = 0
+        }
+        else if (msg[i] === '.')
+        {
+            last_dot = i
+            chars_from_last_dot = 0
+        }
+
+        //hard break any word that has more than 30 letters in it
+        if (last_space + 30 < i)
+        {
+            last_space = i
+            chars_from_last_space = 0
+        }
+        if (current >= maxLen)
+        {
+            if (last_dot + 100 < i) // || msg[last_dot + 1] === undefined
+            {
+                if (last_slice === 0)
+                    common.sendArr.push(msg.slice(0, last_space))
+                else
+                    common.sendArr.push(addOnStart + msg.slice(last_slice, last_space).trim())
+                last_slice = last_space
+                current = chars_from_last_space
+            }
+            else
+            {
+                let additional_shift = 0
+                for (let j = 0; j < 5; j++)
+                    if (msg[last_dot + j] === '.' || msg[last_dot + j] === ' ')
+                        additional_shift++
+                    else
+                        break
+                if (last_slice === 0)
+                    common.sendArr.push(msg.slice(0, last_dot + additional_shift))
+                else
+                    common.sendArr.push(addOnStart + msg.slice(last_slice, last_dot + additional_shift).trim())
+                last_slice = last_dot + additional_shift
+                current = chars_from_last_dot
+            }
+            console.log(common.sendArr)
+        }
+    }
+    if (msg !== '')
+        if (last_slice === 0)
+            common.sendArr.push(msg)
+        else if (msg.slice(last_slice) !== '')
+            common.sendArr.push(addOnStart + msg.slice(last_slice).trim())
+}
+
+function fixTextareaFolding()
+{
+    setTimeout(function ()
+    {
+        document.getElementById('inpchat').focus()
+        document.getElementById('inpchat').blur()
+    }, 100)
+}
+
 function chatSendMsg(msg)
 {
     if (INTERFACE === 'NI') msg = document.getElementById('inpchat').value
@@ -210,96 +298,15 @@ function chatSendMsg(msg)
     if (settings.multiMsg && msg !== '')
     {
         msg = msg.trim()
-
         const addOnStart = calculateAddOnStart(msg)
 
         //delete old sendArr if there was some problem (e.g. lost group chat)
         common.sendArr.splice(0)
-        const len = msg.length
-        let last_slice = 0
-        let current = 0
-        let last_space = 0
-        let last_dot = 0
-
-        //these two are needed to properly calculate char count when slicing message
-        let chars_from_last_space = 0
-        let chars_from_last_dot = 0
 
         const maxLen = 195 - calcMargoLength(addOnStart)
-        console.log({
-            maxLen,
-            msg,
-            len
-        })
         if (calcMargoLength(msg) > maxLen)
         {
-            for (let i = 0; i < len; i++)
-            {
-                if (msg[i].match(polishLetters))
-                {
-                    chars_from_last_dot += 2
-                    chars_from_last_space += 2
-                    current += 2
-                }
-                else
-                {
-                    chars_from_last_dot++
-                    chars_from_last_space++
-                    current++
-                }
-
-                if (msg[i] === ' ')
-                {
-                    last_space = i
-                    chars_from_last_space = 0
-                }
-                else if (msg[i] === '.')
-                {
-                    last_dot = i
-                    chars_from_last_dot = 0
-                }
-
-                //hard break any word that has more than 30 letters in it
-                if (last_space + 30 < i)
-                {
-                    last_space = i
-                    chars_from_last_space = 0
-                }
-                if (current >= maxLen)
-                {
-                    if (last_dot + 100 < i) // || msg[last_dot + 1] === undefined
-                    {
-                        if (last_slice === 0)
-                            common.sendArr.push(msg.slice(0, last_space))
-                        else
-                            common.sendArr.push(addOnStart + msg.slice(last_slice, last_space).trim())
-                        last_slice = last_space
-                        current = chars_from_last_space
-                    }
-                    else
-                    {
-                        let additional_shift = 0
-                        for (let j = 0; j < 5; j++)
-                            if (msg[last_dot + j] === '.' || msg[last_dot + j] === ' ')
-                                additional_shift++
-                            else
-                                break
-                        if (last_slice === 0)
-                            common.sendArr.push(msg.slice(0, last_dot + additional_shift))
-                        else
-                            common.sendArr.push(addOnStart + msg.slice(last_slice, last_dot + additional_shift).trim())
-                        last_slice = last_dot + additional_shift
-                        current = chars_from_last_dot
-                    }
-                    console.log(common.sendArr)
-                }
-            }
-            if (msg !== '')
-                if (last_slice === 0)
-                    common.sendArr.push(msg)
-                else if (msg.slice(last_slice) !== '')
-                    common.sendArr.push(addOnStart + msg.slice(last_slice).trim())
-
+            divideMessageToParts(msg, addOnStart, maxLen)
 
             const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
             let chattxt
@@ -357,32 +364,20 @@ function chatSendMsg(msg)
             document.getElementById('inpchat').blur()
 
             //fix to not folding textarea
-            setTimeout(function ()
-            {
-                document.getElementById('inpchat').focus()
-                document.getElementById('inpchat').blur()
-            }, 100)
+            fixTextareaFolding()
         }
         else
         {
             oldSendMsg(msg)
             //fix to not folding textarea
-            setTimeout(function ()
-            {
-                document.getElementById('inpchat').focus()
-                document.getElementById('inpchat').blur()
-            }, 100)
+            fixTextareaFolding()
         }
     }
     else
     {
         oldSendMsg(msg)
         //fix to not folding textarea
-        setTimeout(function ()
-        {
-            document.getElementById('inpchat').focus()
-            document.getElementById('inpchat').blur()
-        }, 100)
+        fixTextareaFolding()
     }
     if (INTERFACE === 'NI') document.getElementById('inpchat').value = ''
 }

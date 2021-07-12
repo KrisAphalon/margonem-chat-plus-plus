@@ -2,79 +2,102 @@ import {addCustomStyle} from './css-manager'
 
 let textHide = false
 
+const classes = {
+    toHide: [],
+    toHide2: [],
+    toNotHide: []
+}
+
+/**
+ * Checks whether element shouldn't be considered when checking elements for being hidable
+ * @param element
+ * @returns {boolean}
+ */
+function elementIsNeverHidable(element)
+{
+    return classes.toNotHide.indexOf(element.classList[1]) < 0
+        && classes.toNotHide.indexOf(element.classList[2]) < 0
+        && classes.toNotHide.indexOf(element.classList[3]) < 0
+}
+
+/**
+ * Checks whether element should be hidden (or revealed)
+ * @param element
+ * @returns {boolean}
+ */
+function elementIsHidable(element)
+{
+    if (INTERFACE === 'NI')
+    {
+        if (classes.toHide.indexOf(element.classList[1]) >= 0) return true
+
+        for (let j = 0; j < element.children.length; j++)
+        {
+            for (let k = 0; k < classes.toHide2.length; k++)
+            {
+                if (element.children[j].classList.contains(classes.toHide2[k]))
+                {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    else
+    {
+        return classes.toHide.includes(element.className)
+    }
+}
+
 function toggleHide()
 {
     if (INTERFACE === 'NI')
     {
+        const display = textHide ? '' : 'none'
+
         const chat = document.getElementsByClassName('section chat-tpl')[0]
         const scroll_pane = chat.children[4].children[1]
-        const classesToHide = ['sys_info']
-        const classesToHide2 = ['priv-in-general', 'group-in-general', 'clan-in-general', 'system-in-general']
-        const classes2Length = classesToHide2.length
-        const classesToNotHide = ['me', 'nar', 'nar2', 'nar3', 'dial1', 'dial2', 'dial3', 'dial666']
-
         const allchat_button = document.getElementsByClassName('tabs-wrapper connectedSortable ui-sortable')[0].children[0]
-        if (allchat_button.classList.contains('active'))
+        if (!allchat_button.classList.contains('active')) return
+
+        for (let i = 0; i < scroll_pane.children.length; i++)
         {
-            const display = textHide ? '' : 'none'
-
-            const len = scroll_pane.children.length
-            for (let i = 0; i < len; i++)
-            {
-                if (classesToNotHide.indexOf(scroll_pane.children[i].classList[1]) < 0
-                    && classesToNotHide.indexOf(scroll_pane.children[i].classList[2]) < 0
-                    && classesToNotHide.indexOf(scroll_pane.children[i].classList[3]) < 0
-                )
-                {
-                    if (classesToHide.indexOf(scroll_pane.children[i].classList[1]) >= 0)
-                        scroll_pane.children[i].style.display = display
-                    else
-                    {
-                        const len2 = scroll_pane.children[i].children.length
-                        for (let j = 0; j < len2; j++)
-                        {
-                            for (let k = 0; k < classes2Length; k++)
-                            {
-                                if (scroll_pane.children[i].children[j].classList.contains(classesToHide2[k]))
-                                {
-                                    scroll_pane.children[i].style.display = display
-                                    break
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-            textHide = !textHide
+            const element = scroll_pane.children[i]
+            if (elementIsNeverHidable(element)) continue
+            if (elementIsHidable(element)) element.style.display = display
         }
     }
     else
     {
-        const chattxt = document.getElementById('chattxt')
-        const classesToHide = ['clant', 'syst', 'priv', 'priv2', 'sys_info', 'team']
-
         const display = textHide ? 'block' : 'none'
 
-        const len = chattxt.children.length
-        for (let i = 0; i < len; i++)
-            if (classesToHide.indexOf(chattxt.children[i].className) >= 0)
-                chattxt.children[i].style.display = display
+        const chattxt = document.getElementById('chattxt')
 
-        textHide = !textHide
+        for (let i = 0; i < chattxt.children.length; i++)
+        {
+            const element = chattxt.children[i]
+            if (elementIsHidable(element)) element.style.display = display
+        }
     }
+    textHide = !textHide
 }
 
 export function initChatCleaner()
 {
     if (INTERFACE === 'NI')
     {
+        classes.toHide = ['sys_info']
+        classes.toHide2 = ['priv-in-general', 'group-in-general', 'clan-in-general', 'system-in-general']
+        classes.toNotHide = ['me', 'nar', 'nar2', 'nar3', 'dial1', 'dial2', 'dial3', 'dial666']
+
         const lagmeter = document.getElementsByClassName('lagmeter')[0]
         lagmeter.addEventListener('click', toggleHide)
         lagmeter.style.cursor = 'cell'
     }
     else
     {
+        classes.toHide = ['clant', 'syst', 'priv', 'priv2', 'sys_info', 'team']
+
         addCustomStyle('chatCleaner', '#msghider-button{position:\'absolute\';width:17px;height:21px;textAlign:center;cursor:cell}')
 
         const hideButton = document.createElement('div')

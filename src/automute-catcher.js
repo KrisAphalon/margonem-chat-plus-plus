@@ -27,8 +27,85 @@ function removeDuplicates(msg)
     return ''
 }
 
+function testMessage(originalMsg, caughtMsg)
+{
+    const inpchatVal = document.querySelector('#inpchat').value
+
+    let copy = originalMsg
+    if (copy[0] === '@')
+        copy = copy.slice(copy.indexOf(' '))
+
+    const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
+    if (arr && arr[1])
+    {
+        let start = copy.indexOf(arr[1])
+        start = start > 20 ? start - 20 : 0
+        let end = copy.indexOf(arr[1]) + arr[1].length
+        end = end < copy.length + 20 ? end + 20 : copy.length - 1
+
+        const subMsg = copy.substring(start, end)
+
+        if (INTERFACE === 'NI')
+        {
+            document.querySelector('#inpchat').value = '/g ' + subMsg
+            oldSendMsg()
+        }
+        else
+        {
+            oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
+        }
+    }
+    else
+    {
+        message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
+    }
+
+    document.querySelector('#inpchat').value = inpchatVal
+    setTimeout(function ()
+    {
+        document.querySelector('#inpchat').value = inpchatVal
+    }, 501) // workaround for deleting msg on SI
+}
+
+const TIP_SEND_NI = `
+Wysyła podejrzaną część wiadomości na chat grupowy.
+Jeżeli wiadomość zostanie zagwiazdkowana, to nie należy jej wysyłać.
+Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
+`.trim()
+
+const TIP_SEND_SI = `
+Wysyła podejrzaną część wiadomości do samego siebie.
+Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b> prawdopodobnie nie należy jej wysyłać.
+Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
+`.trim()
+
+const PANEL_HTML = `
+<div class="header-label-positioner">
+    <div class="header-label">
+        <div class="left-decor"></div>
+        <div class="right-decor"></div>
+        <span class="panel-name">Automute Catcher</span>
+    </div>
+</div>
+<div class="close-decor">
+    <button class="close-button" tip="Zamknij"/>
+</div>
+<div class="background">
+    <div class="top-box">
+    </div>
+    <div class="bottom-box">
+        <button class="button text-button bottom-test">Przetestuj</button>
+        <button class="button text-button bottom-send">Wyślij</button>
+        <button class="button text-button bottom-close">Nie wysyłaj</button>
+        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
+    </div>
+</div>
+`.trim()
+
 function alertUser(originalMsg, caughtMsg, ahoj)
 {
+    if (document.getElementById('cpp-automute-panel')) return
+
     const alertMsg = ahoj
         ? `
 Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
@@ -44,107 +121,63 @@ ${caughtMsg}</span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość pr
 gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrzynkę pocztową
 `
 
-    let whereToSend = INTERFACE === 'NI' ? `Wysyła podejrzaną część wiadomości na chat grupowy.
-            Jeżeli wiadomość zostanie zagwiazdkowana, to nie należy jej wysyłać.
-            Testuje tylko pierwsze zaczerwienione słowo w wiadomości.`
-        : `Wysyła podejrzaną część wiadomości do samego siebie.
-            Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b> prawdopodobnie nie należy jej wysyłać.
-            Testuje tylko pierwsze zaczerwienione słowo w wiadomości.`
+    const panel = document.createElement('div')
+    setDraggable(panel)
+    panel.id = 'cpp-automute-panel'
+    panel.className = 'cpp-panel'
+    panel.innerHTML = PANEL_HTML
 
-
-    if (!document.getElementById('cpp-automute-panel'))
+    const whereToSend = INTERFACE === 'NI' ? TIP_SEND_NI : TIP_SEND_SI
+    panel.querySelector('.bottom-test').setAttribute('tip', whereToSend)
+    panel.querySelector('.top-box').innerHTML = alertMsg
+    const deletePanel = function ()
     {
-        const panel = document.createElement('div')
-        setDraggable(panel)
-        panel.id = 'cpp-automute-panel'
-        panel.className = 'cpp-panel'
-        panel.innerHTML = `
-<div class="header-label-positioner">
-    <div class="header-label">
-        <div class="left-decor"></div>
-        <div class="right-decor"></div>
-        <span class="panel-name">Automute Catcher</span>
-    </div>
-</div>
-<div class="close-decor">
-    <button class="close-button" tip="Zamknij"/>
-</div>
-<div class="background">
-    <div class="top-box">
-    ${alertMsg}
-    </div>
-    <div class="bottom-box">
-        <button class="button text-button bottom-test" tip="${whereToSend}">Przetestuj</button>
-        <button class="button text-button bottom-send">Wyślij</button>
-        <button class="button text-button bottom-close">Nie wysyłaj</button>
-        <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
-    </div>
-</div>
-`
-        const deletePanel = function ()
-        {
-            document.body.removeChild(panel)
-            document.getElementById('inpchat').focus()
-        }
-        panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
-        panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
-        panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
-        panel.querySelector('.bottom-send').addEventListener('click', function ()
-        {
-            oldSendMsg(originalMsg)
-        })
-
-        panel.querySelector('.bottom-test').addEventListener('click', function ()
-        {
-            const inpchatVal = document.querySelector('#inpchat').value
-
-            let copy = originalMsg
-            if (copy[0] === '@')
-                copy = copy.slice(copy.indexOf(' '))
-
-            const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
-            if (arr && arr[1])
-            {
-                let start = copy.indexOf(arr[1])
-                start = start > 20 ? start - 20 : 0
-                let end = copy.indexOf(arr[1]) + arr[1].length
-                end = end < copy.length + 20 ? end + 20 : copy.length - 1
-
-                const subMsg = copy.substring(start, end)
-
-                if (INTERFACE === 'NI')
-                {
-                    document.querySelector('#inpchat').value = '/g ' + subMsg
-                    oldSendMsg()
-                }
-                else
-                {
-                    oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
-                }
-            }
-            else
-            {
-                message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
-            }
-
-            document.querySelector('#inpchat').value = inpchatVal
-            setTimeout(function ()
-            {
-                document.querySelector('#inpchat').value = inpchatVal
-            }, 501) // workaround for deleting msg on SI
-        })
-
-        document.body.appendChild(panel)
-        if (INTERFACE === 'NI')
-        {
-            // set tips the NI way
-            $('[tip]', $(panel)).each(function ()
-            {
-                const $this = $(this)
-                $this.tip($this.attr('tip'))
-            })
-        }
+        document.body.removeChild(panel)
+        document.getElementById('inpchat').focus()
     }
+    panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
+    panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
+    panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
+    panel.querySelector('.bottom-send').addEventListener('click', function ()
+    {
+        oldSendMsg(originalMsg)
+    })
+
+    panel.querySelector('.bottom-test').addEventListener('click', function ()
+    {
+        testMessage(originalMsg, caughtMsg)
+    })
+
+    document.body.appendChild(panel)
+    if (INTERFACE === 'NI')
+    {
+        // set tips the NI way
+        $('[tip]', $(panel)).each(function ()
+        {
+            const $this = $(this)
+            $this.tip($this.attr('tip'))
+        })
+    }
+}
+
+/**
+ * @param {string} msg
+ * @param {array} badWords
+ * @returns {boolean|string} false or prepared HTML text with red matches
+ */
+function checkMessageForBadWords(msg, badWords)
+{
+    let innocent = true
+    for (const e of badWords)
+    {
+        if (!msg.includes(e)) continue
+
+        console.log('Wykryto zwrot który jest niemiły: ' + e)
+        msg = msg.split(e).join('<span style=\'color: red; font-weight: bold\'>' + e + '</span>')
+        innocent = false
+    }
+    if (innocent) return false
+    return msg
 }
 
 function checkForMuteWordsThenSend(msg)
@@ -157,8 +190,6 @@ function checkForMuteWordsThenSend(msg)
 
     copy = copy.toLowerCase()
 
-
-    let innocent = true
     //delete innocent phrases
     for (const e of falsePositivesWithPolishLetters)
         copy = copy.split(e).join('X')
@@ -180,46 +211,24 @@ function checkForMuteWordsThenSend(msg)
     if (ahojRegex.test(copy))
     {
         alertUser(msg, '', true)
+        return
     }
-    else
-    {
-        //check for known phrases that get flagged as swear words
-        for (const e of badWordsWithSpace)
-        {
-            if (copy.includes(e))
-            {
-                console.log('Wykryto zwrot który jest niemiły: ' + e)
-                copy = copy.split(e).join('<span style=\'color: red; font-weight: bold\'>' + e + '</span>')
-                innocent = false
-                break
-            }
-        }
-        if (innocent)
-        {
-            //delete innocent phrases
-            for (const e of falsePositives)
-                copy = copy.split(e).join('X')
 
+    //check for known phrases that get flagged as swear words
+    let alertMsg = checkMessageForBadWords(msg, badWordsWithSpace)
+    if (alertMsg) return alertUser(msg, alertMsg)
 
-            copy = copy.replace(/ /g, '')
-            copy = removeDuplicates(copy)
+    //delete innocent phrases
+    for (const e of falsePositives)
+        copy = copy.split(e).join('X')
 
-            for (const e of badWords)
-                if (copy.includes(e))
-                {
-                    console.log('Wykryto zwrot który jest niemiły: ' + e)
-                    copy = copy.split(e).join('<span style=\'color: red; font-weight: bold\'>' + e + '</span>')
-                    innocent = false
-                    break
-                }
-            if (innocent)
-                oldSendMsg(msg)
-            else
-                alertUser(msg, copy)
-        }
-        else
-            alertUser(msg, copy)
-    }
+    copy = copy.replace(/ /g, '')
+    copy = removeDuplicates(copy)
+
+    alertMsg = checkMessageForBadWords(msg, badWords)
+    if (alertMsg) return alertUser(msg, alertMsg)
+
+    oldSendMsg(msg)
 }
 
 

@@ -190,19 +190,22 @@ function normalizeString(str)
         .replace(/ś/g, 's')
 }
 
+function removePhrases(str, phrasesToRemove)
+{
+    for (const e of phrasesToRemove)
+        str = str.split(e).join('X')
+    return str
+}
+
 function checkForMuteWordsThenSend(msg)
 {
-    let copy = msg
+    let copy = msg.toLowerCase()
 
     //don't parse nick
     if (copy[0] === '@')
         copy = copy.slice(copy.indexOf(' '))
 
-    copy = copy.toLowerCase()
-
-    //delete innocent phrases
-    for (const e of falsePositivesWithPolishLetters)
-        copy = copy.split(e).join('X')
+    removePhrases(copy, falsePositivesWithPolishLetters)
 
     //delete characters that aren't used to create words
     copy = normalizeString(copy)
@@ -215,9 +218,7 @@ function checkForMuteWordsThenSend(msg)
     let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)
     if (alertMsg) return alertUser(msg, alertMsg)
 
-    //delete innocent phrases
-    for (const e of falsePositives)
-        copy = copy.split(e).join('X')
+    removePhrases(copy, falsePositives)
 
     copy = copy.replace(/ /g, '')
     copy = removeDuplicates(copy)

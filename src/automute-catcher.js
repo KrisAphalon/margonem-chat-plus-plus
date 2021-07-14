@@ -215,7 +215,7 @@ function checkForMuteWordsThenSend(msg)
     }
 
     //check for known phrases that get flagged as swear words
-    let alertMsg = checkMessageForBadWords(msg, badWordsWithSpace)
+    let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)
     if (alertMsg) return alertUser(msg, alertMsg)
 
     //delete innocent phrases
@@ -225,7 +225,7 @@ function checkForMuteWordsThenSend(msg)
     copy = copy.replace(/ /g, '')
     copy = removeDuplicates(copy)
 
-    alertMsg = checkMessageForBadWords(msg, badWords)
+    alertMsg = checkMessageForBadWords(copy, badWords)
     if (alertMsg) return alertUser(msg, alertMsg)
 
     oldSendMsg(msg)

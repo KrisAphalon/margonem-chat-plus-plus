@@ -177,6 +177,19 @@ function checkMessageForBadWords(msg, badWords)
     return msg
 }
 
+function normalizeString(str)
+{
+    return str.replace(/[^a-zńąćśźżóęł ]/g, '')
+        .replace(/ą/g, 'a')
+        .replace(/ę/g, 'e')
+        .replace(/ł/g, 'l')
+        .replace(/[żź]/g, 'z')
+        .replace(/ó/g, 'o')
+        .replace(/ń/g, 'n')
+        .replace(/ć/g, 'c')
+        .replace(/ś/g, 's')
+}
+
 function checkForMuteWordsThenSend(msg)
 {
     let copy = msg
@@ -192,24 +205,11 @@ function checkForMuteWordsThenSend(msg)
         copy = copy.split(e).join('X')
 
     //delete characters that aren't used to create words
-    copy = copy.replace(/[^a-zńąćśźżóęł ]/g, '')
-        .replace(/ą/g, 'a')
-        .replace(/ę/g, 'e')
-        .replace(/ł/g, 'l')
-        .replace(/[żź]/g, 'z')
-        .replace(/ó/g, 'o')
-        .replace(/ń/g, 'n')
-        .replace(/ć/g, 'c')
-        .replace(/ś/g, 's')
-
+    copy = normalizeString(copy)
 
     //check weird 'ahoj'
     const ahojRegex = /a(?=(?:.)*ahoj)(?!hoj.*ahoj)/g
-    if (ahojRegex.test(copy))
-    {
-        alertUser(msg, '', true)
-        return
-    }
+    if (ahojRegex.test(copy)) return alertUser(msg, '', true)
 
     //check for known phrases that get flagged as swear words
     let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)

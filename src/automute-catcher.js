@@ -11,20 +11,17 @@ let oldSendMsg
 // "teeeeeets" changes to "tests"
 function removeDuplicates(msg)
 {
-    const len = msg.length
-    if (len !== 0)
+    if (msg.length === 0) return ''
+
+    let copy = msg[0]
+    let lastLetter = msg[0]
+    for (let i = 1; i < msg.length; i++)
     {
-        let copy = msg[0]
-        let lastLetter = msg[0]
-        for (let i = 1; i < len; i++)
-        {
-            if (msg[i] !== lastLetter)
-                copy = copy + msg[i]
-            lastLetter = msg[i]
-        }
-        return copy
+        if (msg[i] !== lastLetter)
+            copy = copy + msg[i]
+        lastLetter = msg[i]
     }
-    return ''
+    return copy
 }
 
 function testMessage(originalMsg, caughtMsg)

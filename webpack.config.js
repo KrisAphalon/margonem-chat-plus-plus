@@ -38,43 +38,32 @@ const rules = [
     }
 ]
 
-module.exports = [
-    {
-        name: 'NI',
-        mode: 'production',
+function createBuild(name, mode, gameInterface, css)
+{
+    return {
+        name: name,
+        mode: mode,
         entry: './src/main.js',
         output: {
             path: path.resolve(__dirname, 'dist/'),
-            filename: 'chat-plus-plus-NI.js'
+            filename: `chat-plus-plus-${gameInterface}.js`
         },
         plugins: [
             CONSTANTS,
             new webpack.DefinePlugin({
-                INTERFACE: JSON.stringify('NI'),
-                BASIC_CSS: JSON.stringify(resultNI)
-            })
-        ],
-        module: {
-            rules
-        }
-    },
-    {
-        name: 'SI',
-        mode: 'production',
-        entry: './src/main.js',
-        output: {
-            path: path.resolve(__dirname, 'dist/'),
-            filename: 'chat-plus-plus-SI.js'
-        },
-        plugins: [
-            CONSTANTS,
-            new webpack.DefinePlugin({
-                INTERFACE: JSON.stringify('SI'),
-                BASIC_CSS: JSON.stringify(resultSI)
+                INTERFACE: JSON.stringify(gameInterface),
+                BASIC_CSS: JSON.stringify(css)
             })
         ],
         module: {
             rules
         }
     }
+}
+
+const buildNI = createBuild('NI', 'production', 'NI', resultNI)
+const buildSI = createBuild('SI', 'production', 'SI', resultSI)
+module.exports = [
+    buildNI,
+    buildSI
 ]

@@ -6,12 +6,14 @@ import {addCustomStyle, removeCustomStyle} from './css-manager'
 
 let textarea
 let background
-const CHAT_COLORS = {
+const chatColors = {
     priv: '#fc0',
     clant: '#ffa500',
     team: '#b554ff',
     sys_comm: '#f33'
 }
+const classList = ['priv', 'sys_comm', 'clant', 'team']
+const classListNI = ['priv-in-general', 'chat-message sys_red', 'clan-message', 'group-message']
 
 /**
  * Changes chatColors object to have accurate colors as seen in chat
@@ -30,38 +32,25 @@ function updateCommandsColors()
     chat.style.display = 'none'
     const msg = document.createElement('div')
     chat.appendChild(msg)
+    const chatmsg = document.createElement('span')
+    chatmsg.className = 'chatmsg'
+    msg.appendChild(chatmsg)
+    document.body.appendChild(chat)
 
-
-    const classList = ['priv', 'sys_comm', 'clant', 'team']
-    const classListLength = classList.length
-
-    if (INTERFACE === 'NI')
+    for (let i = 0; i < classList.length; i++)
     {
-        document.body.appendChild(chat)
-        const classListNI = ['priv-in-general', 'chat-message sys_red', 'clan-message', 'group-message']
-
-        for (let i = 0; i < classListLength; i++)
-        {
-            const className = classListNI[i]
-            msg.className = className
-            CHAT_COLORS[className] = window.getComputedStyle(msg).color
-        }
-    }
-    else
-    {
-        const chatmsg = document.createElement('span')
-        chatmsg.className = 'chatmsg'
-        msg.appendChild(chatmsg)
-        document.body.appendChild(chat)
-
-        for (let i = 0; i < classListLength; i++)
-        {
-            const className = classList[i]
-            msg.className = className
-            CHAT_COLORS[className] = window.getComputedStyle(chatmsg).color
-        }
+        msg.className = INTERFACE === 'NI' ? classListNI[i] : classList[i]
+        chatColors[classList[i]] = window.getComputedStyle(chatmsg).color
     }
     document.body.removeChild(chat)
+
+    addCustomStyle('inputClasses', `
+#inpchat.priv { color: ${chatColors.priv}; }
+#inpchat.clant { color: ${chatColors.clant}; }
+#inpchat.team { color: ${chatColors.team}; }
+#inpchat.sys_comm { color: ${chatColors.sys_comm}; }
+        `.trim()
+    )
 }
 
 /**
@@ -196,12 +185,12 @@ function recolorTextarea()
     textarea.style.color = ''
     if (command[0] === '@')
     {
-        textarea.style.color = CHAT_COLORS.priv
+        textarea.style.color = chatColors.priv
         return
     }
     if (SYS_COMMANDS.includes(command))
     {
-        textarea.style.color = CHAT_COLORS.sys_comm
+        textarea.style.color = chatColors.sys_comm
         return
     }
     if (CHAT_COMMAND_CLASSES[command])
@@ -239,30 +228,31 @@ function unfoldTextarea()
 {
     // fix for strange bug that doesn't fold when it should
     if (textarea.value === '')
+    {
         foldTextarea(textarea)
+        return
+    }
+
+    if (INTERFACE === 'NI')
+    {
+        const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
+        const background = document.getElementById('textarea-background')
+        const backgroundUp = document.getElementById('textarea-background-up')
+        textarea.classList.add('unfolded')
+        background.style.display = 'block'
+        backgroundUp.style.display = 'block'
+        let scroll = false
+        if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight) scroll = true
+        scrollPanel.classList.add('input-unfolded')
+        if (scroll) scrollPanel.scrollTop = scrollPanel.scrollHeight
+    }
     else
     {
-        if (INTERFACE === 'NI')
-        {
-            const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
-            const background = document.getElementById('textarea-background')
-            const backgroundUp = document.getElementById('textarea-background-up')
-            textarea.classList.add('unfolded')
-            background.style.display = 'block'
-            backgroundUp.style.display = 'block'
-            let scroll = false
-            if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight) scroll = true
-            scrollPanel.classList.add('input-unfolded')
-            if (scroll) scrollPanel.scrollTop = scrollPanel.scrollHeight
-        }
-        else
-        {
-            const bg = document.getElementById('textarea-background')
-            textarea.classList.add('unfolded')
-            bg.classList.add('unfolded')
-        }
-        removeCustomStyle('hideInputScrollbar')
+        const bg = document.getElementById('textarea-background')
+        textarea.classList.add('unfolded')
+        bg.classList.add('unfolded')
     }
+    removeCustomStyle('hideInputScrollbar')
 }
 
 function makeChatScalable(textarea)

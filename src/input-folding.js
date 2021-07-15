@@ -55,17 +55,22 @@ function unfoldTextarea()
     removeCustomStyle('hideInputScrollbar')
 }
 
+function getMaxSmallInputLength()
+{
+    if (INTERFACE === 'NI') return textarea.style.width === '466px' ? 45 : 20
+    return 30
+}
+
 function checkToUnfold()
 {
-    let maxSmallInputLength = 30
     if (INTERFACE === 'SI' && Number(g.chat.state) !== 3) return
-    if (INTERFACE === 'NI')
-    {
-        maxSmallInputLength = textarea.style.width === '466px' ? 45 : 20
-    }
 
-    if (textarea.value.length > maxSmallInputLength) return unfoldTextarea()
-    return foldTextarea()
+    if (textarea.value.length > getMaxSmallInputLength())
+    {
+        unfoldTextarea()
+        return
+    }
+    foldTextarea()
 }
 
 function makeChatScalable(textarea)

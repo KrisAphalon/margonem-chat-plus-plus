@@ -57,21 +57,15 @@ function unfoldTextarea()
 
 function checkToUnfold()
 {
-    let maxSmallInputLength
+    let maxSmallInputLength = 30
+    if (INTERFACE === 'SI' && Number(g.chat.state) !== 3) return
     if (INTERFACE === 'NI')
     {
         maxSmallInputLength = textarea.style.width === '466px' ? 45 : 20
     }
-    else
-    {
-        if (Number(g.chat.state) !== 3) return
-        maxSmallInputLength = 30
-    }
 
-    if (textarea.value.length > maxSmallInputLength)
-        unfoldTextarea()
-    else
-        foldTextarea()
+    if (textarea.value.length > maxSmallInputLength) return unfoldTextarea()
+    return foldTextarea()
 }
 
 function makeChatScalable(textarea)

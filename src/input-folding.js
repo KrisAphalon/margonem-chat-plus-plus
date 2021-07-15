@@ -57,25 +57,21 @@ function unfoldTextarea()
 
 function checkToUnfold()
 {
+    let maxSmallInputLength
     if (INTERFACE === 'NI')
     {
-        //check length
-        if (textarea.value.length > (textarea.style.width === '466px' ? 45 : 20))
-            unfoldTextarea()
-        else
-            foldTextarea()
+        maxSmallInputLength = textarea.style.width === '466px' ? 45 : 20
     }
     else
     {
-        //check length
-        if (g.chat.state === 3 || g.chat.state === '3')
-        {
-            if (textarea.value.length > 30)
-                unfoldTextarea()
-            else
-                foldTextarea()
-        }
+        if (Number(g.chat.state) !== 3) return
+        maxSmallInputLength = 30
     }
+
+    if (textarea.value.length > maxSmallInputLength)
+        unfoldTextarea()
+    else
+        foldTextarea()
 }
 
 function makeChatScalable(textarea)
@@ -88,6 +84,26 @@ function revokeChatScalable(textarea)
 {
     textarea.removeEventListener('focusout', foldTextarea, false)
     textarea.removeEventListener('focusin', checkToUnfold, false)
+}
+
+function initChatScalableChange()
+{
+    window.g.chat.__state = window.g.chat.state
+    Object.defineProperty(window.g.chat, 'state', {
+        set(val)
+        {
+            if (val === 3 || val === '3')
+                makeChatScalable(textarea)
+            else
+                revokeChatScalable(textarea)
+
+            this.__state = val
+        },
+        get()
+        {
+            return this.__state
+        }
+    })
 }
 
 export function initInputFolding()
@@ -107,22 +123,6 @@ export function initInputFolding()
             foldTextarea()
             revokeChatScalable(textarea)
         }
-
-        window.g.chat.__state = window.g.chat.state
-        Object.defineProperty(window.g.chat, 'state', {
-            set(val)
-            {
-                if (val === 3 || val === '3')
-                    makeChatScalable(textarea)
-                else
-                    revokeChatScalable(textarea)
-
-                this.__state = val
-            },
-            get()
-            {
-                return this.__state
-            }
-        })
+        initChatScalableChange()
     }
 }

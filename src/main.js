@@ -7,6 +7,7 @@ import {initPanel} from './panel'
 import {initTextJustify} from './text-justify'
 import {initChatCleaner} from './chat-cleaner'
 import {initAutomuteCatcher} from './automute-catcher'
+import {initInputFolding} from './input-folding'
 
 export function handleNoAnswer()
 {
@@ -31,6 +32,7 @@ function start()
     loadBasicStyles()
 
     initInputColor()
+    initInputFolding()
     initChatCleaner()
 
     // Order of loading this two modules is crucial, do not reverse it.

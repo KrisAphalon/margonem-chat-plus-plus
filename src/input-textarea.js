@@ -2,9 +2,9 @@
 // If textarea doesn't start with any valid command, then it resets color to default
 import {common} from './main'
 import {settings} from './settings'
-import {addCustomStyle, removeCustomStyle} from './css-manager'
+import {addCustomStyle} from './css-manager'
 
-let textarea
+export let textarea
 let background
 const chatColors = {
     priv: '#fc0',
@@ -103,8 +103,6 @@ function checkInputMsg()
     const input = document.getElementById('inpchat')
     if (INTERFACE === 'NI')
     {
-        const len = textarea.value.length
-
         //fixes bug when clicking enter to start chatting
         textarea.value = textarea.value.replace(/\r?\n/gi, '')
 
@@ -115,19 +113,13 @@ function checkInputMsg()
             textarea.removeAttribute('maxLength')
         //check colors
         recolorTextarea()
-        //check length
-        if (len > (textarea.style.width === '466px' ? 45 : 20))
-            unfoldTextarea()
-        else
-            foldTextarea()
+
         if (!settings.multiMsg)
             input.value = textarea.value
         return textarea.value
     }
     else
     {
-        const len = input.value.length
-
         //fixes bug when clicking enter to start chatting
         input.value = input.value.replace(/\r?\n/gi, '')
 
@@ -138,14 +130,7 @@ function checkInputMsg()
             input.removeAttribute('maxLength')
         //check colors
         recolorTextarea()
-        //check length
-        if (g.chat.state === 3 || g.chat.state === '3')
-        {
-            if (len > 30)
-                unfoldTextarea()
-            else
-                foldTextarea()
-        }
+
         return input.value
     }
 }
@@ -197,75 +182,6 @@ function recolorTextarea()
         textarea.classList.add(CHAT_COMMAND_CLASSES[command])
 }
 
-/**
- * Folds textarea hiding big message edit window
- */
-function foldTextarea()
-{
-    if (INTERFACE === 'NI')
-    {
-        const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
-        const background = document.getElementById('textarea-background')
-        const backgroundUp = document.getElementById('textarea-background-up')
-        textarea.classList.remove('unfolded')
-        background.style.display = 'none'
-        backgroundUp.style.display = 'none'
-        scrollPanel.classList.remove('input-unfolded')
-    }
-    else
-    {
-        const bg = document.getElementById('textarea-background')
-        textarea.classList.remove('unfolded')
-        bg.classList.remove('unfolded')
-    }
-    addCustomStyle('hideInputScrollbar', '#input {-ms-overflow-style: none;} #inpchat::-webkit-scrollbar { display: none;}')
-}
-
-/**
- * Unfolds textarea showing big message edit window
- */
-function unfoldTextarea()
-{
-    // fix for strange bug that doesn't fold when it should
-    if (textarea.value === '')
-    {
-        foldTextarea(textarea)
-        return
-    }
-
-    if (INTERFACE === 'NI')
-    {
-        const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
-        const background = document.getElementById('textarea-background')
-        const backgroundUp = document.getElementById('textarea-background-up')
-        textarea.classList.add('unfolded')
-        background.style.display = 'block'
-        backgroundUp.style.display = 'block'
-        let scroll = false
-        if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight) scroll = true
-        scrollPanel.classList.add('input-unfolded')
-        if (scroll) scrollPanel.scrollTop = scrollPanel.scrollHeight
-    }
-    else
-    {
-        const bg = document.getElementById('textarea-background')
-        textarea.classList.add('unfolded')
-        bg.classList.add('unfolded')
-    }
-    removeCustomStyle('hideInputScrollbar')
-}
-
-function makeChatScalable(textarea)
-{
-    textarea.addEventListener('focusout', foldTextarea, false)
-    textarea.addEventListener('focusin', checkInputMsg, false)
-}
-
-function revokeChatScalable(textarea)
-{
-    textarea.removeEventListener('focusout', foldTextarea, false)
-    textarea.removeEventListener('focusin', checkInputMsg, false)
-}
 
 export function initInputColor()
 {
@@ -310,8 +226,6 @@ export function initInputColor()
         backgroundUp.id = 'textarea-background-up'
         inputWrapper.insertBefore(backgroundUp, background)
 
-        makeChatScalable(textarea)
-
 
         //Change value of textarea when something changes value of input
         const inpchat_value = inpchat.value
@@ -355,33 +269,6 @@ export function initInputColor()
         {
             e.stopPropagation()
         }, true)
-
-
-        const state = window.g.chat.state
-        if (state === 3 || state === '3')
-            makeChatScalable(textarea)
-        else
-        {
-            foldTextarea()
-            revokeChatScalable(textarea)
-        }
-
-        window.g.chat.__state = window.g.chat.state
-        Object.defineProperty(window.g.chat, 'state', {
-            set(val)
-            {
-                if (val === 3 || val === '3')
-                    makeChatScalable(textarea)
-                else
-                    revokeChatScalable(textarea)
-
-                this.__state = val
-            },
-            get()
-            {
-                return this.__state
-            }
-        })
     }
 
     // Fix for last available version of Firefox on Windows XP.

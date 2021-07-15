@@ -145,6 +145,13 @@
   }
 }
 
+#inpchat.team {
+  color: #b554ff;
+}
+
+#inpchat.clant {
+  color: #ffa500;
+}
 
 /* Panel */
 .cpp-panel {
@@ -438,6 +445,7 @@
 #cpp-automute-panel .bottom-box {
   justify-content: space-evenly;
 }
+
 #cpp-automute-panel .text-button {
   justify-content: space-evenly;
 }

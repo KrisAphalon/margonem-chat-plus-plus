@@ -6,7 +6,7 @@ import {addCustomStyle, removeCustomStyle} from './css-manager'
 
 let textarea
 let background
-const chatColors = {
+const CHAT_COLORS = {
     priv: '#fc0',
     clant: '#ffa500',
     team: '#b554ff',
@@ -44,7 +44,7 @@ function updateCommandsColors()
         {
             const className = classListNI[i]
             msg.className = className
-            chatColors[className] = window.getComputedStyle(msg).color
+            CHAT_COLORS[className] = window.getComputedStyle(msg).color
         }
     }
     else
@@ -58,7 +58,7 @@ function updateCommandsColors()
         {
             const className = classList[i]
             msg.className = className
-            chatColors[className] = window.getComputedStyle(chatmsg).color
+            CHAT_COLORS[className] = window.getComputedStyle(chatmsg).color
         }
     }
     document.body.removeChild(chat)
@@ -161,13 +161,32 @@ function checkInputMsg()
     }
 }
 
+
+const CHAT_COMMAND_CLASSES = {
+    '/g': 'team',
+    '/k': 'clant',
+    '*me': 'me',
+    '/me': 'me',
+    '*nar': 'nar',
+    '*nar1': 'nar',
+    '/nar': 'nar',
+    '*nar2': 'nar2',
+    '*nar3': 'nar3',
+    '*dial': 'dial1',
+    '*dial1': 'dial1',
+    '*dial2': 'dial2',
+    '*dial3': 'dial3',
+    '*dial666': 'dial666'
+}
+
+const SYS_COMMANDS = ['*sys', '*map', '*light', '*addGraf', '*delGraf', '*hide', '*weather']
+
 /**
  * Recolors textarea's text color according to message inside of it
  */
 function recolorTextarea()
 {
     const value = textarea.value.trim()
-
     const command = value.split(' ')[0]
 
     if (textarea.classList.contains('unfolded'))
@@ -176,53 +195,17 @@ function recolorTextarea()
         textarea.className = ''
     textarea.style.color = ''
     if (command[0] === '@')
-        textarea.style.color = chatColors.priv
-    else switch (command)
     {
-        case '/g':
-            textarea.style.color = chatColors.team
-            break
-        case '/k':
-            textarea.style.color = chatColors.clant
-            break
-        case '*me':
-        case '/me':
-            textarea.classList.add('me')
-            break
-        case '*nar':
-        case '*nar1':
-        case '/nar':
-            textarea.classList.add('nar')
-            break
-        case '*nar2':
-            textarea.classList.add('nar2')
-            break
-        case '*nar3':
-            textarea.classList.add('nar3')
-            break
-        case '*dial':
-        case '*dial1':
-            textarea.classList.add('dial1')
-            break
-        case '*dial2':
-            textarea.classList.add('dial2')
-            break
-        case '*dial3':
-            textarea.classList.add('dial3')
-            break
-        case '*dial666':
-            textarea.classList.add('dial666')
-            break
-        case '*sys':
-        case '*map':
-        case '*light':
-        case '*addGraf':
-        case '*delGraf':
-        case '*hide':
-        case '*weather':
-            textarea.style.color = chatColors.sys_comm
-            break
+        textarea.style.color = CHAT_COLORS.priv
+        return
     }
+    if (SYS_COMMANDS.includes(command))
+    {
+        textarea.style.color = CHAT_COLORS.sys_comm
+        return
+    }
+    if (CHAT_COMMAND_CLASSES[command])
+        textarea.classList.add(CHAT_COMMAND_CLASSES[command])
 }
 
 /**

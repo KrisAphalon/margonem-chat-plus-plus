@@ -286,9 +286,90 @@ function fixTextareaFolding()
     }, 100)
 }
 
+function createMutationObserver()
+{
+    const chattxt = INTERFACE === 'NI'
+        ? document.querySelector('.chat-tpl .messages-wrapper .scroll-pane')
+        : document.getElementById('chattxt')
+
+    const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
+    const mutation_config = {attributes: false, childList: true, subtree: false}
+    const callback = function (mutationsList)
+    {
+        for (const mutation of mutationsList)
+        {
+            const len = mutation.addedNodes.length
+            for (let i = 0; i < len; i++)
+            {
+                let message
+                if (INTERFACE === 'NI') message = mutation.addedNodes[i].children[2].innerText.trim()
+                else message = mutation.addedNodes[i].children[1].innerText.trim()
+
+                if (typeof common.sendArr[0] !== 'undefined')
+                {
+                    console.log([
+                        message.trim(),
+                        parseMessageToChatForm(common.sendArr[0]),
+                        message.trim() === parseMessageToChatForm(common.sendArr[0])
+                    ])
+                    if (message.trim() === parseMessageToChatForm(common.sendArr[0]))
+                    {
+                        clearTimeout(common.sendTimeout)
+                        common.sendArr.shift()
+                        if (common.sendArr.length > 0)
+                        {
+                            setTimeout(function ()
+                            {
+                                if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
+                                    oldSendMsg(common.sendArr[0])
+                            }, settings.messageTimeout)
+
+                            if (common.sendArr.length > 1)
+                                common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    const observer = new MutationObserver(callback)
+    observer.observe(chattxt, mutation_config)
+}
+
+function sendMultiMsg(msg)
+{
+    msg = msg.trim()
+    const addOnStart = calculateAddOnStart(msg)
+
+    //delete old sendArr if there was some problem (e.g. lost group chat)
+    common.sendArr.splice(0)
+
+    const maxLen = 195 - calcMargoLength(addOnStart)
+    if (calcMargoLength(msg) <= maxLen)
+    {
+        oldSendMsg(msg)
+        fixTextareaFolding()
+        return
+    }
+    divideMessageToParts(msg, addOnStart, maxLen)
+
+    if (common.sendArr.length > 0)
+    {
+        oldSendMsg(common.sendArr[0])
+        common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
+    }
+    document.getElementById('inpchat').blur()
+    fixTextareaFolding()
+}
+
 function chatSendMsg(msg)
 {
-    if (INTERFACE === 'NI') msg = document.getElementById('inpchat').value
+    if (INTERFACE === 'NI')
+    {
+        const inpchat = document.getElementById('inpchat')
+        msg = inpchat.value
+        inpchat.value = ''
+    }
 
     // replace hard spaces (alt + space) with normal one
     // eslint-disable-next-line no-irregular-whitespace
@@ -297,89 +378,10 @@ function chatSendMsg(msg)
 
     if (settings.multiMsg && msg !== '')
     {
-        msg = msg.trim()
-        const addOnStart = calculateAddOnStart(msg)
-
-        //delete old sendArr if there was some problem (e.g. lost group chat)
-        common.sendArr.splice(0)
-
-        const maxLen = 195 - calcMargoLength(addOnStart)
-        if (calcMargoLength(msg) > maxLen)
-        {
-            divideMessageToParts(msg, addOnStart, maxLen)
-
-            const not_only_dots = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
-            let chattxt
-            if (INTERFACE === 'NI') chattxt = document.querySelector('.chat-tpl .messages-wrapper .scroll-pane')
-            else chattxt = document.getElementById('chattxt')
-            const mutation_config = {attributes: false, childList: true, subtree: false}
-
-            const callback = function (mutationsList)
-            {
-                for (const mutation of mutationsList)
-                {
-                    const len = mutation.addedNodes.length
-                    for (let i = 0; i < len; i++)
-                    {
-                        let message
-                        if (INTERFACE === 'NI') message = mutation.addedNodes[i].children[2].innerText.trim()
-                        else message = mutation.addedNodes[i].children[1].innerText.trim()
-
-                        if (typeof common.sendArr[0] !== 'undefined')
-                        {
-                            console.log([
-                                message.trim(),
-                                parseMessageToChatForm(common.sendArr[0]),
-                                message.trim() === parseMessageToChatForm(common.sendArr[0])
-                            ])
-                            if (message.trim() === parseMessageToChatForm(common.sendArr[0]))
-                            {
-                                clearTimeout(common.sendTimeout)
-                                common.sendArr.shift()
-                                if (common.sendArr.length > 0)
-                                {
-                                    setTimeout(function ()
-                                    {
-                                        if (common.sendArr[0].match(not_only_dots).length > 0)
-                                            oldSendMsg(common.sendArr[0])
-                                    }, settings.messageTimeout)
-
-                                    if (common.sendArr.length > 1)
-                                        common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            const observer = new MutationObserver(callback)
-            observer.observe(chattxt, mutation_config)
-
-            if (common.sendArr.length > 0)
-            {
-                oldSendMsg(common.sendArr[0])
-                common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
-            }
-            document.getElementById('inpchat').blur()
-
-            //fix to not folding textarea
-            fixTextareaFolding()
-        }
-        else
-        {
-            oldSendMsg(msg)
-            //fix to not folding textarea
-            fixTextareaFolding()
-        }
+        return sendMultiMsg(msg)
     }
-    else
-    {
-        oldSendMsg(msg)
-        //fix to not folding textarea
-        fixTextareaFolding()
-    }
-    if (INTERFACE === 'NI') document.getElementById('inpchat').value = ''
+    oldSendMsg(msg)
+    fixTextareaFolding()
 }
 
 function toggleMultiMsg()
@@ -399,6 +401,7 @@ export function initMultiMsg()
         toggleMultiMsg
     )
 
+    createMutationObserver()
     if (INTERFACE === 'NI')
     {
         oldSendMsg = Engine.chat.sendMessage.bind(Engine.chat)

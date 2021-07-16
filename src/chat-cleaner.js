@@ -49,12 +49,18 @@ function elementIsHidable(element)
     }
 }
 
+function applyDisplayStyleIfHidable(element, style)
+{
+    if (INTERFACE === 'NI' && elementIsNeverHidable(element)) return
+
+    if (elementIsHidable(element)) element.style.display = style
+}
+
 function toggleHide()
 {
+    const display = textHide ? '' : 'none'
     if (INTERFACE === 'NI')
     {
-        const display = textHide ? '' : 'none'
-
         const chat = document.getElementsByClassName('section chat-tpl')[0]
         const scroll_pane = chat.children[4].children[1]
         const allchat_button = document.getElementsByClassName('tabs-wrapper connectedSortable ui-sortable')[0].children[0]
@@ -62,21 +68,15 @@ function toggleHide()
 
         for (let i = 0; i < scroll_pane.children.length; i++)
         {
-            const element = scroll_pane.children[i]
-            if (elementIsNeverHidable(element)) continue
-            if (elementIsHidable(element)) element.style.display = display
+            applyDisplayStyleIfHidable(scroll_pane.children[i], display)
         }
     }
     else
     {
-        const display = textHide ? 'block' : 'none'
-
         const chattxt = document.getElementById('chattxt')
-
         for (let i = 0; i < chattxt.children.length; i++)
         {
-            const element = chattxt.children[i]
-            if (elementIsHidable(element)) element.style.display = display
+            applyDisplayStyleIfHidable(chattxt.children[i], display)
         }
     }
     textHide = !textHide

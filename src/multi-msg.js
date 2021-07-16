@@ -6,44 +6,26 @@ let oldSendMsg
 
 function deconstructSendArrPart(part)
 {
-    if (['/', '@', '*'].includes(part[0]))
+    if (!['/', '@', '*'].includes(part[0])) return part
+
+    let split = part.split(' ')
+
+    if (part[0] === '*')
     {
-        if (part[0] === '*')
-        {
-            const split = part.split(' ')
-            switch (split[0])
-            {
-                case '*me':
-                case '*nar':
-                case '*nar1':
-                case '*nar2':
-                case '*nar3':
-                case '*sys':
-                    split.shift()
-                    return split.join(' ')
-                case '*dial':
-                case '*dial1':
-                case '*dial2':
-                case '*dial3':
-                case '*dial666':
-                {
-                    const npcSplit = part.split(',')
-                    npcSplit.shift()
-                    return npcSplit.join(',')
-                }
-            }
-        }
-        else
-        {
-            const split = part.split(' ')
-            split.shift()
-            if (part[0] === '@')
-                return deconstructSendArrPart(split.join(' '))
-            else
-                return split.join(' ')
-        }
+        if (split[0].includes('dial'))
+            split = part.split(',')
+
+        split.shift()
+        return split.join(' ')
     }
-    return part
+    else
+    {
+        split.shift()
+        if (part[0] === '@')
+            return deconstructSendArrPart(split.join(' '))
+        else
+            return split.join(' ')
+    }
 }
 
 function calcMargoLength(string)

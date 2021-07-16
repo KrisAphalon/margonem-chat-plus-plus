@@ -27,26 +27,20 @@ function elementIsNeverHidable(element)
  */
 function elementIsHidable(element)
 {
-    if (INTERFACE === 'NI')
-    {
-        if (classes.toHide.indexOf(element.classList[1]) >= 0) return true
+    if (INTERFACE === 'SI') return classes.toHide.includes(element.className)
+    if (classes.toHide.includes(element.classList[1])) return true
 
-        for (let j = 0; j < element.children.length; j++)
+    for (let j = 0; j < element.children.length; j++)
+    {
+        for (let k = 0; k < classes.toHide2.length; k++)
         {
-            for (let k = 0; k < classes.toHide2.length; k++)
+            if (element.children[j].classList.contains(classes.toHide2[k]))
             {
-                if (element.children[j].classList.contains(classes.toHide2[k]))
-                {
-                    return true
-                }
+                return true
             }
         }
-        return false
     }
-    else
-    {
-        return classes.toHide.includes(element.className)
-    }
+    return false
 }
 
 function applyDisplayStyleIfHidable(elements, style)

@@ -8,6 +8,7 @@ import {initTextJustify} from './text-justify'
 import {initChatCleaner} from './chat-cleaner'
 import {initAutomuteCatcher} from './automute-catcher'
 import {initInputFolding} from './input-folding'
+import {initMultiMsgSender} from './multi-msg-sender'
 
 export function handleNoAnswer()
 {
@@ -37,6 +38,7 @@ function start()
     initInputFolding()
     initChatCleaner()
 
+    initMultiMsgSender()
     // Order of loading this two modules is crucial, do not reverse it.
     // Reversing it will break common.sendMsg chaining
     const sendMsg = initMultiMsg()

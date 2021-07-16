@@ -286,53 +286,51 @@ function fixTextareaFolding()
     }, 100)
 }
 
+const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
+
+function handleAddedNode(node)
+{
+    const message = INTERFACE === 'NI'
+        ? node.children[2].innerText.trim()
+        : node.children[1].innerText.trim()
+
+    if (typeof common.sendArr[0] === 'undefined') return
+
+    if (message === parseMessageToChatForm(common.sendArr[0]))
+    {
+        clearTimeout(common.sendTimeout)
+        common.sendArr.shift()
+        if (common.sendArr.length === 0) return
+
+        setTimeout(function ()
+        {
+            if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
+                oldSendMsg(common.sendArr[0])
+        }, settings.messageTimeout)
+
+        common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
+    }
+}
+
+function mutationCallback(mutationsList)
+{
+    for (const mutation of mutationsList)
+    {
+        for (let i = 0; i < mutation.addedNodes.length; i++)
+        {
+            handleAddedNode(mutation.addedNodes[i])
+        }
+    }
+}
+
 function createMutationObserver()
 {
     const chattxt = INTERFACE === 'NI'
         ? document.querySelector('.chat-tpl .messages-wrapper .scroll-pane')
         : document.getElementById('chattxt')
 
-    const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
     const mutation_config = {attributes: false, childList: true, subtree: false}
-    const callback = function (mutationsList)
-    {
-        for (const mutation of mutationsList)
-        {
-            const len = mutation.addedNodes.length
-            for (let i = 0; i < len; i++)
-            {
-                let message
-                if (INTERFACE === 'NI') message = mutation.addedNodes[i].children[2].innerText.trim()
-                else message = mutation.addedNodes[i].children[1].innerText.trim()
-
-                if (typeof common.sendArr[0] !== 'undefined')
-                {
-                    console.log([
-                        message.trim(),
-                        parseMessageToChatForm(common.sendArr[0]),
-                        message.trim() === parseMessageToChatForm(common.sendArr[0])
-                    ])
-                    if (message.trim() === parseMessageToChatForm(common.sendArr[0]))
-                    {
-                        clearTimeout(common.sendTimeout)
-                        common.sendArr.shift()
-                        if (common.sendArr.length > 0)
-                        {
-                            setTimeout(function ()
-                            {
-                                if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
-                                    oldSendMsg(common.sendArr[0])
-                            }, settings.messageTimeout)
-
-                            if (common.sendArr.length > 1)
-                                common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    const observer = new MutationObserver(callback)
+    const observer = new MutationObserver(mutationCallback)
     observer.observe(chattxt, mutation_config)
 }
 

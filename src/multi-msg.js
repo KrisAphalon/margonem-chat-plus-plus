@@ -103,6 +103,8 @@ function calculateAddOnStart(msg)
 
 function divideMessageToParts(msg, addOnStart, maxLen)
 {
+    if (msg === '') return
+
     let last_slice = 0
     let current = 0
     let last_space = 0
@@ -144,40 +146,41 @@ function divideMessageToParts(msg, addOnStart, maxLen)
             last_space = i
             chars_from_last_space = 0
         }
-        if (current >= maxLen)
+
+        if (current < maxLen) continue
+
+        if (last_dot + 100 < i) // || msg[last_dot + 1] === undefined
         {
-            if (last_dot + 100 < i) // || msg[last_dot + 1] === undefined
-            {
-                if (last_slice === 0)
-                    common.sendArr.push(msg.slice(0, last_space))
-                else
-                    common.sendArr.push(addOnStart + msg.slice(last_slice, last_space).trim())
-                last_slice = last_space
-                current = chars_from_last_space
-            }
+            if (last_slice === 0)
+                common.sendArr.push(msg.slice(0, last_space))
             else
-            {
-                let additional_shift = 0
-                for (let j = 0; j < 5; j++)
-                    if (msg[last_dot + j] === '.' || msg[last_dot + j] === ' ')
-                        additional_shift++
-                    else
-                        break
-                if (last_slice === 0)
-                    common.sendArr.push(msg.slice(0, last_dot + additional_shift))
-                else
-                    common.sendArr.push(addOnStart + msg.slice(last_slice, last_dot + additional_shift).trim())
-                last_slice = last_dot + additional_shift
-                current = chars_from_last_dot
-            }
-            console.log(common.sendArr)
+                common.sendArr.push(addOnStart + msg.slice(last_slice, last_space).trim())
+            last_slice = last_space
+            current = chars_from_last_space
         }
+        else
+        {
+            let additional_shift = 0
+            for (let j = 0; j < 5; j++)
+                if (msg[last_dot + j] === '.' || msg[last_dot + j] === ' ')
+                    additional_shift++
+                else
+                    break
+            if (last_slice === 0)
+                common.sendArr.push(msg.slice(0, last_dot + additional_shift))
+            else
+                common.sendArr.push(addOnStart + msg.slice(last_slice, last_dot + additional_shift).trim())
+            last_slice = last_dot + additional_shift
+            current = chars_from_last_dot
+        }
+        console.log(common.sendArr)
+
     }
-    if (msg !== '')
-        if (last_slice === 0)
-            common.sendArr.push(msg)
-        else if (msg.slice(last_slice) !== '')
-            common.sendArr.push(addOnStart + msg.slice(last_slice).trim())
+
+    if (last_slice === 0)
+        common.sendArr.push(msg)
+    else if (msg.slice(last_slice) !== '')
+        common.sendArr.push(addOnStart + msg.slice(last_slice).trim())
 }
 
 function fixTextareaFolding()

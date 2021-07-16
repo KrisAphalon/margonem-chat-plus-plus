@@ -10,22 +10,15 @@ function deconstructSendArrPart(part)
 
     let split = part.split(' ')
 
-    if (part[0] === '*')
+    if (part[0] === '*' && split[0].includes('dial'))
     {
-        if (split[0].includes('dial'))
-            split = part.split(',')
+        split = part.split(',')
+    }
+    split.shift()
+    if (part[0] === '@')
+        return deconstructSendArrPart(split.join(' '))
 
-        split.shift()
-        return split.join(' ')
-    }
-    else
-    {
-        split.shift()
-        if (part[0] === '@')
-            return deconstructSendArrPart(split.join(' '))
-        else
-            return split.join(' ')
-    }
+    return split.join(' ')
 }
 
 function calcMargoLength(string)

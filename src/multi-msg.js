@@ -86,36 +86,35 @@ const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 
 function calculateAddOnStart(msg)
 {
-    let addOnStart = ''
     const arr = msg.split(' ')
-    if (arr.length > 1)
+    if (arr.length <= 1) return ''
+
+    let addOnStart = ''
+    if (['*', '/'].includes(arr[0][0]))
     {
-        if (arr[0][0] === '*' || arr[0][0] === '/')
-        {
-            if ((arr[0][1] === 'k' || arr[0][1] === 'g') && arr[0][2] === undefined)
-                addOnStart = '/'
-            else
-                addOnStart = '*'
-            const command = arr[0].slice(1)
-            addOnStart += command + ' '
-            if (command.startsWith('dial'))
-                addOnStart = msg.split(',')[0] + ', '
-            //no bullshit with e.g. *le*n*n*gt*h
+        if (['k', 'g'].includes(arr[0][1]) && arr[0][2] === undefined)
+            addOnStart = '/'
+        else
+            addOnStart = '*'
 
-        }
-        else if (arr[0][0] === '@')
-            addOnStart = msg.split(' ')[0] + ' '
+        const command = arr[0].slice(1)
+        addOnStart += command + ' '
+        if (command.startsWith('dial'))
+            addOnStart = msg.split(',')[0] + ', '
+        //no bullshit with e.g. *le*n*n*gt*h
+    }
+    else if (arr[0][0] === '@')
+        addOnStart = msg.split(' ')[0] + ' '
 
-        //if it's command on specific channel or priv
-        if (arr[1][0] === '*' &&
-            (arr[0].startsWith('/k') || arr[0].startsWith('/g') || arr[0].startsWith('@'))
-        )
-        {
-            const command = arr[1].slice(1)
-            addOnStart += '*' + command + ' '
-            if (command.startsWith('dial'))
-                addOnStart = msg.split(',')[0] + ', '
-        }
+    //if it's command on specific channel or priv
+    if (arr[1][0] === '*' &&
+        (arr[0].startsWith('/k') || arr[0].startsWith('/g') || arr[0].startsWith('@'))
+    )
+    {
+        const command = arr[1].slice(1)
+        addOnStart += '*' + command + ' '
+        if (command.startsWith('dial'))
+            addOnStart = msg.split(',')[0] + ', '
     }
     return addOnStart
 }

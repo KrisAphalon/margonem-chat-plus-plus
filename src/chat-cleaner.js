@@ -55,8 +55,8 @@ function applyDisplayStyleIfHidable(elements, style)
     {
         const element = elements[i]
 
-        if (INTERFACE === 'NI' && elementIsNeverHidable(element)) return
-        if (elementIsHidable(element)) element.style.display = style
+        if (!elementIsNeverHidable(element) && elementIsHidable(element))
+            element.style.display = style
     }
 }
 

@@ -15,6 +15,18 @@ const chatColors = {
 const classList = ['priv', 'sys_comm', 'clant', 'team']
 const classListNI = ['priv-in-general', 'chat-message sys_red', 'clan-message', 'group-message']
 
+
+function addCommandsColorStyles()
+{
+    addCustomStyle('inputClasses', `
+#inpchat.priv { color: ${chatColors.priv}; }
+#inpchat.clant { color: ${chatColors.clant}; }
+#inpchat.team { color: ${chatColors.team}; }
+#inpchat.sys_comm { color: ${chatColors.sys_comm}; }
+        `.trim()
+    )
+}
+
 /**
  * Changes chatColors object to have accurate colors as seen in chat
  */
@@ -44,13 +56,7 @@ function updateCommandsColors()
     }
     document.body.removeChild(chat)
 
-    addCustomStyle('inputClasses', `
-#inpchat.priv { color: ${chatColors.priv}; }
-#inpchat.clant { color: ${chatColors.clant}; }
-#inpchat.team { color: ${chatColors.team}; }
-#inpchat.sys_comm { color: ${chatColors.sys_comm}; }
-        `.trim()
-    )
+    addCommandsColorStyles()
 }
 
 /**

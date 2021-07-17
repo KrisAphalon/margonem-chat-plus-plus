@@ -182,6 +182,27 @@ function recolorTextarea()
         textarea.classList.add(CHAT_COMMAND_CLASSES[command])
 }
 
+//Change value of textarea when something changes value of input
+function addInputToTextareaConvertor()
+{
+    const inputWrapper = document.getElementsByClassName('chat-tpl')[0].children[5]
+    const inpchat = inputWrapper.children[0]
+    const inpchat_value = inpchat.value
+    Object.defineProperty(inpchat, 'value', {
+        set(val)
+        {
+            this.__value = val
+            if (textarea.value !== inpchat.value && !common.blockTextareaChanging)
+                textarea.value = inpchat.value
+        },
+        get()
+        {
+            if (typeof this.__value === 'undefined')
+                return inpchat_value
+            return this.__value
+        }
+    })
+}
 
 export function initInputColor()
 {
@@ -226,23 +247,7 @@ export function initInputColor()
         backgroundUp.id = 'textarea-background-up'
         inputWrapper.insertBefore(backgroundUp, background)
 
-
-        //Change value of textarea when something changes value of input
-        const inpchat_value = inpchat.value
-        Object.defineProperty(inpchat, 'value', {
-            set(val)
-            {
-                this.__value = val
-                if (textarea.value !== inpchat.value && !common.blockTextareaChanging)
-                    textarea.value = inpchat.value
-            },
-            get()
-            {
-                if (typeof this.__value === 'undefined')
-                    return inpchat_value
-                return this.__value
-            }
-        })
+        addInputToTextareaConvertor()
         checkInputMsg()
     }
     else

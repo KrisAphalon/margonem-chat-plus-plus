@@ -107,38 +107,24 @@ function checkMaxLength(textarea)
 function checkInputMsg()
 {
     const input = document.getElementById('inpchat')
-    if (INTERFACE === 'NI')
-    {
-        //fixes bug when clicking enter to start chatting
-        textarea.value = textarea.value.replace(/\r?\n/gi, '')
+    let trueInputElement = INTERFACE === 'NI' ? input : textarea
 
-        //check maxLength
-        if (!settings.multiMsg)
-            checkMaxLength(textarea)
-        else
-            textarea.removeAttribute('maxLength')
-        //check colors
-        recolorTextarea()
+    //fixes bug when clicking enter to start chatting
+    trueInputElement.value = trueInputElement.value.replace(/\r?\n/gi, '')
 
-        if (!settings.multiMsg)
-            input.value = textarea.value
-        return textarea.value
-    }
+    //check maxLength
+    if (settings.multiMsg)
+        trueInputElement.removeAttribute('maxLength')
     else
-    {
-        //fixes bug when clicking enter to start chatting
-        input.value = input.value.replace(/\r?\n/gi, '')
+        checkMaxLength(textarea)
 
-        //check maxLength
-        if (!settings.multiMsg)
-            checkMaxLength(textarea)
-        else
-            input.removeAttribute('maxLength')
-        //check colors
-        recolorTextarea()
+    //check colors
+    recolorTextarea()
 
-        return input.value
-    }
+    if (!settings.multiMsg && trueInputElement !== input)
+        input.value = textarea.value
+
+    return trueInputElement.value
 }
 
 

@@ -196,6 +196,33 @@ function addInputToTextareaConvertor()
     })
 }
 
+function loadAndApplyUserTheme()
+{
+    const check = function ()
+    {
+        updateCommandsColors()
+        recolorTextarea()
+        applyCustomBackground(background)
+    }
+    // I haven't found a great way of knowing if user theme has loaded.
+    // For now it just checks stuff that it requires in one and two seconds after start
+    setTimeout(check, 1000)
+    setTimeout(check, 2000)
+
+    // "Shair" theme is known for loading really long, so I added extra checks
+    if (typeof window.shairModuleLoader !== 'function' && !document.getElementById('loading')) return
+
+    const loading = document.getElementById('loading')
+    if (window.getComputedStyle(loading, null).backgroundImage === 'url("https://i.imgur.com/1en4JTp.png")')
+    {
+        document.getElementById('textarea-background').style.left = '146px'
+        document.getElementById('inpchat').style.left = '65px'
+        setTimeout(check, 3000)
+        setTimeout(check, 5000)
+        setTimeout(check, 20000)
+    }
+}
+
 export function initInputColor()
 {
     if (INTERFACE === 'NI')
@@ -313,29 +340,6 @@ export function initInputColor()
 
         if (!settings.multiMsg) textarea.maxLength = 199
 
-        const check = function ()
-        {
-            updateCommandsColors()
-            recolorTextarea()
-            applyCustomBackground(background)
-        }
-        // I haven't found a great way of knowing if user theme has loaded.
-        // For now it just checks stuff that it requires in one and two seconds after start
-        setTimeout(check, 1000)
-        setTimeout(check, 2000)
-
-        // "Shair" theme is known for loading really long, so I added extra checks
-        if (typeof window.shairModuleLoader === 'function' || document.getElementById('loading'))
-        {
-            const loading = document.getElementById('loading')
-            if (window.getComputedStyle(loading, null).backgroundImage === 'url("https://i.imgur.com/1en4JTp.png")')
-            {
-                document.getElementById('textarea-background').style.left = '146px'
-                document.getElementById('inpchat').style.left = '65px'
-                setTimeout(check, 3000)
-                setTimeout(check, 5000)
-                setTimeout(check, 20000)
-            }
-        }
+        loadAndApplyUserTheme()
     }
 }

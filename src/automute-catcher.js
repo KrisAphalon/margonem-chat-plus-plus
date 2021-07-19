@@ -26,41 +26,40 @@ function removeDuplicates(msg)
 
 function testMessage(originalMsg, caughtMsg)
 {
-    const inpchatVal = document.querySelector('#inpchat').value
+    const inpchat = document.querySelector('#inpchat')
+    const inpchatVal = inpchat.value
 
     let copy = originalMsg
     if (copy[0] === '@')
         copy = copy.slice(copy.indexOf(' '))
 
     const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
-    if (arr && arr[1])
+    if (!arr || !arr[1])
     {
-        let start = copy.indexOf(arr[1])
-        start = start > 20 ? start - 20 : 0
-        let end = copy.indexOf(arr[1]) + arr[1].length
-        end = end < copy.length + 20 ? end + 20 : copy.length - 1
+        message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
+        return
+    }
 
-        const subMsg = copy.substring(start, end)
+    const start = Math.max(copy.indexOf(arr[1]) - 20, 0)
+    let end = copy.indexOf(arr[1]) + arr[1].length
+    end = end < copy.length + 20 ? end + 20 : copy.length - 1
 
-        if (INTERFACE === 'NI')
-        {
-            document.querySelector('#inpchat').value = '/g ' + subMsg
-            oldSendMsg()
-        }
-        else
-        {
-            oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
-        }
+    const subMsg = copy.substring(start, end)
+
+    if (INTERFACE === 'NI')
+    {
+        inpchat.value = '/g ' + subMsg
+        oldSendMsg()
     }
     else
     {
-        message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
+        oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
     }
 
-    document.querySelector('#inpchat').value = inpchatVal
+    inpchat.value = inpchatVal
     setTimeout(function ()
     {
-        document.querySelector('#inpchat').value = inpchatVal
+        inpchat.value = inpchatVal
     }, 501) // workaround for deleting msg on SI
 }
 
@@ -180,14 +179,14 @@ function checkMessageForBadWords(msg, badWords)
 function normalizeString(str)
 {
     return str.replace(/[^a-zńąćśźżóęł ]/g, '')
-        .replace(/ą/g, 'a')
-        .replace(/ę/g, 'e')
-        .replace(/ł/g, 'l')
-        .replace(/[żź]/g, 'z')
-        .replace(/ó/g, 'o')
-        .replace(/ń/g, 'n')
-        .replace(/ć/g, 'c')
-        .replace(/ś/g, 's')
+    .replace(/ą/g, 'a')
+    .replace(/ę/g, 'e')
+    .replace(/ł/g, 'l')
+    .replace(/[żź]/g, 'z')
+    .replace(/ó/g, 'o')
+    .replace(/ń/g, 'n')
+    .replace(/ć/g, 'c')
+    .replace(/ś/g, 's')
 }
 
 function removePhrases(str, phrasesToRemove)

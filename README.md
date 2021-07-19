@@ -35,7 +35,7 @@ Features
 
 - Addon automatically colors messages based on what's being currently written.
 - For example it can color commands on red and priv messages on blue.
-- It contains commands from base game, as well as [Nerthus addon](https://github.com/akrzyz/nerthusaddon)
+- It contains commands from base game, as well as [Nerthus addon](https://github.com/nerthus-margonem/nerthusaddon)
 
 ##### Supports both interfaces
 

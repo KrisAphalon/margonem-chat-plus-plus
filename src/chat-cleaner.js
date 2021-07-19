@@ -15,9 +15,7 @@ const classes = {
  */
 function elementIsNeverHidable(element)
 {
-    return classes.toNotHide.indexOf(element.classList[1]) < 0
-        && classes.toNotHide.indexOf(element.classList[2]) < 0
-        && classes.toNotHide.indexOf(element.classList[3]) < 0
+    return classes.toNotHide.some((cls) => element.classList.contains(cls))
 }
 
 /**

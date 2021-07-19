@@ -32,13 +32,9 @@ function elementIsHidable(element)
 
     for (let j = 0; j < element.children.length; j++)
     {
-        for (let k = 0; k < classes.toHide2.length; k++)
-        {
-            if (element.children[j].classList.contains(classes.toHide2[k]))
-            {
-                return true
-            }
-        }
+        const child = element.children[j]
+        if (classes.toHide2.some((hide) => child.classList.contains(hide)))
+            return true
     }
     return false
 }

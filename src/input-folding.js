@@ -8,11 +8,10 @@ function foldTextarea()
 {
     if (INTERFACE === 'NI')
     {
-        const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
         document.getElementById('textarea-background').style.display = 'none'
         document.getElementById('textarea-background-up').style.display = 'none'
         textarea.classList.remove('unfolded')
-        scrollPanel.classList.remove('input-unfolded')
+        document.querySelector('.messages-wrapper > .scroll-pane').classList.remove('input-unfolded')
     }
     else
     {
@@ -37,14 +36,15 @@ function unfoldTextarea()
 
     if (INTERFACE === 'NI')
     {
-        const scrollPanel = document.querySelector(':not([data-template=chat-tpl]) > .messages-wrapper > .scroll-pane')
+        const scrollPanel = document.querySelector('.messages-wrapper > .scroll-pane')
         document.getElementById('textarea-background').style.display = 'block'
         document.getElementById('textarea-background-up').style.display = 'block'
         textarea.classList.add('unfolded')
-        let scroll = false
-        if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight) scroll = true
+
+        if (scrollPanel.scrollTop === scrollPanel.scrollHeight - scrollPanel.clientHeight)
+            scrollPanel.scrollTop = scrollPanel.scrollHeight
+
         scrollPanel.classList.add('input-unfolded')
-        if (scroll) scrollPanel.scrollTop = scrollPanel.scrollHeight
     }
     else
     {

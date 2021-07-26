@@ -56,10 +56,8 @@ function testMessage(originalMsg, caughtMsg)
     }
 
     inpchat.value = inpchatVal
-    setTimeout(function ()
-    {
-        inpchat.value = inpchatVal
-    }, 501) // workaround for deleting msg on SI
+    // workaround for deleting msg on SI
+    setTimeout(() => inpchat.value = inpchatVal, 501)
 }
 
 const TIP_SEND_NI = `

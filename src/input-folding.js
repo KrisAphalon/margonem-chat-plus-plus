@@ -111,6 +111,7 @@ export function initInputFolding()
     if (INTERFACE === 'NI')
     {
         makeChatScalable(textarea)
+        foldTextarea()
     }
     else
     {

@@ -1,8 +1,8 @@
 // Recolors textarea to match it's color with color of command it starts with
+import {addCustomStyle} from './css-manager'
 // If textarea doesn't start with any valid command, then it resets color to default
 import {common} from './main'
 import {settings} from './settings'
-import {addCustomStyle} from './css-manager'
 
 export let textarea
 let background
@@ -177,15 +177,17 @@ function recolorTextarea()
 //Change value of textarea when something changes value of input
 function addInputToTextareaConvertor()
 {
-    const inputWrapper = document.getElementsByClassName('chat-tpl')[0].children[5]
-    const inpchat = inputWrapper.children[0]
+    const inpchat = document.querySelector('.chat-tpl > .input-wrapper > input')
     const inpchat_value = inpchat.value
     Object.defineProperty(inpchat, 'value', {
         set(val)
         {
             this.__value = val
             if (textarea.value !== inpchat.value && !common.blockTextareaChanging)
+            {
                 textarea.value = inpchat.value
+                recolorTextarea()
+            }
         },
         get()
         {

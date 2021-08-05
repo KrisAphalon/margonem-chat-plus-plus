@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Chat Plus Plus
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.3.2
 // @description  Makes game chat 200% better
 // @author       Kris Aphalon
-// @match        http://*.margonem.pl/
 // @match        https://*.margonem.pl/
+// @exclude https://www.margonem.pl/
+// @exclude https://addons2.margonem.pl/
+// @exclude https://forum.margonem.pl/
 // ==/UserScript==
 
 (function ()

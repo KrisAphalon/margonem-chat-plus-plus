@@ -229,15 +229,13 @@ function replaceChatInput()
 {
     if (INTERFACE === 'NI')
     {
+        textarea.placeholder = 'Naciśnij Enter, aby porozmawiać'
+
         const inputWrapper = document.getElementsByClassName('chat-tpl')[0].children[5]
         inputWrapper.style.zIndex = '200'
         const inpchat = inputWrapper.children[0]
         inpchat.style.opacity = '0'
         inpchat.style.pointerEvents = 'none'
-
-        textarea.placeholder = 'Naciśnij Enter, aby porozmawiać'
-        if (!settings.multiMsg)
-            textarea.maxLength = 199
 
         textarea.addEventListener('keypress', function (e)
         {
@@ -302,6 +300,7 @@ export function initInputTextarea()
 {
     textarea = document.createElement('textarea')
     textarea.id = 'inpchat'
+    if (!settings.multiMsg) textarea.maxLength = 199
     replaceChatInput()
 
     // Fix for last available version of Firefox on Windows XP.
@@ -334,8 +333,6 @@ export function initInputTextarea()
             document.getElementById('bottxt').style.display = 'none'
             document.getElementById('inpchat').style.opacity = '1'
         }, false)
-
-        if (!settings.multiMsg) textarea.maxLength = 199
 
         loadAndApplyUserTheme()
     }

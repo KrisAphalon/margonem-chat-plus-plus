@@ -1,7 +1,7 @@
 import {loadSettings} from './settings'
 import {initMultiMsg} from './multi-msg'
 import {initTextMerger} from './text-merger'
-import {initInputColor} from './input-textarea'
+import {initInputTextarea} from './input-textarea'
 import {loadBasicStyles} from './css-manager'
 import {initPanel} from './panel'
 import {initTextJustify} from './text-justify'
@@ -34,7 +34,7 @@ function start()
     loadSettings()
     loadBasicStyles()
 
-    initInputColor()
+    initInputTextarea()
     initInputFolding()
     initChatCleaner()
 

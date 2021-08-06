@@ -225,7 +225,7 @@ function loadAndApplyUserTheme()
     }
 }
 
-export function initInputColor()
+function replaceChatInput()
 {
     if (INTERFACE === 'NI')
     {
@@ -235,38 +235,32 @@ export function initInputColor()
         inpchat.style.opacity = '0'
         inpchat.style.pointerEvents = 'none'
 
-        textarea = document.createElement('textarea')
-        textarea.id = 'inpchat'
         textarea.placeholder = 'Naciśnij Enter, aby porozmawiać'
         if (!settings.multiMsg)
             textarea.maxLength = 199
 
         textarea.addEventListener('keypress', function (e)
         {
-            if (e.key === 'Enter')
-            {
-                //TODO validate if it was really sent
-                textarea.blur()
-                if (textarea.value !== '') //initSendButton
-                    Engine.chat.sendMessage(textarea.value)
-            }
+            if (e.key !== 'Enter') return
+
+            //TODO validate if it was really sent
+            textarea.blur()
+            if (textarea.value !== '') //initSendButton
+                Engine.chat.sendMessage(textarea.value)
         }, true)
 
         //move focus to our textarea
-        inpchat.addEventListener('focusin', function ()
-        {
-            textarea.focus()
-        })
-
-        inputWrapper.prepend(textarea)
-
-        background = document.createElement('div')
-        background.id = 'textarea-background'
-        inputWrapper.insertBefore(background, textarea)
+        inpchat.addEventListener('focusin', () => textarea.focus())
 
         const backgroundUp = document.createElement('div')
         backgroundUp.id = 'textarea-background-up'
-        inputWrapper.insertBefore(backgroundUp, background)
+        inputWrapper.prepend(backgroundUp)
+
+        background = document.createElement('div')
+        background.id = 'textarea-background'
+        inputWrapper.prepend(background)
+
+        inputWrapper.prepend(textarea)
 
         addInputToTextareaConvertor()
         checkInputMsg()
@@ -280,22 +274,35 @@ export function initInputColor()
         background = document.createElement('div')
         background.id = 'textarea-background'
         bottombar.appendChild(background)
-
-        textarea = document.createElement('textarea')
-        textarea.id = 'inpchat'
         bottombar.appendChild(textarea)
 
         // This listener makes sure that unfolded textarea does not close immediately when clicked on.
-        textarea.addEventListener('click', function (e)
-        {
-            e.stopPropagation()
-        }, true)
+        textarea.addEventListener('click', (e) => e.stopPropagation(), true)
         // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
-        textarea.addEventListener('mousedown', function (e)
-        {
-            e.stopPropagation()
-        }, true)
+        textarea.addEventListener('mousedown', (e) => e.stopPropagation(), true)
     }
+}
+
+function loadLastSavedMessage()
+{
+    const savedMessage = localStorage.getItem('lastInputtedMsg')
+    if (savedMessage)
+    {
+        textarea.value = savedMessage
+        if (INTERFACE === 'SI')
+        {
+            document.getElementById('bottxt').style.display = 'block'
+            textarea.style.opacity = '0'
+        }
+    }
+    recolorTextarea()
+}
+
+export function initInputTextarea()
+{
+    textarea = document.createElement('textarea')
+    textarea.id = 'inpchat'
+    replaceChatInput()
 
     // Fix for last available version of Firefox on Windows XP.
     // This fix is one of a kind, this script is not designed to work on older web browsers
@@ -309,19 +316,7 @@ export function initInputColor()
     textarea.addEventListener('input', saveInputMsg, false)
 
     updateCommandsColors()
-
-    const savedMessage = localStorage.getItem('lastInputtedMsg')
-    if (savedMessage)
-    {
-        textarea.value = savedMessage
-        if (INTERFACE === 'SI')
-        {
-            document.getElementById('bottxt').style.display = 'block'
-            textarea.style.opacity = '0'
-        }
-    }
-    recolorTextarea()
-
+    loadLastSavedMessage()
 
     if (INTERFACE === 'SI')
     {

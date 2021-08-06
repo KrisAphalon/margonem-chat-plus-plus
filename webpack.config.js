@@ -35,6 +35,11 @@ const rules = [
                 plugins: ['@babel/plugin-transform-runtime']
             }
         }
+    },
+    {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: 'htmlts-loader'
     }
 ]
 

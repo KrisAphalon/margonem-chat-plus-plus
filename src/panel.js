@@ -48,44 +48,35 @@ const PANEL_HTML = `html
 export function showPanel(e)
 {
     e.preventDefault()
-    if (!document.getElementById('cpp-panel'))
-    {
-        const panel = document.createElement('div')
-        setDraggable(panel)
-        panel.id = 'cpp-panel'
-        panel.className = 'cpp-panel'
-        panel.innerHTML = PANEL_HTML
-        panel.querySelector('.settings-box').innerHTML = settingsElms.join('')
-        const deletePanel = function ()
-        {
-            document.body.removeChild(panel)
-        }
-        panel.querySelector('#cpp-panel .close-button').addEventListener('click', deletePanel)
-        panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
-        panel.querySelector('.bottom-close').addEventListener('click', function ()
-        {
-            message('Zapisano!')
-        })
+    if (document.getElementById('cpp-panel')) return
 
-        for (const settingName in callbacks)
+    const panel = document.createElement('div')
+    setDraggable(panel)
+    panel.id = 'cpp-panel'
+    panel.className = 'cpp-panel'
+    panel.innerHTML = PANEL_HTML
+    panel.querySelector('.settings-box').innerHTML = settingsElms.join('')
+
+    const deletePanel = () => document.body.removeChild(panel)
+    panel.querySelector('#cpp-panel .close-button').addEventListener('click', deletePanel)
+    panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
+    panel.querySelector('.bottom-close').addEventListener('click', () => message('Zapisano!'))
+
+    for (const settingName in callbacks)
+    {
+        const input = panel.querySelector(`#cpp-setting-${settingName}`)
+        input.checked = settings[settingName]
+        input.addEventListener('input', callbacks[settingName])
+    }
+    document.body.appendChild(panel)
+    if (INTERFACE === 'NI')
+    {
+        // set tips the NI way
+        $('[tip]', $(panel)).each(function ()
         {
-            const input = panel.querySelector(`#cpp-setting-${settingName}`)
-            input.checked = settings[settingName]
-            input.addEventListener('input', function ()
-            {
-                callbacks[settingName]()
-            })
-        }
-        document.body.appendChild(panel)
-        if (INTERFACE === 'NI')
-        {
-            // set tips the NI way
-            $('[tip]', $(panel)).each(function ()
-            {
-                const $this = $(this)
-                $this.tip($this.attr('tip'))
-            })
-        }
+            const $this = $(this)
+            $this.tip($this.attr('tip'))
+        })
     }
 }
 

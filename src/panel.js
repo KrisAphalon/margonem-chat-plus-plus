@@ -9,7 +9,7 @@ export function addSettingToPanel(settingName, translation, tip, callback)
 {
     const checked = settings[settingName] ? ' checked' : ''
 
-    const setting = `
+    const setting = `html
 <label class="setting-label">
     <span class="setting-label-text" tip="${tip}">${translation}</span>
     <input class="setting-checkbox" id="cpp-setting-${settingName}" name="${settingName}" type="checkbox" ${checked}>
@@ -25,16 +25,7 @@ export function addSettingToPanel(settingName, translation, tip, callback)
     callbacks[settingName] = callback
 }
 
-export function showPanel(e)
-{
-    e.preventDefault()
-    if (!document.getElementById('cpp-panel'))
-    {
-        const panel = document.createElement('div')
-        setDraggable(panel)
-        panel.id = 'cpp-panel'
-        panel.className = 'cpp-panel'
-        panel.innerHTML = `
+const PANEL_HTML = `html
 <div class="header-label-positioner">
     <div class="header-label">
         <div class="left-decor"></div>
@@ -46,15 +37,25 @@ export function showPanel(e)
     <button class="close-button" tip="Zamknij"/>
 </div>
 <div class="background">
-    <div class="settings-box">
-    ${settingsElms.join('')}
-    </div>
+    <div class="settings-box"></div>
     <div class="bottom-box">
         <button class="button text-button bottom-close">OK</button>
         <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
     </div>
 </div>
 `
+
+export function showPanel(e)
+{
+    e.preventDefault()
+    if (!document.getElementById('cpp-panel'))
+    {
+        const panel = document.createElement('div')
+        setDraggable(panel)
+        panel.id = 'cpp-panel'
+        panel.className = 'cpp-panel'
+        panel.innerHTML = PANEL_HTML
+        panel.querySelector('.settings-box').innerHTML = settingsElms.join('')
         const deletePanel = function ()
         {
             document.body.removeChild(panel)

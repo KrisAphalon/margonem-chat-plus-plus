@@ -3,6 +3,7 @@ import {default as badWordsWithSpace} from '../res/automute/bad-words-with-space
 import {default as falsePositivesWithPolishLetters} from '../res/automute/false-positives-with-polish-letters.json'
 import {default as falsePositives} from '../res/automute/false-positives.json'
 import {setDraggable} from './dragging'
+import {setNITipsInsideOf} from './utility-functions'
 
 let oldSendMsg
 
@@ -143,14 +144,7 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
 
     document.body.appendChild(panel)
     if (INTERFACE === 'NI')
-    {
-        // set tips the NI way
-        $('[tip]', $(panel)).each(function ()
-        {
-            const $this = $(this)
-            $this.tip($this.attr('tip'))
-        })
-    }
+        setNITipsInsideOf(panel)
 }
 
 /**

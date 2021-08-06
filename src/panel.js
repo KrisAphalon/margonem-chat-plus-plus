@@ -1,5 +1,6 @@
 import {setDraggable} from './dragging'
 import {settings} from './settings'
+import {setNITipsInsideOf} from './utility-functions'
 
 
 const settingsElms = []
@@ -70,14 +71,7 @@ export function showPanel(e)
     }
     document.body.appendChild(panel)
     if (INTERFACE === 'NI')
-    {
-        // set tips the NI way
-        $('[tip]', $(panel)).each(function ()
-        {
-            const $this = $(this)
-            $this.tip($this.attr('tip'))
-        })
-    }
+        setNITipsInsideOf(panel)
 }
 
 export function initPanel()

@@ -1,57 +1,81 @@
 import {common, handleNoAnswer} from './main'
-import {saveSettings, settings} from './settings'
 import {addSettingToPanel} from './panel'
+import {saveSettings, settings} from './settings'
 
 const messages = {}
 const ALLOWED_COMMANDS = ['nar', 'nar2', 'nar3', 'sys_comm', 'me']
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
 
-function parseMessage(tab, nick, text, time, command)
+function destructureMessage(ch)
 {
+    return {
+        tab: ch.k,
+        nick: ch.n === '' ? ch.nick : ch.n, // Handle Nerthus Addon
+        text: ch.t,
+        time: ch.ts,
+        command: ch.s
+    }
+}
+
+function parseSingleMsgOnChat(elm, ch)
+{
+    const {tab, nick, text, time, command} = destructureMessage(ch)
+
+    if (elm.innerHTML !== messages[nick][2]) return false
+    const html_regexp = /(.*)<\/span>$/g
+    const html_match = html_regexp.exec(messages[nick][2])
+    if (!html_match) return false
+
+    const new_text = html_match[1] + ' ' + text + '</span>'
+    elm.innerHTML = new_text
+    messages[nick] = [tab, command, new_text, time]
+    log('[' + tab + '] ' + nick + ' -> ' + text)
+
+    window.clearTimeout(common.sendTimeout)
+    if (typeof common.sendArr[0] !== 'undefined')
+        common.sendArr.shift()
+    if (common.sendArr.length > 0)
+        setTimeout(function ()
+        {
+            if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
+                window.chatSendMsg(common.sendArr[0])
+        }, settings.messageTimeout)
+    if (common.sendArr.length > 1)
+        common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
+
+    return true
+}
+
+function isMessageParseable(ch)
+{
+    const {tab, nick, time, command} = destructureMessage(ch)
+
     if (typeof messages[nick] === 'undefined') return false
-    if (messages[nick][0] !== tab || messages[nick][1] !== command || time - messages[nick][3] > 5) return false
+    if (messages[nick][0] !== tab || messages[nick][1] !== command) return false
+    if (time - messages[nick][3] > 5) return false
+    return true
+}
+
+function parseMessage(ch)
+{
+    if (!isMessageParseable(ch)) return false
 
     const chattxt = document.getElementById('chattxt')
     // count down so it should be faster
     for (let i = chattxt.children.length - 1; i >= 0; i--)
     {
-        if (chattxt.children[i].innerHTML !== messages[nick][2]) continue
-        const html_regexp = /(.*)<\/span>$/g
-        const html_match = html_regexp.exec(messages[nick][2])
-        if (!html_match) continue
-
-        const new_text = html_match[1] + ' ' + text + '</span>'
-        chattxt.children[i].innerHTML = new_text
-        messages[nick] = [tab, command, new_text, time]
-        log('[' + tab + '] ' + nick + ' -> ' + text)
-
-        window.clearTimeout(common.sendTimeout)
-        if (typeof common.sendArr[0] !== 'undefined')
-            common.sendArr.shift()
-        if (common.sendArr.length > 0)
-            setTimeout(function ()
-            {
-                if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
-                    window.chatSendMsg(common.sendArr[0])
-            }, settings.messageTimeout)
-        if (common.sendArr.length > 1)
-            common.sendTimeout = setTimeout(handleNoAnswer, settings.messageTimeout * 3)
-
-        return true
+        if (parseSingleMsgOnChat(chattxt.children[i], ch)) return true
     }
 }
 
 function parser(ch)
 {
-    if (!settings.mergeMessages) return false
-    if (!ALLOWED_COMMANDS.includes(ch.s)) return false
+    const {tab, nick, text, time, command} = destructureMessage(ch)
 
-    const tab = ch.k
-    const nick = ch.n === '' ? ch.nick : ch.n // Handle Nerthus Addon
-    const text = ch.t
-    const time = ch.ts
-    const command = ch.s
-    const wasParsed = parseMessage(tab, nick, text, time, command)
+    if (!settings.mergeMessages) return false
+    if (!ALLOWED_COMMANDS.includes(command)) return false
+
+    const wasParsed = parseMessage(ch)
     if (wasParsed) return true
 
     const html_text = `<span></span><span class="chatmsg">${text}</span>`

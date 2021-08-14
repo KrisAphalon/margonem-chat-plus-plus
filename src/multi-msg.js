@@ -1,6 +1,6 @@
-import {saveSettings, settings} from './settings'
 import {common, handleNoAnswer} from './main'
 import {addSettingToPanel} from './panel'
+import {saveSettings, settings} from './settings'
 
 let oldSendMsg
 
@@ -59,38 +59,33 @@ function restoreMsg(e)
 
 const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 
+function calculateAddOnStartAsterix(arr, commandIndex)
+{
+    if (arr[commandIndex].startsWith('*dial'))
+    {
+        const arrStartingAtCommand = arr.slice(commandIndex)
+        return arrStartingAtCommand.join(' ').split(',')[0] + ', '
+    }
+    return arr[commandIndex] + ' '
+}
+
 function calculateAddOnStart(msg)
 {
     const arr = msg.split(' ')
     if (arr.length <= 1) return ''
 
     let addOnStart = ''
-    if (['*', '/'].includes(arr[0][0]))
+    if (msg.startsWith('@') || ['/k', '/g'].includes(arr[0])) addOnStart = arr[0] + ' '
+    if (msg.startsWith('*'))
     {
-        if (['k', 'g'].includes(arr[0][1]) && arr[0][2] === undefined)
-            addOnStart = '/'
-        else
-            addOnStart = '*'
-
-        const command = arr[0].slice(1)
-        addOnStart += command + ' '
-        if (command.startsWith('dial'))
-            addOnStart = msg.split(',')[0] + ', '
-        //no bullshit with e.g. *le*n*n*gt*h
+        addOnStart = calculateAddOnStartAsterix(arr, 0)
     }
-    else if (arr[0][0] === '@')
-        addOnStart = msg.split(' ')[0] + ' '
 
-    //if it's command on specific channel or priv
-    if (arr[1][0] === '*' &&
-        (arr[0].startsWith('/k') || arr[0].startsWith('/g') || arr[0].startsWith('@'))
-    )
+    if (addOnStart && !addOnStart.startsWith('*') && arr[1].startsWith('*'))
     {
-        const command = arr[1].slice(1)
-        addOnStart += '*' + command + ' '
-        if (command.startsWith('dial'))
-            addOnStart = msg.split(',')[0] + ', '
+        addOnStart += calculateAddOnStartAsterix(arr, 1)
     }
+
     return addOnStart
 }
 

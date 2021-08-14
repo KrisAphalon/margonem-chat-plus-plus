@@ -1,5 +1,5 @@
-import {default as badWords} from '../res/automute/bad-words.json'
 import {default as badWordsWithSpace} from '../res/automute/bad-words-with-space.json'
+import {default as badWords} from '../res/automute/bad-words.json'
 import {default as falsePositivesWithPolishLetters} from '../res/automute/false-positives-with-polish-letters.json'
 import {default as falsePositives} from '../res/automute/false-positives.json'
 import {setDraggable} from './dragging'
@@ -36,10 +36,7 @@ function testMessage(originalMsg, caughtMsg)
 
     const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
     if (!arr || !arr[1])
-    {
-        message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
-        return
-    }
+        return message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
 
     const match = arr[1]
     const start = Math.max(copy.indexOf(match) - 20, 0)
@@ -96,24 +93,27 @@ const PANEL_HTML = `
 </div>
 `.trim()
 
-function alertUser(originalMsg, caughtMsg, ahoj)
-{
-    if (document.getElementById('cpp-automute-panel')) return
-
-    const alertMsg = ahoj
-        ? `
+const AHOJ_ALERT = `
 Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
 <span style="color:red">Zawiera ona zwrot "ahoj", który poprzedzony jest przez
 dowolną literę "a". Tak, w ten sposób automute sprawdza czy jest to "przekleństwo".
 Jeżeli chcesz wysłać tak czy siak, droga wolna.
 Wiedz jednak, że akurat w tym przypadku nie ma pomyłek.</span>
-`
-        : `
+`.trim()
+
+const NORMAL_ALERT = `
 Twoja wiadomość prawdopodobnie byłaby wyłapana przez automute, ale masz szczęście ;) <br>
-Poniżej wiadomość, jaką widzi automute:<hr><span style="word-wrap: break-word; text-align: left;">
-${caughtMsg}</span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość przejdzie bez
+Poniżej wiadomość, jaką widzi automute:<hr><span class="cpp-mute-text" style="word-wrap: break-word; text-align: left;">
+
+</span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość przejdzie bez
 gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrzynkę pocztową
-`
+`.trim()
+
+function alertUser(originalMsg, caughtMsg, ahoj)
+{
+    if (document.getElementById('cpp-automute-panel')) return
+
+    const alertMsg = ahoj ? AHOJ_ALERT : NORMAL_ALERT
 
     const panel = document.createElement('div')
     setDraggable(panel)
@@ -124,6 +124,7 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
     const whereToSend = INTERFACE === 'NI' ? TIP_SEND_NI : TIP_SEND_SI
     panel.querySelector('.bottom-test').setAttribute('tip', whereToSend)
     panel.querySelector('.top-box').innerHTML = alertMsg
+    if (!ahoj) panel.querySelector('.cpp-mute-text').innerHTML = caughtMsg
     const deletePanel = function ()
     {
         document.body.removeChild(panel)
@@ -132,15 +133,8 @@ gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrz
     panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
-    panel.querySelector('.bottom-send').addEventListener('click', function ()
-    {
-        oldSendMsg(originalMsg)
-    })
-
-    panel.querySelector('.bottom-test').addEventListener('click', function ()
-    {
-        testMessage(originalMsg, caughtMsg)
-    })
+    panel.querySelector('.bottom-send').addEventListener('click', () => oldSendMsg(originalMsg))
+    panel.querySelector('.bottom-test').addEventListener('click', () => testMessage(originalMsg, caughtMsg))
 
     document.body.appendChild(panel)
     if (INTERFACE === 'NI')
@@ -170,14 +164,14 @@ function checkMessageForBadWords(msg, badWords)
 function normalizeString(str)
 {
     return str.replace(/[^a-zńąćśźżóęł ]/g, '')
-    .replace(/ą/g, 'a')
-    .replace(/ę/g, 'e')
-    .replace(/ł/g, 'l')
-    .replace(/[żź]/g, 'z')
-    .replace(/ó/g, 'o')
-    .replace(/ń/g, 'n')
-    .replace(/ć/g, 'c')
-    .replace(/ś/g, 's')
+        .replace(/ą/g, 'a')
+        .replace(/ę/g, 'e')
+        .replace(/ł/g, 'l')
+        .replace(/[żź]/g, 'z')
+        .replace(/ó/g, 'o')
+        .replace(/ń/g, 'n')
+        .replace(/ć/g, 'c')
+        .replace(/ś/g, 's')
 }
 
 function removePhrases(str, phrasesToRemove)

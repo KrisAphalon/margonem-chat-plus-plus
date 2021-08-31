@@ -189,7 +189,7 @@ function checkForMuteWordsThenSend(msg)
     if (copy[0] === '@')
         copy = copy.slice(copy.indexOf(' '))
 
-    removePhrases(copy, falsePositivesWithPolishLetters)
+    copy = removePhrases(copy, falsePositivesWithPolishLetters)
 
     //delete characters that aren't used to create words
     copy = normalizeString(copy)
@@ -202,7 +202,7 @@ function checkForMuteWordsThenSend(msg)
     let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)
     if (alertMsg) return alertUser(msg, alertMsg)
 
-    removePhrases(copy, falsePositives)
+    copy = removePhrases(copy, falsePositives)
 
     copy = copy.replace(/ /g, '')
     copy = removeDuplicates(copy)

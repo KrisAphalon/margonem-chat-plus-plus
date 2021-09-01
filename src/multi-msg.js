@@ -61,6 +61,9 @@ const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 
 function calculateAddOnStartAsterix(arr, commandIndex)
 {
+    // force first letter to be asterix in case of /me
+    if (arr[commandIndex][0] !== '*') arr[commandIndex] = '*' + arr[commandIndex].substr(1)
+
     if (arr[commandIndex].startsWith('*dial'))
     {
         const arrStartingAtCommand = arr.slice(commandIndex)
@@ -76,7 +79,7 @@ function calculateAddOnStart(msg)
 
     let addOnStart = ''
     if (msg.startsWith('@') || ['/k', '/g'].includes(arr[0])) addOnStart = arr[0] + ' '
-    if (msg.startsWith('*'))
+    if (msg.startsWith('*') || msg.startsWith('/me'))
     {
         addOnStart = calculateAddOnStartAsterix(arr, 0)
     }

@@ -21,9 +21,11 @@
     height: 124px;
     line-height: 25.6px;
     overflow-x: hidden;
-    padding: 4px;
     scrollbar-width: thin;
     white-space: pre-wrap;
+    margin-top: 5px;
+    padding: 0 4px 4px;
+    z-index: 100;
   }
 
   #textarea-background {
@@ -36,6 +38,7 @@
     left: -104px;
     pointer-events: none;
     position: absolute;
+    z-index: 50;
   }
 
   #textarea-background-up {
@@ -47,6 +50,7 @@
     left: -104px;
     pointer-events: none;
     position: absolute;
+    z-index: 60;
   }
 
   .chat-size-1 #textarea-background, .chat-size-1 #textarea-background-up {

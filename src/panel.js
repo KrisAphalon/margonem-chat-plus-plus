@@ -10,15 +10,15 @@ export function addSettingToPanel(settingName, translation, tip, callback)
 {
     const checked = settings[settingName] ? ' checked' : ''
 
-    const setting = `html
+    const setting = `
 <label class="setting-label">
     <span class="setting-label-text" tip="${tip}">${translation}</span>
     <input class="setting-checkbox" id="cpp-setting-${settingName}" name="${settingName}" type="checkbox" ${checked}>
     <span class="checkbox-outline">
         <span class="checkmark">
-        <div class="checkmark-stem"></div>
-        <div class="checkmark-kick"></div>
-    </span>
+            <div class="checkmark-stem"></div>
+            <div class="checkmark-kick"></div>
+        </span>
     </span>
 </label>
 `
@@ -26,7 +26,7 @@ export function addSettingToPanel(settingName, translation, tip, callback)
     callbacks[settingName] = callback
 }
 
-const PANEL_HTML = `html
+const PANEL_HTML = `
 <div class="header-label-positioner">
     <div class="header-label">
         <div class="left-decor"></div>

@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
-const sass = require('node-sass')
+const sass = require('sass')
 const fs = require('fs')
 const childProcess = require('child_process')
 
@@ -32,14 +32,13 @@ const rules = [
             loader: 'babel-loader',
             options: {
                 presets: ['@babel/preset-env'],
-                plugins: ['@babel/plugin-transform-runtime']
+                plugins: [
+                    '@babel/plugin-transform-runtime',
+                    'babel-plugin-remove-template-literals-whitespace'
+                ],
+                minified: true
             }
         }
-    },
-    {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: 'htmlts-loader'
     }
 ]
 

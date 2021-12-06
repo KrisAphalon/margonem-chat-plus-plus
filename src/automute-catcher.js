@@ -62,13 +62,13 @@ const TIP_SEND_NI = `
 Wysyła podejrzaną część wiadomości na chat grupowy.
 Jeżeli wiadomość zostanie zagwiazdkowana, to nie należy jej wysyłać.
 Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
-`.trim()
+`
 
 const TIP_SEND_SI = `
 Wysyła podejrzaną część wiadomości do samego siebie.
 Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b> prawdopodobnie nie należy jej wysyłać.
 Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
-`.trim()
+`
 
 const PANEL_HTML = `
 <div class="header-label-positioner">
@@ -91,7 +91,7 @@ const PANEL_HTML = `
         <a href="https://www.buymeacoffee.com/krisaphalon" target="_blank"><button class="button donate-button" tip="Wesprzyj mnie"><span>♥</span></button></a>
     </div>
 </div>
-`.trim()
+`
 
 const AHOJ_ALERT = `
 Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
@@ -99,7 +99,7 @@ Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
 dowolną literę "a". Tak, w ten sposób automute sprawdza czy jest to "przekleństwo".
 Jeżeli chcesz wysłać tak czy siak, droga wolna.
 Wiedz jednak, że akurat w tym przypadku nie ma pomyłek.</span>
-`.trim()
+`
 
 const NORMAL_ALERT = `
 Twoja wiadomość prawdopodobnie byłaby wyłapana przez automute, ale masz szczęście ;) <br>
@@ -107,7 +107,7 @@ Poniżej wiadomość, jaką widzi automute:<hr><span class="cpp-mute-text" style
 
 </span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość przejdzie bez
 gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrzynkę pocztową
-`.trim()
+`
 
 function alertUser(originalMsg, caughtMsg, ahoj)
 {

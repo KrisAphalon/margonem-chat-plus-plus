@@ -23,7 +23,7 @@ function addCommandsColorStyles()
 #inpchat.clant { color: ${chatColors.clant}; }
 #inpchat.team { color: ${chatColors.team}; }
 #inpchat.sys_comm { color: ${chatColors.sys_comm}; }
-        `.trim()
+        `
     )
 }
 

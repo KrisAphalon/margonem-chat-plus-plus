@@ -3,6 +3,7 @@ import {addSettingToPanel} from './panel'
 import {saveSettings, settings} from './settings'
 import {regexIndexOf} from './utility-functions'
 
+const polishLetters = /[ąćęłńóśźż@]/gi // @ is strange, can't really test it
 let oldSendMsg
 
 function deconstructSendArrPart(part)
@@ -87,8 +88,6 @@ function calculateAddOnStart(msg)
 
     return addOnStart
 }
-
-const polishLetters = /[ąćęłńóśźż@]/gi // @ is strange, can't really test it
 
 function getSplitCandidate(str, idx, maxLength)
 {

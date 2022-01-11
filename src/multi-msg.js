@@ -1,6 +1,7 @@
 import {common, handleNoAnswer} from './main'
 import {addSettingToPanel} from './panel'
 import {saveSettings, settings} from './settings'
+import {regexIndexOf} from './utility-functions'
 
 let oldSendMsg
 
@@ -23,14 +24,11 @@ function deconstructSendArrPart(part)
 
 function calcMargoLength(string)
 {
-    let margoLength = 0
-    const len = string.length
-    for (let i = 0; i < len; i++)
-        if (string[i].match(polishLetters))
-            margoLength += 2
-        else
-            margoLength++
-    return margoLength
+    const match = string.match(polishLetters)
+    if (match)
+        return string.length + match.length
+
+    return string.length
 }
 
 function restoreMsg(e)
@@ -56,8 +54,6 @@ function restoreMsg(e)
     inpchat.value = newChatValue
     return false
 }
-
-const polishLetters = /[ąćęłńóśźż*@,. _]/gi
 
 function calculateAddOnStartAsterix(arr, commandIndex)
 {
@@ -92,86 +88,69 @@ function calculateAddOnStart(msg)
     return addOnStart
 }
 
-function divideMessageToParts(msg, addOnStart, maxLen)
+const polishLetters = /[ąćęłńóśźż@]/gi // @ is strange, can't really test it
+
+function getSplitCandidate(str, idx, maxLength)
+{
+    const dotPos = regexIndexOf(str, /[!?.] /, Math.floor(maxLength / 2))
+    if (dotPos >= 0)
+        return dotPos + 2
+
+    const spacePos = str.lastIndexOf(' ')
+    if (spacePos >= 0)
+        return spacePos + 1
+
+    return idx
+}
+
+function getNextIdx(msg, idx, maxLength)
+{
+    for (let i = 0; i < maxLength; i++)
+    {
+        idx++
+        if (idx >= msg.length) break
+        if (msg[idx].match(polishLetters)) i++
+    }
+    return idx
+}
+
+function splitAndFormatLines(msg, prefix, maxLength)
+{
+    maxLength -= prefix.length
+    if (prefix.match(polishLetters))
+        maxLength -= prefix.match(polishLetters).length
+
+    const ret = []
+    let idx = 0
+    let msgLength = msg.length
+    while (msgLength > 0)
+    {
+        const begin = idx
+
+        idx = getNextIdx(msg, idx, maxLength)
+
+        const substr = msg.substring(begin, idx)
+        const split = msgLength > maxLength ? getSplitCandidate(substr, idx, maxLength) : msgLength
+
+        ret.push(prefix + substr.substring(0, split).trim())
+        idx = begin + split
+        msgLength -= idx - begin
+    }
+
+    return ret
+}
+
+function divideMessageToParts(msg, prefix, maxLength)
 {
     if (msg === '') return
 
-    let last_slice = 0
-    let current = 0
-    let last_space = 0
-    let last_dot = 0
-
-    //these two are needed to properly calculate char count when slicing message
-    let chars_from_last_space = 0
-    let chars_from_last_dot = 0
-
-    for (let i = 0; i < msg.length; i++)
+    msg = msg.substring(prefix.length)
+    const arr = splitAndFormatLines(msg, prefix, maxLength)
+    console.log(arr)
+    for (let msg of arr)
     {
-        if (msg[i].match(polishLetters))
-        {
-            chars_from_last_dot += 2
-            chars_from_last_space += 2
-            current += 2
-        }
-        else
-        {
-            chars_from_last_dot++
-            chars_from_last_space++
-            current++
-        }
-
-        if (msg[i] === ' ')
-        {
-            last_space = i
-            chars_from_last_space = 0
-        }
-        else if (msg[i] === '.')
-        {
-            last_dot = i
-            chars_from_last_dot = 0
-        }
-
-        //hard break any word that has more than 30 letters in it
-        if (last_space + 30 < i)
-        {
-            last_space = i
-            chars_from_last_space = 0
-        }
-
-        if (current < maxLen) continue
-
-        if (last_dot + 100 < i) // || msg[last_dot + 1] === undefined
-        {
-            if (last_slice === 0)
-                common.sendArr.push(msg.slice(0, last_space))
-            else
-                common.sendArr.push(addOnStart + msg.slice(last_slice, last_space).trim())
-            last_slice = last_space
-            current = chars_from_last_space
-        }
-        else
-        {
-            let additional_shift = 0
-            for (let j = 0; j < 5; j++)
-                if (msg[last_dot + j] === '.' || msg[last_dot + j] === ' ')
-                    additional_shift++
-                else
-                    break
-            if (last_slice === 0)
-                common.sendArr.push(msg.slice(0, last_dot + additional_shift))
-            else
-                common.sendArr.push(addOnStart + msg.slice(last_slice, last_dot + additional_shift).trim())
-            last_slice = last_dot + additional_shift
-            current = chars_from_last_dot
-        }
-        console.log(common.sendArr)
-
-    }
-
-    if (last_slice === 0)
         common.sendArr.push(msg)
-    else if (msg.slice(last_slice) !== '')
-        common.sendArr.push(addOnStart + msg.slice(last_slice).trim())
+    }
 }
 
 function fixTextareaFolding()
@@ -191,7 +170,7 @@ function sendMultiMsg(msg)
     //delete old sendArr if there was some problem (e.g. lost group chat)
     common.sendArr.splice(0)
 
-    const maxLen = 195 - calcMargoLength(addOnStart)
+    const maxLen = 197
     if (calcMargoLength(msg) <= maxLen)
     {
         oldSendMsg(msg)

@@ -61,7 +61,7 @@ function calculateAddOnStartAsterix(arr, commandIndex)
     // force first letter to be asterix in case of /me
     if (arr[commandIndex][0] !== '*') arr[commandIndex] = '*' + arr[commandIndex].substr(1)
 
-    if (arr[commandIndex].startsWith('*dial'))
+    if (arr[commandIndex].startsWith('*dial') || arr[commandIndex].startsWith('*lang'))
     {
         const arrStartingAtCommand = arr.slice(commandIndex)
         return arrStartingAtCommand.join(' ').split(',')[0] + ', '

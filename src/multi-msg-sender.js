@@ -14,6 +14,7 @@ function parseMessageToChatForm(message)
     let split = message.split(' ')
 
     let retry = false
+    let surroundCharacter = ''
     if (message[0] === '/' || message[0] === '*')
     {
         let command = message.split(' ', 1)[0]
@@ -58,6 +59,15 @@ function parseMessageToChatForm(message)
                 command = '«' + npcName + '»'
                 break
             }
+            case '*lang':
+            {
+                const languageSplit = message.split(',')
+                languageSplit.shift()
+                split = languageSplit.join(',').split(' ')
+                command = ''
+                surroundCharacter = '*'
+                break
+            }
         }
         split.shift()
         if (command !== '')
@@ -75,6 +85,9 @@ function parseMessageToChatForm(message)
         if (split[i] !== '')
             message += split[i] + ' '
     message = message.trim()
+
+    if (surroundCharacter)
+        message = `${surroundCharacter}${message}${surroundCharacter}`
 
     if (retry)
         return parseMessageToChatForm(message)

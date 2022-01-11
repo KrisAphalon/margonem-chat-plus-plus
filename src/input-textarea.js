@@ -142,7 +142,8 @@ const CHAT_COMMAND_CLASSES = {
     '*dial1': 'dial1',
     '*dial2': 'dial2',
     '*dial3': 'dial3',
-    '*dial666': 'dial666'
+    '*dial666': 'dial666',
+    '*lang': 'lang'
 }
 
 const SYS_COMMANDS = ['*sys', '*map', '*light', '*addGraf', '*delGraf', '*hide', '*weather']

@@ -102,8 +102,9 @@ function getSplitCandidate(str, idx, maxLength)
     return idx
 }
 
-function getNextIdx(msg, idx, maxLength)
+function getIdx(msg, maxLength)
 {
+    let idx = 0
     for (let i = 0; i < maxLength; i++)
     {
         idx++
@@ -120,20 +121,13 @@ function splitAndFormatLines(msg, prefix, maxLength)
         maxLength -= prefix.match(polishLetters).length
 
     const ret = []
-    let idx = 0
-    let msgLength = msg.length
-    while (msgLength > 0)
+    while (msg.length > 0)
     {
-        const begin = idx
-
-        idx = getNextIdx(msg, idx, maxLength)
-
-        const substr = msg.substring(begin, idx)
-        const split = msgLength > maxLength ? getSplitCandidate(substr, idx, maxLength) : msgLength
-
+        const idx = getIdx(msg, maxLength)
+        const substr = msg.substring(0, idx)
+        const split = calcMargoLength(msg) > maxLength ? getSplitCandidate(substr, idx, maxLength) : msg.length
         ret.push(prefix + substr.substring(0, split).trim())
-        idx = begin + split
-        msgLength -= idx - begin
+        msg = msg.slice(split)
     }
 
     return ret

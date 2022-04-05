@@ -116,9 +116,7 @@ function getIdx(msg, maxLength)
 
 function splitAndFormatLines(msg, prefix, maxLength)
 {
-    maxLength -= prefix.length
-    if (prefix.match(polishLetters))
-        maxLength -= prefix.match(polishLetters).length
+    maxLength -= calcMargoLength(prefix)
 
     const ret = []
     while (msg.length > 0)

@@ -1,6 +1,7 @@
 import {common, handleNoAnswer} from './main'
 import {addSettingToPanel} from './panel'
 import {saveSettings, settings} from './settings'
+import {sanitizeText} from './utility-functions'
 
 const messages = {}
 const ALLOWED_COMMANDS = ['nar', 'nar2', 'nar3', 'sys_comm', 'me']
@@ -29,7 +30,7 @@ function parseSingleMsgOnChat(elm, ch)
     const new_text = html_match[1] + ' ' + text + '</span>'
     elm.innerHTML = new_text
     messages[nick] = [tab, command, new_text, time]
-    log('[' + tab + '] ' + nick + ' -> ' + text)
+    log(sanitizeText(`[${tab}] ${nick} -> ${text}`))
 
     window.clearTimeout(common.sendTimeout)
     if (typeof common.sendArr[0] !== 'undefined')

@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -49,16 +49,12 @@ jobs:
         run: |
           RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
           RELEASE_DESC=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
-          
-          git tag -d ${GITHUB_REF#*/*/}
           git tag -f -a "${GITHUB_REF#*/*/}" -m "$RELEASE_TITLE" -m "$RELEASE_DESC"
-          git push --set-upstream origin :${GITHUB_REF#*/*/}
-          hub release delete ${GITHUB_REF#*/*/}
-          git push --set-upstream origin ${GITHUB_REF#*/*/}
-          hub release create ${GITHUB_REF#*/*/} -m "$RELEASE_TITLE" -m "$RELEASE_DESC"
         env:
           GITHUB_USER: <ORG>
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push changes
-        run: git push --set-upstream origin production --force --tags
+        run: |
+          git push --set-upstream origin production --force
+          git push origin "${GITHUB_REF#*/*/}" --force

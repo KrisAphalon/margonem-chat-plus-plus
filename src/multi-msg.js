@@ -158,7 +158,7 @@ function sendMultiMsg(msg)
     msg = msg.trim()
     const addOnStart = calculateAddOnStart(msg)
 
-    //delete old sendArr if there was some problem (e.g. lost group chat)
+    // delete old sendArr if there was some problem (e.g. lost group chat)
     common.sendArr.splice(0)
 
     const maxLen = 197
@@ -169,6 +169,12 @@ function sendMultiMsg(msg)
         return
     }
     divideMessageToParts(msg, addOnStart, maxLen)
+
+    // replace the *me prefix back to /me for the first part if message started with /me
+    if (msg.startsWith('/me'))
+    {
+        common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, '/me')
+    }
 
     if (common.sendArr.length > 0)
     {

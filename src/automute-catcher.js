@@ -40,7 +40,7 @@ function testMessage(originalMsg, caughtMsg)
 
     const match = arr[1]
     const start = Math.max(copy.indexOf(match) - 20, 0)
-    const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length - 1)
+    const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length)
     const subMsg = copy.substring(start, end)
 
     if (INTERFACE === 'NI')

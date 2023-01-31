@@ -1,6 +1,6 @@
 {
   "name": "margonem-chat-plus-plus",
-  "version": "2.9.4",
+  "version": "2.9.6",
   "main": "/src/main.js",
   "browserslist": [
     "defaults",
@@ -14,7 +14,7 @@
     "@babel/preset-env": "^7.20.2",
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
     "babel-loader": "^9.1.2",
-    "eslint": "^8.31.0",
+    "eslint": "^8.33.0",
     "sass": "^1.57.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"

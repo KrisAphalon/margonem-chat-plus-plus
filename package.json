@@ -1,6 +1,6 @@
 {
   "name": "margonem-chat-plus-plus",
-  "version": "2.9.6",
+  "version": "2.9.11",
   "main": "/src/main.js",
   "browserslist": [
     "defaults",
@@ -9,14 +9,14 @@
     "firefox 52"
   ],
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/core": "^7.21.3",
+    "@babel/plugin-transform-runtime": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
     "babel-loader": "^9.1.2",
-    "eslint": "^8.33.0",
-    "sass": "^1.57.1",
-    "webpack": "^5.75.0",
+    "eslint": "^8.36.0",
+    "sass": "^1.59.3",
+    "webpack": "^5.76.2",
     "webpack-cli": "^5.0.1"
   },
   "scripts": {

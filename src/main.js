@@ -1,4 +1,3 @@
-import {initLogSaver} from './log-saver'
 import {loadSettings} from './settings'
 import {initMultiMsg} from './multi-msg'
 import {initTextMerger} from './text-merger'
@@ -53,7 +52,6 @@ function start()
     }
 
     //initPanel()
-    //initLogSaver()
 }
 
 if (INTERFACE === 'NI')

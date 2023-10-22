@@ -3,13 +3,11 @@ import {default as badWords} from '../res/automute/bad-words.json'
 import {default as falsePositivesWithPolishLetters} from '../res/automute/false-positives-with-polish-letters.json'
 import {default as falsePositives} from '../res/automute/false-positives.json'
 import {setDraggable} from './dragging'
-import {setNITipsInsideOf} from './utility-functions'
-
-let oldSendMsg
-
+import {chatChecks} from './input-textarea'
+import {sendMessage, setNITipsInsideOf} from './utility-functions'
 
 // removes duplicate letters from message
-// "teeeeeets" changes to "tests"
+// "teeeeeests" changes to "tests"
 function removeDuplicates(msg)
 {
     if (msg.length === 0) return ''
@@ -35,7 +33,7 @@ function testMessage(originalMsg, caughtMsg)
         copy = copy.slice(copy.indexOf(' '))
 
     const arr = caughtMsg.match(/<span style='color: red; font-weight: bold'>(.*)<\/span>/)
-    if (!arr || !arr[1])
+    if (!(arr?.[1]))
         return message('Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie')
 
     const match = arr[1]
@@ -50,7 +48,7 @@ function testMessage(originalMsg, caughtMsg)
     }
     else
     {
-        oldSendMsg('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
+        sendMessage('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
     }
 
     inpchat.value = inpchatVal
@@ -66,7 +64,7 @@ Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
 
 const TIP_SEND_SI = `
 Wysyła podejrzaną część wiadomości do samego siebie.
-Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b> prawdopodobnie nie należy jej wysyłać.
+Jeżeli wiadomość zostanie zagwiazdkowana <b>lub nie pojawi się dwa razy</b>, prawdopodobnie nie należy jej wysyłać.
 Testuje tylko pierwsze zaczerwienione słowo w wiadomości.
 `
 
@@ -96,7 +94,7 @@ const PANEL_HTML = `
 const AHOJ_ALERT = `
 Twoja wiadomość byłaby wyłapana przez automute, ale masz szczęście ;) <br>
 <span style="color:red">Zawiera ona zwrot "ahoj", który poprzedzony jest przez
-dowolną literę "a". Tak, w ten sposób automute sprawdza czy jest to "przekleństwo".
+dowolną literę "a". Tak, w ten sposób automute sprawdza, czy jest to "przekleństwo".
 Jeżeli chcesz wysłać tak czy siak, droga wolna.
 Wiedz jednak, że akurat w tym przypadku nie ma pomyłek.</span>
 `
@@ -106,7 +104,7 @@ Twoja wiadomość prawdopodobnie byłaby wyłapana przez automute, ale masz szcz
 Poniżej wiadomość, jaką widzi automute:<hr><span class="cpp-mute-text" style="word-wrap: break-word; text-align: left;">
 
 </span><hr>Czy mimo tego chcesz ją wysłać? Jeżeli wiadomość przejdzie bez
-gwiazdkowania wyślij wyjątek do Kris Aphalon#3484 na discordzie bądź na skrzynkę pocztową
+gwiazdkowania wyślij wyjątek do Kris Aphalon na Discordzie bądź na skrzynkę pocztową
 `
 
 function alertUser(originalMsg, caughtMsg, ahoj)
@@ -133,7 +131,7 @@ function alertUser(originalMsg, caughtMsg, ahoj)
     panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
-    panel.querySelector('.bottom-send').addEventListener('click', () => oldSendMsg(originalMsg))
+    panel.querySelector('.bottom-send').addEventListener('click', () => sendMessage(originalMsg))
     panel.querySelector('.bottom-test').addEventListener('click', () => testMessage(originalMsg, caughtMsg))
 
     document.body.appendChild(panel)
@@ -181,13 +179,15 @@ function removePhrases(str, phrasesToRemove)
     return str
 }
 
-function checkForMuteWordsThenSend(msg)
+function messageContainsBadWords(msg)
 {
     let copy = msg.toLowerCase()
 
     //don't parse nick
     if (copy[0] === '@')
+    {
         copy = copy.slice(copy.indexOf(' '))
+    }
 
     copy = removePhrases(copy, falsePositivesWithPolishLetters)
 
@@ -195,12 +195,20 @@ function checkForMuteWordsThenSend(msg)
     copy = normalizeString(copy)
 
     //check weird 'ahoj'
-    const ahojRegex = /a(?=(?:.)*ahoj)(?!hoj.*ahoj)/g
-    if (ahojRegex.test(copy)) return alertUser(msg, '', true)
+    const ahojRegex = /a(?=.*ahoj)(?!hoj.*ahoj)/g
+    if (ahojRegex.test(copy))
+    {
+        alertUser(msg, '', true)
+        return true
+    }
 
     //check for known phrases that get flagged as swear words
     let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)
-    if (alertMsg) return alertUser(msg, alertMsg)
+    if (alertMsg)
+    {
+        alertUser(msg, alertMsg)
+        return true
+    }
 
     copy = removePhrases(copy, falsePositives)
 
@@ -208,21 +216,23 @@ function checkForMuteWordsThenSend(msg)
     copy = removeDuplicates(copy)
 
     alertMsg = checkMessageForBadWords(copy, badWords)
-    if (alertMsg) return alertUser(msg, alertMsg)
+    if (alertMsg)
+    {
+        alertUser(msg, alertMsg)
+        return true
+    }
 
-    oldSendMsg(msg)
+    return false
 }
 
 
-export function initAutomuteCatcher(sendMsg)
+function chatCheck()
 {
-    oldSendMsg = sendMsg
-    if (INTERFACE === 'NI')
-    {
-        Engine.chat.sendMessage = checkForMuteWordsThenSend.bind(Engine.chat)
-    }
-    else
-    {
-        window.chatSendMsg = checkForMuteWordsThenSend
-    }
+    const chatInputValue = document.querySelector('#inpchat').value
+    return messageContainsBadWords(chatInputValue)
+}
+
+export function initAutomuteCatcher()
+{
+    chatChecks.push(chatCheck)
 }

@@ -4,6 +4,7 @@ import {addCustomStyle} from './css-manager'
 import {common} from './main'
 import {settings} from './settings'
 
+export const chatChecks = []
 export let textarea
 let background
 const chatColors = {
@@ -268,7 +269,7 @@ function replaceChatInput()
     {
         const bottombar = document.getElementById('bottombar')
         const inpchat = document.getElementById('inpchat')
-        inpchat.parentNode.removeChild(inpchat)
+        // inpchat.parentNode.removeChild(inpchat)
 
         background = document.createElement('div')
         background.id = 'textarea-background'
@@ -297,44 +298,70 @@ function loadLastSavedMessage()
     recolorTextarea()
 }
 
+function handleChatSendAttempt(event)
+{
+    console.log(chatChecks)
+    for (const chatCheck of chatChecks)
+    {
+        const stop = chatCheck(event)
+        if (stop)
+        {
+            console.log('STOPPPP')
+            event.preventDefault()
+            event.stopImmediatePropagation()
+            event.stopPropagation()
+            return
+        }
+    }
+}
+
 export function initInputTextarea()
 {
-    textarea = document.createElement('textarea')
-    textarea.id = 'inpchat'
-    if (!settings.multiMsg) textarea.maxLength = 199
-    replaceChatInput()
-
-    // Fix for last available version of Firefox on Windows XP.
-    // This fix is one of a kind, this script is not designed to work on older web browsers
-    // It's only implemented because it's quick, easy and fixes massive problem.
-    // (scrollbar that makes writing impossible)
-    if (navigator.userAgent.endsWith('Firefox/52.0'))
-        textarea.style.overflowX = 'hidden'
-
-
-    textarea.addEventListener('input', checkInputMsg, false)
-    textarea.addEventListener('input', saveInputMsg, false)
-
     updateCommandsColors()
-    loadLastSavedMessage()
-
-    if (INTERFACE === 'SI')
+    document.querySelector('#bottombar').addEventListener('keyup', (event) =>
     {
-        textarea.addEventListener('focusout', function ()
+        if (event.key === 'Enter')
         {
-            const inpchat = document.getElementById('inpchat')
-            if (inpchat.value === '')
-            {
-                document.getElementById('bottxt').style.display = 'block'
-                inpchat.style.opacity = '0'
-            }
-        }, false)
-        textarea.addEventListener('focusin', function ()
-        {
-            document.getElementById('bottxt').style.display = 'none'
-            document.getElementById('inpchat').style.opacity = '1'
-        }, false)
+            handleChatSendAttempt(event)
+        }
+    }, true)
 
-        loadAndApplyUserTheme()
-    }
+    // textarea = document.createElement('textarea')
+    // textarea.id = 'inpchat2'
+    // if (!settings.multiMsg) textarea.maxLength = 199
+    // replaceChatInput()
+    //
+    // // Fix for last available version of Firefox on Windows XP.
+    // // This fix is one of a kind, this script is not designed to work on older web browsers
+    // // It's only implemented because it's quick, easy and fixes massive problem.
+    // // (scrollbar that makes writing impossible)
+    // if (navigator.userAgent.endsWith('Firefox/52.0'))
+    //     textarea.style.overflowX = 'hidden'
+    //
+    //
+    // textarea.addEventListener('input', checkInputMsg, false)
+    // textarea.addEventListener('input', saveInputMsg, false)
+    //
+    // updateCommandsColors()
+    // loadLastSavedMessage()
+    //
+    // if (INTERFACE === 'SI')
+    // {
+    //     textarea.addEventListener('focusout', function ()
+    //     {
+    //         const inpchat = document.getElementById('inpchat')
+    //         if (inpchat.value === '')
+    //         {
+    //             document.getElementById('bottxt').style.display = 'block'
+    //             inpchat.style.opacity = '0'
+    //         }
+    //     }, false)
+    //     textarea.addEventListener('focusin', function ()
+    //     {
+    //         document.getElementById('bottxt').style.display = 'none'
+    //         document.getElementById('inpchat').style.opacity = '1'
+    //     }, false)
+    //
+    //     loadAndApplyUserTheme()
+    // }
 }

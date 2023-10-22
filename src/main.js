@@ -1,3 +1,4 @@
+import {initLogSaver} from './log-saver'
 import {loadSettings} from './settings'
 import {initMultiMsg} from './multi-msg'
 import {initTextMerger} from './text-merger'
@@ -35,23 +36,24 @@ function start()
     loadBasicStyles()
 
     initInputTextarea()
-    initInputFolding()
-    initChatCleaner()
+    //initInputFolding()
+    //initChatCleaner()
 
-    initMultiMsgSender()
-    // Order of loading this two modules is crucial, do not reverse it.
+    //initMultiMsgSender()
+    // Order of loading these two modules is crucial, do not reverse it.
     // Reversing it will break common.sendMsg chaining
-    const sendMsg = initMultiMsg()
-    initAutomuteCatcher(sendMsg)
+    //const sendMsg = initMultiMsg()
+    initAutomuteCatcher()
 
 
     if (INTERFACE === 'SI')
     {
-        initTextMerger()
-        initTextJustify()
+        //initTextMerger()
+        //initTextJustify()
     }
 
-    initPanel()
+    //initPanel()
+    //initLogSaver()
 }
 
 if (INTERFACE === 'NI')

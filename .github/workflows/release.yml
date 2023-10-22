@@ -11,13 +11,13 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -47,8 +47,9 @@ jobs:
 
       - name: Change tag
         run: |
-          RELEASE_TITLE=$(hub release show "${GITHUB_REF#*/*/}" -f %t)
-          RELEASE_DESC=$(hub release show "${GITHUB_REF#*/*/}" -f %b)
+          RELEASE_TITLE=$(gh release view "${GITHUB_REF#*/*/}" --json name --template "{{.name}}")
+          RELEASE_DESC=$(gh release view "${GITHUB_REF#*/*/}" --json body --template "{{.body}}")
+
           git tag -f -a "${GITHUB_REF#*/*/}" -m "$RELEASE_TITLE" -m "$RELEASE_DESC"
         env:
           GITHUB_USER: <ORG>

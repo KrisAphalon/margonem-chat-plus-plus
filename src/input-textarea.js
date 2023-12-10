@@ -318,7 +318,16 @@ function handleChatSendAttempt(event)
 export function initInputTextarea()
 {
     updateCommandsColors()
-    document.querySelector('#bottombar').addEventListener('keyup', (event) =>
+    let selector = ''
+    if (INTERFACE === 'NI')
+    {
+        selector = '.magic-input-wrapper'
+    }
+    else
+    {
+        selector = '#bottombar'
+    }
+    document.querySelector(selector).addEventListener('keyup', (event) =>
     {
         if (event.key === 'Enter')
         {

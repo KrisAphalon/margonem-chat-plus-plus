@@ -5,7 +5,7 @@ import {default as falsePositives} from '../res/automute/false-positives.json'
 import {CHANNELS} from './constants'
 import {setDraggable} from './dragging'
 import {chatChecks} from './input-textarea'
-import {sendMessage, setNITipsInsideOf} from './utility-functions'
+import {getSiMessageFormat, sendMessage, setNITipsInsideOf} from './utility-functions'
 
 // removes duplicate letters from message
 // "teeeeeests" changes to "tests"
@@ -26,9 +26,6 @@ function removeDuplicates(msg)
 
 function testMessage(originalMsg, caughtMsg)
 {
-    const inpchat = document.querySelector('#inpchat')
-    const inpchatVal = inpchat.value
-
     let copy = originalMsg
     if (copy[0] === '@')
         copy = copy.slice(copy.indexOf(' '))
@@ -42,23 +39,21 @@ function testMessage(originalMsg, caughtMsg)
     const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length)
     let subMsg = copy.substring(start, end)
 
+    if (CHANNELS[subMsg.substring(0, 3)])
+    {
+        subMsg = subMsg.substring(3)
+    }
+
+    let heroNick = ''
     if (INTERFACE === 'NI')
     {
-        inpchat.value = '/g ' + subMsg
-        oldSendMsg()
+        heroNick = Engine.hero.d.nick
     }
     else
     {
-        if (CHANNELS[subMsg.substring(0, 3)])
-        {
-            subMsg = subMsg.substring(3)
-        }
-        sendMessage('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
+        heroNick = hero.nick
     }
-
-    inpchat.value = inpchatVal
-    // workaround for deleting msg on SI
-    setTimeout(() => inpchat.value = inpchatVal, 501)
+    sendMessage('@' + heroNick.split(' ').join('_') + ' ' + subMsg)
 }
 
 const TIP_SEND_NI = `
@@ -139,7 +134,16 @@ function alertUser(originalMsg, caughtMsg, ahoj)
     panel.querySelector('.bottom-send').addEventListener('click', () =>
     {
         sendMessage(originalMsg)
-        document.querySelector('#inpchat').value = ''
+        if (INTERFACE === 'NI')
+        {
+            document.querySelector('.magic-input').innerText = ''
+            document.querySelector('.magic-input-placeholder').style.display = 'block'
+        }
+        else
+        {
+            document.querySelector('#inpchat').value = ''
+        }
+
     })
     panel.querySelector('.bottom-test').addEventListener('click', () => testMessage(originalMsg, caughtMsg))
 
@@ -207,7 +211,7 @@ function messageContainsBadWords(msg)
     const ahojRegex = /a(?=.*ahoj)(?!hoj.*ahoj)/g
     if (ahojRegex.test(copy))
     {
-        alertUser(msg, '', true)
+        alertUser(getSiMessageFormat(msg), '', true)
         return true
     }
 
@@ -215,7 +219,7 @@ function messageContainsBadWords(msg)
     let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace)
     if (alertMsg)
     {
-        alertUser(msg, alertMsg)
+        alertUser(getSiMessageFormat(msg), alertMsg)
         return true
     }
 
@@ -227,7 +231,7 @@ function messageContainsBadWords(msg)
     alertMsg = checkMessageForBadWords(copy, badWords)
     if (alertMsg)
     {
-        alertUser(msg, alertMsg)
+        alertUser(getSiMessageFormat(msg), alertMsg)
         return true
     }
 
@@ -237,7 +241,15 @@ function messageContainsBadWords(msg)
 
 function chatCheck()
 {
-    const chatInputValue = document.querySelector('#inpchat').value
+    let chatInputValue
+    if (INTERFACE === 'NI')
+    {
+        chatInputValue = document.querySelector('.magic-input').innerText
+    }
+    else
+    {
+        chatInputValue = document.querySelector('#inpchat').value
+    }
     return messageContainsBadWords(chatInputValue)
 }
 

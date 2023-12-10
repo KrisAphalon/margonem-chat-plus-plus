@@ -56,7 +56,7 @@ function start()
 
 if (INTERFACE === 'NI')
 {
-    if (Engine && Engine.allInit)
+    if (Engine?.allInit)
     {
         start()
     }

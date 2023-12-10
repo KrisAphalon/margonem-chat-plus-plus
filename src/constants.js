@@ -1,7 +1,15 @@
 export const CHANNELS = {
-    '/k ': 'clan',
-    '/h ': 'trade',
     '/o ': 'global',
     '/l ': 'local',
-    '/g ': 'party'
+    '/h ': 'trade',
+    '/g ': 'party',
+    '/k ': 'clan'
+}
+
+export const CHANNEL_MAPPINGS = {
+    'Globalny': '/o ',
+    'Lokalny': '/l ',
+    'Handlowy': '/h ',
+    'Grupowy': '/g ',
+    'Klanowy': '/k '
 }

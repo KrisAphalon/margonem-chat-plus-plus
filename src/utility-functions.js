@@ -1,4 +1,4 @@
-import {CHANNELS} from './constants'
+import {CHANNEL_MAPPINGS, CHANNELS} from './constants'
 
 export function setNITipsInsideOf(element)
 {
@@ -23,6 +23,10 @@ export function sanitizeText(text)
     return element.innerHTML
 }
 
+/**
+ *
+ * @param msg {string} Message in SI format
+ */
 export function sendMessage(msg)
 {
     if (msg.startsWith('@'))
@@ -39,5 +43,25 @@ export function sendMessage(msg)
         window._g(`chat&channel=${CHANNELS[msg.substring(0, 3)]}`, false, {c: msg.substring(3)})
         return
     }
-    window._g(`chat&channel=${window.ChatData.SERVER_CHANNEL.LOCAL}`, false, {c: msg})
+    window._g('chat&channel=local', false, {c: msg})
+}
+
+export function getSiMessageFormat(message)
+{
+    if (INTERFACE === 'SI')
+    {
+        return message
+    }
+    
+    const channelName = document.querySelector('.chat-input-wrapper .card-name').innerText
+    if (channelName === 'Prywatny')
+    {
+        const receiverName = document.querySelector('.chat-input-wrapper .private-nick').innerText.replaceAll(' ', '_')
+        return `@${receiverName} ${message}`
+    }
+    if (CHANNEL_MAPPINGS[channelName])
+    {
+        return `${CHANNEL_MAPPINGS[channelName]} ${message}`
+    }
+    return message
 }

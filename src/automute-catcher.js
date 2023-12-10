@@ -2,6 +2,7 @@ import {default as badWordsWithSpace} from '../res/automute/bad-words-with-space
 import {default as badWords} from '../res/automute/bad-words.json'
 import {default as falsePositivesWithPolishLetters} from '../res/automute/false-positives-with-polish-letters.json'
 import {default as falsePositives} from '../res/automute/false-positives.json'
+import {CHANNELS} from './constants'
 import {setDraggable} from './dragging'
 import {chatChecks} from './input-textarea'
 import {sendMessage, setNITipsInsideOf} from './utility-functions'
@@ -39,7 +40,7 @@ function testMessage(originalMsg, caughtMsg)
     const match = arr[1]
     const start = Math.max(copy.indexOf(match) - 20, 0)
     const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length)
-    const subMsg = copy.substring(start, end)
+    let subMsg = copy.substring(start, end)
 
     if (INTERFACE === 'NI')
     {
@@ -48,6 +49,10 @@ function testMessage(originalMsg, caughtMsg)
     }
     else
     {
+        if (CHANNELS[subMsg.substring(0, 3)])
+        {
+            subMsg = subMsg.substring(3)
+        }
         sendMessage('@' + hero.nick.split(' ').join('_') + ' ' + subMsg)
     }
 
@@ -131,7 +136,11 @@ function alertUser(originalMsg, caughtMsg, ahoj)
     panel.querySelector('#cpp-automute-panel .close-button').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-close').addEventListener('click', deletePanel)
     panel.querySelector('.bottom-send').addEventListener('click', deletePanel)
-    panel.querySelector('.bottom-send').addEventListener('click', () => sendMessage(originalMsg))
+    panel.querySelector('.bottom-send').addEventListener('click', () =>
+    {
+        sendMessage(originalMsg)
+        document.querySelector('#inpchat').value = ''
+    })
     panel.querySelector('.bottom-test').addEventListener('click', () => testMessage(originalMsg, caughtMsg))
 
     document.body.appendChild(panel)

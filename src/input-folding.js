@@ -1,5 +1,5 @@
-import {addCustomStyle, removeCustomStyle} from './css-manager'
-import {textarea} from './input-textarea'
+import {addCustomStyle, removeCustomStyle} from './css-manager.js'
+import {textarea} from './input-textarea.js'
 
 /**
  * Folds textarea hiding big message edit window

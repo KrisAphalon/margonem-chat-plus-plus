@@ -1,28 +1,27 @@
-const webpack = require('webpack')
-const path = require('path')
-const sass = require('sass')
-const fs = require('fs')
-const childProcess = require('child_process')
+import * as childProcess from 'child_process'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as sass from 'sass'
+import webpack from 'webpack'
 
 const inputScss = fs.readFileSync('res/style.scss').toString()
-const resultSI = sass.renderSync({
-    data: '$INTERFACE: \'SI\';\n\n' + inputScss,
-    outputStyle: 'compressed'
-}).css.toString()
+const resultSI = sass.compileString('$INTERFACE: "SI";\n\n' + inputScss, {
+    style: 'compressed'
+}).css
 
-const resultNI = sass.renderSync({
-    data: '$INTERFACE: \'NI\';\n\n' + inputScss,
-    outputStyle: 'compressed'
-}).css.toString()
+const resultNI = sass.compileString('$INTERFACE: "NI";\n\n' + inputScss, {
+    style: 'compressed'
+}).css
 
-
-const version = childProcess.execSync('cat version').toString().replace('\n', '')
+const version = childProcess.execSync('cat version').
+    toString().replace('\n', '')
 
 const CONSTANTS = new webpack.DefinePlugin({
-    FILE_PREFIX: JSON.stringify('https://cdn.jsdelivr.net/gh/KrisAphalon/margonem-chat-plus-plus@' + version + '/'),
+    FILE_PREFIX: JSON.stringify(
+        'https://cdn.jsdelivr.net/gh/KrisAphalon/margonem-chat-plus-plus@' +
+        version + '/'),
     VERSION: JSON.stringify(version)
 })
-
 
 const rules = [
     {
@@ -49,7 +48,7 @@ function createBuild(name, mode, gameInterface, css)
         mode: mode,
         entry: './src/main.js',
         output: {
-            path: path.resolve(__dirname, 'dist/'),
+            path: path.resolve(import.meta.dirname, 'dist/'),
             filename: `chat-plus-plus-${gameInterface}.js`
         },
         plugins: [
@@ -67,7 +66,11 @@ function createBuild(name, mode, gameInterface, css)
 
 const buildNI = createBuild('NI', 'production', 'NI', resultNI)
 const buildSI = createBuild('SI', 'production', 'SI', resultSI)
-module.exports = [
+
+export default [
     buildNI,
     buildSI
 ]
+// module.exports = [
+//
+// ]

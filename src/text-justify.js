@@ -1,6 +1,6 @@
-import {saveSettings, settings} from './settings'
-import {addSettingToPanel} from './panel'
-import {addCustomStyle, removeCustomStyle} from './css-manager'
+import {saveSettings, settings} from './settings.js'
+import {addSettingToPanel} from './panel.js'
+import {addCustomStyle, removeCustomStyle} from './css-manager.js'
 
 const scrollbar = document.getElementById('chatscrollbar')
 let timeout

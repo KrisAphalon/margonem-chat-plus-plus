@@ -1,7 +1,7 @@
-import {common, handleNoAnswer} from './main'
-import {addSettingToPanel} from './panel'
-import {saveSettings, settings} from './settings'
-import {regexIndexOf} from './utility-functions'
+import {common, handleNoAnswer} from './main.js'
+import {addSettingToPanel} from './panel.js'
+import {saveSettings, settings} from './settings.js'
+import {regexIndexOf} from './utility-functions.js'
 
 const polishLetters = /[ąćęłńóśźż@]/gi // @ is strange, can't really test it
 let oldSendMsg

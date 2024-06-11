@@ -1,5 +1,5 @@
-import {common, handleNoAnswer} from './main'
-import {settings} from './settings'
+import {common, handleNoAnswer} from './main.js'
+import {settings} from './settings.js'
 
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g
 

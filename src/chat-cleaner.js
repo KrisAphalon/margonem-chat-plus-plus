@@ -1,4 +1,4 @@
-import {addCustomStyle} from './css-manager'
+import {addCustomStyle} from './css-manager.js'
 
 let textHide = false
 

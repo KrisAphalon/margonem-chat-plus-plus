@@ -1,6 +1,6 @@
-import {setDraggable} from './dragging'
-import {settings} from './settings'
-import {setNITipsInsideOf} from './utility-functions'
+import {setDraggable} from './dragging.js'
+import {settings} from './settings.js'
+import {setNITipsInsideOf} from './utility-functions.js'
 
 
 const settingsElms = []

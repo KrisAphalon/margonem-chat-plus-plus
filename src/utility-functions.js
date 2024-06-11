@@ -1,4 +1,4 @@
-import {CHANNEL_MAPPINGS, CHANNELS} from './constants'
+import {CHANNEL_MAPPINGS, CHANNELS} from './constants.js'
 
 export function setNITipsInsideOf(element)
 {

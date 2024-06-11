@@ -1,14 +1,7 @@
-import {loadSettings} from './settings'
-import {initMultiMsg} from './multi-msg'
-import {initTextMerger} from './text-merger'
-import {initInputTextarea} from './input-textarea'
-import {loadBasicStyles} from './css-manager'
-import {initPanel} from './panel'
-import {initTextJustify} from './text-justify'
-import {initChatCleaner} from './chat-cleaner'
-import {initAutomuteCatcher} from './automute-catcher'
-import {initInputFolding} from './input-folding'
-import {initMultiMsgSender} from './multi-msg-sender'
+import {initAutomuteCatcher} from './automute-catcher.js'
+import {loadBasicStyles} from './css-manager.js'
+import {initInputTextarea} from './input-textarea.js'
+import {loadSettings} from './settings.js'
 
 export function handleNoAnswer()
 {
@@ -16,11 +9,11 @@ export function handleNoAnswer()
 
     if (!sessionStorage.noAnwserMsgDisplayed)
     {
-        window.message('Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na koordynaty by przywrócić resztę niewysłanej wiadomości.\n Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.')
+        window.message(
+            'Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na koordynaty by przywrócić resztę niewysłanej wiadomości.\n Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.')
         sessionStorage.noAnwserMsgDisplayed = true
     }
 }
-
 
 //TODO naming
 export const common = {
@@ -43,7 +36,6 @@ function start()
     // Reversing it will break common.sendMsg chaining
     //const sendMsg = initMultiMsg()
     initAutomuteCatcher()
-
 
     if (INTERFACE === 'SI')
     {

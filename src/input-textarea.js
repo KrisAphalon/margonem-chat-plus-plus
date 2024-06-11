@@ -1,8 +1,8 @@
 // Recolors textarea to match it's color with color of command it starts with
-import {addCustomStyle} from './css-manager'
+import {addCustomStyle} from './css-manager.js'
 // If textarea doesn't start with any valid command, then it resets color to default
-import {common} from './main'
-import {settings} from './settings'
+import {common} from './main.js'
+import {settings} from './settings.js'
 
 export const chatChecks = []
 export let textarea

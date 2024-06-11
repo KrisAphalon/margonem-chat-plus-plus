@@ -1,7 +1,7 @@
-import {common, handleNoAnswer} from './main'
-import {addSettingToPanel} from './panel'
-import {saveSettings, settings} from './settings'
-import {sanitizeText} from './utility-functions'
+import {common, handleNoAnswer} from './main.js'
+import {addSettingToPanel} from './panel.js'
+import {saveSettings, settings} from './settings.js'
+import {sanitizeText} from './utility-functions.js'
 
 const messages = {}
 const ALLOWED_COMMANDS = ['nar', 'nar2', 'nar3', 'sys_comm', 'me']

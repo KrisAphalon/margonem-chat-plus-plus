@@ -1,12 +1,11 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0045b2e38640fbd10184/maintainability)](https://codeclimate.com/github/KrisAphalon/margonem-chat-plus-plus/maintainability)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-Chat Plus Plus
-======
+# Chat Plus Plus
+
 Addon/extension for online MMORPG game: [Margonem](https://www.margonem.pl/), adding extended chat capabilities.
 
-
-Features
-------
+## Features
 
 ##### Auto mute catcher
 
@@ -53,8 +52,7 @@ Features
 - It reuses visible assets after loading itself, so custom theme graphics or CSS are nicely integrated, without any need
   for changes from theme author.
 
-Installation
-------
+## Installation
 
 - Install [Tampermonkey](https://www.tampermonkey.net/) or similar browser extension that allows for external scripts.
 - Head to [install page](https://krisaphalon.github.io/margonem-chat-plus-plus/chat-plus-plus.user.js) and click

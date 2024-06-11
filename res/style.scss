@@ -1,4 +1,4 @@
-@if $INTERFACE == 'NI' {
+@if $INTERFACE == "NI" {
   #inpchat {
     background: 0 0;
     border: 0;
@@ -30,7 +30,13 @@
 
   #textarea-background {
     background-color: #233316;
-    border-image: url(/img/gui/chat-srodek-powtarzalny.png) 0 111 0 104 round round;
+    border-image: url(/img/gui/chat-srodek-powtarzalny.png)
+      0
+      111
+      0
+      104
+      round
+      round;
     border-style: solid;
     border-width: 0 111px 0 104px;
     bottom: 18px;
@@ -53,11 +59,13 @@
     z-index: 60;
   }
 
-  .chat-size-1 #textarea-background, .chat-size-1 #textarea-background-up {
+  .chat-size-1 #textarea-background,
+  .chat-size-1 #textarea-background-up {
     width: 33px;
   }
 
-  .chat-size-2 #textarea-background, .chat-size-2 #textarea-background-up {
+  .chat-size-2 #textarea-background,
+  .chat-size-2 #textarea-background-up {
     width: 290px;
   }
 
@@ -68,7 +76,6 @@
   .chat-size-2 #inpchat {
     width: 463px;
   }
-
 
   .section.chat-tpl .send-btn.right {
     z-index: 201;
@@ -144,7 +151,10 @@
     display: block;
   }
 
-  #lagmeter, #botloc, #bchat, #pvpmode {
+  #lagmeter,
+  #botloc,
+  #bchat,
+  #pvpmode {
     z-index: 363;
   }
 }
@@ -152,12 +162,14 @@
 /* Panel */
 .cpp-panel {
   animation: fade 0.5s;
-  border-image: url(http://cronus.margonem.com/img/gui/tmp/window-frame.png) 32 20 repeat;
+  border-image: url(http://cronus.margonem.com/img/gui/tmp/window-frame.png) 32
+    20 repeat;
   border-style: solid;
   border-width: 34px 13px 10px 13px;
   color: #000;
-  @if $INTERFACE == 'NI' {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/1.png), url(http://nerthus.margonem.pl/img/gui/cursor/1.cur), auto;
+  @if $INTERFACE == "NI" {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/1.png),
+      url(http://nerthus.margonem.pl/img/gui/cursor/1.cur), auto;
   }
   left: calc(50% - 204px);
   pointer-events: auto;
@@ -230,8 +242,9 @@
 .cpp-panel .close-button {
   background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -263px -79px;
   border: 0;
-  @if $INTERFACE == 'NI' {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == "NI" {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -267,8 +280,9 @@
 }
 
 .cpp-panel .setting-label-text {
-  @if $INTERFACE == 'NI' {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == "NI" {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -285,8 +299,9 @@
   border: 2px solid #6e644b;
   border-radius: 2px;
   box-sizing: border-box;
-  @if $INTERFACE == 'NI' {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  @if $INTERFACE == "NI" {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -354,11 +369,9 @@
   box-shadow: inset 0 0 1px 1px #da6161a6;
 }
 
-
 .cpp-panel .hidden {
   display: none;
 }
-
 
 //.cpp-panel .button-group {
 //  border: 1px solid #d8c28d;
@@ -372,16 +385,18 @@
 //  width: 110px;
 //}
 
-
 .cpp-panel .button {
   background-image: linear-gradient(to top, #12210d, #396b29);
   border: 1px solid #0c0d0d;
   border-radius: 4px;
-  box-shadow: inset 0 0 1px 1px #cecece, inset 0 0 0 3px #0c0d0d;
+  box-shadow:
+    inset 0 0 1px 1px #cecece,
+    inset 0 0 0 3px #0c0d0d;
   box-sizing: border-box;
-  color: #E6D6BF;
-  @if $INTERFACE == 'NI' {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png), url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+  color: #e6d6bf;
+  @if $INTERFACE == "NI" {
+    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -405,7 +420,7 @@
   border-radius: 4px;
   bottom: 3px;
   box-shadow: inset 0 0 1px 1px #7ec568a6;
-  content: '';
+  content: "";
   left: 3px;
   position: absolute;
   right: 3px;
@@ -417,7 +432,7 @@
   border-radius: 3px;
   bottom: 0;
   box-shadow: 0 1px 0 1px #0c0d0d;
-  content: '';
+  content: "";
   left: 0;
   position: absolute;
   right: 0;
@@ -464,7 +479,9 @@
 .cpp-panel .donate-button {
   background-image: linear-gradient(to top, #58310b, #daa520);
   bottom: 6px;
-  box-shadow: inset 0 0 1px 1px #cecece, inset 0 0 0 3px #0c0d0d;
+  box-shadow:
+    inset 0 0 1px 1px #cecece,
+    inset 0 0 0 3px #0c0d0d;
   height: 35px;
   padding: 2px 0 0 0;
   position: absolute;
@@ -484,7 +501,7 @@
 }
 
 .cpp-panel .donate-button::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 3px;
   top: 3px;

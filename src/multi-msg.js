@@ -158,7 +158,7 @@ function sendMultiMsg(msg) {
     sendMessage(common.sendArr[0]);
     common.sendTimeout = setTimeout(
       handleNoAnswer,
-      settings.messageTimeout * 3,
+      settings.sendMessageTimeout * 3,
     );
   }
   return true;

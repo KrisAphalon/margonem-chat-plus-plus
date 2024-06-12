@@ -89,11 +89,11 @@ function handleAddedNode(node) {
     setTimeout(function () {
       if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
         sendMessage(common.sendArr[0]);
-    }, settings.messageTimeout);
+    }, settings.sendMessageTimeout);
 
     common.sendTimeout = setTimeout(
       handleNoAnswer,
-      settings.messageTimeout * 3,
+      settings.sendMessageTimeout * 3,
     );
   }
 }

@@ -36,11 +36,11 @@ function parseSingleMsgOnChat(elm, ch) {
     setTimeout(function () {
       if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
         window.chatSendMsg(common.sendArr[0]);
-    }, settings.messageTimeout);
+    }, settings.sendMessageTimeout);
   if (common.sendArr.length > 1)
     common.sendTimeout = setTimeout(
       handleNoAnswer,
-      settings.messageTimeout * 3,
+      settings.sendMessageTimeout * 3,
     );
 
   return true;

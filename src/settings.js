@@ -2,7 +2,7 @@ export const settings = {
   multiMsg: true,
   justifyChat: false,
   mergeMessages: true,
-  messageTimeout: 2000,
+  sendMessageTimeout: 2_500,
 };
 
 export function loadSettings() {

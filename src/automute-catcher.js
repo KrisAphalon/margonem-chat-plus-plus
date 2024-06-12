@@ -2,14 +2,10 @@ import { default as badWordsWithSpace } from "../res/automute/bad-words-with-spa
 import { default as badWords } from "../res/automute/bad-words.json";
 import { default as falsePositivesWithPolishLetters } from "../res/automute/false-positives-with-polish-letters.json";
 import { default as falsePositives } from "../res/automute/false-positives.json";
-import { CHANNELS } from "./constants.js";
+import { CHANNELS, getSiMessageFormat } from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";
-import {
-  getSiMessageFormat,
-  sendMessage,
-  setNITipsInsideOf,
-} from "./utility-functions.js";
+import { sendMessage, setNITipsInsideOf } from "./utility-functions.js";
 
 // removes duplicate letters from message
 // "teeeeeests" changes to "tests"

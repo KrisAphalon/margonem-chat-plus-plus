@@ -1,4 +1,4 @@
-import { CHANNEL_MAPPINGS, CHANNELS } from "./constants.js";
+import { CHANNELS } from "./chat.js";
 
 export function setNITipsInsideOf(element) {
   // set tips the NI way
@@ -20,7 +20,7 @@ export function sanitizeText(text) {
 }
 
 /**
- *
+ * @deprecated use sendMessage from chat.js instead
  * @param msg {string} Message in SI format
  */
 export function sendMessage(msg) {
@@ -39,24 +39,4 @@ export function sendMessage(msg) {
     return;
   }
   window._g("chat&channel=local", false, { c: msg });
-}
-
-export function getSiMessageFormat(message) {
-  if (INTERFACE === "SI") {
-    return message;
-  }
-
-  const channelName = document.querySelector(
-    ".chat-input-wrapper .card-name",
-  ).innerText;
-  if (channelName === "Prywatny") {
-    const receiverName = document
-      .querySelector(".chat-input-wrapper .private-nick")
-      .innerText.replaceAll(" ", "_");
-    return `@${receiverName} ${message}`;
-  }
-  if (CHANNEL_MAPPINGS[channelName]) {
-    return `${CHANNEL_MAPPINGS[channelName]} ${message}`;
-  }
-  return message;
 }

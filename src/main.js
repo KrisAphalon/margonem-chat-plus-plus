@@ -1,6 +1,8 @@
 import { initAutomuteCatcher } from "./automute-catcher.js";
 import { loadBasicStyles } from "./css-manager.js";
 import { initInputTextarea } from "./input-textarea.js";
+import { initMultiMsgSender } from "./multi-msg-sender.js";
+import { initMultiMsg } from "./multi-msg.js";
 import { loadSettings } from "./settings.js";
 
 export function handleNoAnswer() {
@@ -29,11 +31,10 @@ function start() {
   //initInputFolding()
   //initChatCleaner()
 
-  //initMultiMsgSender()
+  initMultiMsgSender();
   // Order of loading these two modules is crucial, do not reverse it.
-  // Reversing it will break common.sendMsg chaining
-  //const sendMsg = initMultiMsg()
   initAutomuteCatcher();
+  initMultiMsg();
 
   if (INTERFACE === "SI") {
     //initTextMerger()

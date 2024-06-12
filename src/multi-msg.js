@@ -1,11 +1,11 @@
+import { CHANNELS, getSiMessageFormat, sendMessage } from "./chat.js";
+import { chatChecks } from "./input-textarea.js";
 import { common, handleNoAnswer } from "./main.js";
 import { addSettingToPanel } from "./panel.js";
 import { saveSettings, settings } from "./settings.js";
 import { regexIndexOf } from "./utility-functions.js";
 
 const polishLetters = /[ąćęłńóśźż@]/gi; // @ is strange, can't really test it
-let oldSendMsg;
-
 function deconstructSendArrPart(part) {
   if (!["/", "@", "*"].includes(part[0])) return part;
 
@@ -48,10 +48,12 @@ function restoreMsg(e) {
 }
 
 function calculateAddOnStartAsterix(arr, commandIndex) {
-  // force first letter to be asterix in case of /me
-  if (arr[commandIndex][0] !== "*")
-    arr[commandIndex] = "*" + arr[commandIndex].substr(1);
-
+  if (arr[commandIndex].startsWith("/lm")) {
+    arr[commandIndex] = "*me";
+  }
+  if (arr[commandIndex].startsWith("/ln")) {
+    arr[commandIndex] = "*nar";
+  }
   if (
     arr[commandIndex].startsWith("*dial") ||
     arr[commandIndex].startsWith("*lang")
@@ -64,12 +66,15 @@ function calculateAddOnStartAsterix(arr, commandIndex) {
 
 function calculateAddOnStart(msg) {
   const arr = msg.split(" ");
-  if (arr.length <= 1) return "";
+  if (arr.length <= 1) {
+    return "";
+  }
 
   let addOnStart = "";
-  if (msg.startsWith("@") || ["/k", "/g"].includes(arr[0]))
+  if (msg.startsWith("@") || Object.keys(CHANNELS).includes(arr[0] + " ")) {
     addOnStart = arr[0] + " ";
-  if (msg.startsWith("*") || msg.startsWith("/me")) {
+  }
+  if (msg.startsWith("*") || msg.startsWith("/lm") || msg.startsWith("/ln")) {
     addOnStart = calculateAddOnStartAsterix(arr, 0);
   }
 
@@ -129,61 +134,61 @@ function divideMessageToParts(msg, prefix, maxLength) {
   }
 }
 
-function fixTextareaFolding() {
-  setTimeout(function () {
-    document.getElementById("inpchat").focus();
-    document.getElementById("inpchat").blur();
-  }, 100);
-}
-
 function sendMultiMsg(msg) {
-  msg = msg.trim();
   const addOnStart = calculateAddOnStart(msg);
-
-  // delete old sendArr if there was some problem (e.g. lost group chat)
+  // Delete old sendArr if there was some problem (e.g., lost group chat)
   common.sendArr.splice(0);
 
   const maxLen = 197;
   if (calcMargoLength(msg) <= maxLen) {
-    oldSendMsg(msg);
-    fixTextareaFolding();
-    return;
+    return false;
   }
   divideMessageToParts(msg, addOnStart, maxLen);
 
-  // replace the *me prefix back to /me for the first part if message started with /me
-  if (msg.startsWith("/me")) {
-    common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, "/me");
+  // replace the *me prefix back to /lm for the first part
+  // if a message started with /lm
+  if (msg.startsWith("/lm")) {
+    common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, "/lm");
+  }
+  if (msg.startsWith("/ln")) {
+    common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, "/nar");
   }
 
   if (common.sendArr.length > 0) {
-    oldSendMsg(common.sendArr[0]);
+    sendMessage(common.sendArr[0]);
     common.sendTimeout = setTimeout(
       handleNoAnswer,
       settings.messageTimeout * 3,
     );
   }
-  document.getElementById("inpchat").blur();
-  fixTextareaFolding();
+  return true;
 }
 
+/**
+ *
+ * @param msg {string} Message in SI format
+ */
 function chatSendMsg(msg) {
-  if (INTERFACE === "NI") {
-    const inpchat = document.getElementById("inpchat");
-    msg = inpchat.value;
-    inpchat.value = "";
-  }
-
   // replace hard spaces (alt + space) with normal one
   // eslint-disable-next-line no-irregular-whitespace
   msg = msg.replace(/ /g, " ");
   msg = msg.replace(/[«»]/g, "");
+  msg = msg.trim();
 
-  if (settings.multiMsg && msg !== "") {
-    return sendMultiMsg(msg);
+  if (!settings.multiMsg || msg === "") {
+    return false;
   }
-  oldSendMsg(msg);
-  fixTextareaFolding();
+  return sendMultiMsg(msg);
+}
+
+function chatCheck() {
+  let chatInputValue;
+  if (INTERFACE === "NI") {
+    chatInputValue = document.querySelector(".magic-input").innerText;
+  } else {
+    chatInputValue = document.querySelector("#inpchat").value;
+  }
+  return chatSendMsg(getSiMessageFormat(chatInputValue));
 }
 
 function toggleMultiMsg() {
@@ -201,20 +206,6 @@ export function initMultiMsg() {
   );
 
   if (INTERFACE === "NI") {
-    oldSendMsg = Engine.chat.sendMessage.bind(Engine.chat);
-    Engine.chat.sendMessage = chatSendMsg.bind(Engine.chat);
-
-    document
-      .querySelector(".chat-tpl .send-btn")
-      .addEventListener("contextmenu", restoreMsg);
-    return Engine.chat.sendMessage;
-  } else {
-    oldSendMsg = window.chatSendMsg;
-    window.chatSendMsg = chatSendMsg;
-
-    document
-      .getElementById("botloc")
-      .addEventListener("contextmenu", restoreMsg);
-    return window.chatSendMsg;
+    chatChecks.push(chatCheck);
   }
 }

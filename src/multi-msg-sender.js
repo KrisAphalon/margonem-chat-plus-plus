@@ -1,14 +1,11 @@
+import { sendMessage } from "./chat.js";
 import { common, handleNoAnswer } from "./main.js";
 import { settings } from "./settings.js";
 
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
 
-let oldSendMsg;
-
 function parseMessageToChatForm(message) {
   message = message.trim();
-  // replace characters
-  // message = message.replace(/[«»]/g, '')
 
   let split = message.split(" ");
 
@@ -17,18 +14,21 @@ function parseMessageToChatForm(message) {
   if (message[0] === "/" || message[0] === "*") {
     let command = message.split(" ", 1)[0];
     switch (command) {
-      case "/me":
+      case "/lm":
         if (INTERFACE === "NI") {
           command = Engine.hero.nick;
         } else {
           command = hero.nick;
         }
         break;
+      case "/l":
+      case "/o":
+      case "/h":
       case "/g":
       case "/k":
         retry = true;
       // falls through
-      case "/nar":
+      case "/ln":
       case "*me":
       case "*nar":
       case "*nar1":
@@ -43,13 +43,9 @@ function parseMessageToChatForm(message) {
       case "*dial3":
       case "*dial666": {
         const npcNameSplit = message.split(",");
-        const npcNameSplitSpace = npcNameSplit[0].split(" ");
         npcNameSplit.shift();
         split = npcNameSplit.join(",").split(" ");
-        split.unshift("");
-        npcNameSplitSpace.shift();
-        const npcName = npcNameSplitSpace.join(" ");
-        command = "«" + npcName + "»";
+        command = "";
         break;
       }
       case "*lang": {
@@ -81,10 +77,7 @@ function parseMessageToChatForm(message) {
 }
 
 function handleAddedNode(node) {
-  const message =
-    INTERFACE === "NI"
-      ? node.children[2].innerText.trim()
-      : node.children[1].innerText.trim();
+  const message = node.children[1].innerText.trim();
 
   if (typeof common.sendArr[0] === "undefined") return;
 
@@ -95,7 +88,7 @@ function handleAddedNode(node) {
 
     setTimeout(function () {
       if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
-        oldSendMsg(common.sendArr[0]);
+        sendMessage(common.sendArr[0]);
     }, settings.messageTimeout);
 
     common.sendTimeout = setTimeout(
@@ -107,8 +100,8 @@ function handleAddedNode(node) {
 
 function mutationCallback(mutationsList) {
   for (const mutation of mutationsList) {
-    for (let i = 0; i < mutation.addedNodes.length; i++) {
-      handleAddedNode(mutation.addedNodes[i]);
+    for (const addedNode of mutation.addedNodes) {
+      handleAddedNode(addedNode);
     }
   }
 }
@@ -116,13 +109,15 @@ function mutationCallback(mutationsList) {
 function createMutationObserver() {
   const chattxt =
     INTERFACE === "NI"
-      ? document.querySelector(".chat-tpl .messages-wrapper .scroll-pane")
+      ? document.querySelector(
+          ".new-chat-window .chat-message-wrapper .scroll-pane",
+        )
       : document.getElementById("chattxt");
 
   const mutation_config = {
     attributes: false,
     childList: true,
-    subtree: false,
+    subtree: true,
   };
   const observer = new MutationObserver(mutationCallback);
   observer.observe(chattxt, mutation_config);
@@ -130,9 +125,6 @@ function createMutationObserver() {
 
 export function initMultiMsgSender() {
   if (INTERFACE === "NI") {
-    oldSendMsg = Engine.chat.sendMessage.bind(Engine.chat);
-  } else {
-    oldSendMsg = window.chatSendMsg;
+    createMutationObserver();
   }
-  createMutationObserver();
 }

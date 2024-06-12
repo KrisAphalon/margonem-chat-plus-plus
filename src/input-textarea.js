@@ -93,8 +93,8 @@ function checkMaxLength(textarea) {
 
   let polishLettersCount = 0;
   //calculate length every time, because we can change it inside for()
-  for (let i = 0; i < textarea.value.length; i++)
-    if (textarea.value[i].match(polishLetters)) {
+  for (const element of textarea.value)
+    if (element.match(polishLetters)) {
       polishLettersCount++;
       textarea.value = textarea.value.substr(0, 199 - polishLettersCount);
     }
@@ -306,7 +306,7 @@ function handleChatSendAttempt(event) {
 
 export function initInputTextarea() {
   updateCommandsColors();
-  let selector = "";
+  let selector;
   if (INTERFACE === "NI") {
     selector = ".magic-input-wrapper";
   } else {

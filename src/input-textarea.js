@@ -131,6 +131,7 @@ const CHAT_COMMAND_CLASSES = {
   "/nar": "nar",
   "*nar2": "nar2",
   "*nar3": "nar3",
+  "*nar6": "nar6",
   "*dial": "dial1",
   "*dial1": "dial1",
   "*dial2": "dial2",

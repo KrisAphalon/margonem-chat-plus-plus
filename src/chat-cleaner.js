@@ -75,6 +75,7 @@ export function initChatCleaner() {
       "nar",
       "nar2",
       "nar3",
+      "nar6",
       "dial1",
       "dial2",
       "dial3",

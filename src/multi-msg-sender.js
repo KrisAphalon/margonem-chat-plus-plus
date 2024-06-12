@@ -34,6 +34,7 @@ function parseMessageToChatForm(message) {
       case "*nar1":
       case "*nar2":
       case "*nar3":
+      case "*nar6":
       case "*sys":
         command = "";
         break;

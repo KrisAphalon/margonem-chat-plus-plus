@@ -4,7 +4,7 @@ import { saveSettings, settings } from "./settings.js";
 import { sanitizeText } from "./utility-functions.js";
 
 const messages = {};
-const ALLOWED_COMMANDS = ["nar", "nar2", "nar3", "sys_comm", "me"];
+const ALLOWED_COMMANDS = ["nar", "nar2", "nar3", "nar6", "sys_comm", "me"];
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
 
 function destructureMessage(ch) {

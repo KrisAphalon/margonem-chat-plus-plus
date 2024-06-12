@@ -63,7 +63,6 @@ function getChannelSettingsFromMsg(msg) {
   if (msg.startsWith("@")) {
     channel.name = "PRIVATE";
     privateReceiver = msg.split(" ")[0].substring(1);
-    console.debug(privateReceiver);
   }
 
   return [channel, privateReceiver, messageStyle, true];

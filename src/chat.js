@@ -117,7 +117,7 @@ export function sendMessage(msg) {
   const tempMessageStyle = chatInputWrapper.getStyleMessage();
 
   const channelSettings = getChannelSettingsFromMsg(msg);
-  chatInputWrapper.setChannel(Object.values(channelSettings));
+  chatInputWrapper.setChannel(...Object.values(channelSettings));
   sendMessageRequest(getPrunedMessage(msg), channelSettings);
 
   chatInputWrapper.setChannel(

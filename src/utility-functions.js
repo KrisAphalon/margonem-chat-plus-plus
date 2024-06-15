@@ -1,4 +1,4 @@
-import { CHANNELS } from "./chat.js";
+import { CHANNEL } from "./chat.js";
 
 export function setNITipsInsideOf(element) {
   // set tips the NI way
@@ -32,8 +32,8 @@ export function sendMessage(msg) {
     window._g(`chat&channel=personal&receiver=${nick}`, false, { c: msg });
     return;
   }
-  if (CHANNELS[msg.substring(0, 3)]) {
-    window._g(`chat&channel=${CHANNELS[msg.substring(0, 3)]}`, false, {
+  if (CHANNEL[msg.substring(0, 3)]) {
+    window._g(`chat&channel=${CHANNEL[msg.substring(0, 3)]}`, false, {
       c: msg.substring(3),
     });
     return;

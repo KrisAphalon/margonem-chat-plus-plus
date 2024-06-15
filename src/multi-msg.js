@@ -1,4 +1,4 @@
-import { CHANNELS, getSiMessageFormat, sendMessage } from "./chat.js";
+import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
 import { chatChecks } from "./input-textarea.js";
 import { common, handleNoAnswer } from "./main.js";
 import { addSettingToPanel } from "./panel.js";
@@ -71,7 +71,7 @@ function calculateAddOnStart(msg) {
   }
 
   let addOnStart = "";
-  if (msg.startsWith("@") || Object.keys(CHANNELS).includes(arr[0] + " ")) {
+  if (msg.startsWith("@") || Object.keys(CHANNEL).includes(arr[0] + " ")) {
     addOnStart = arr[0] + " ";
   }
   if (msg.startsWith("*") || msg.startsWith("/lm") || msg.startsWith("/ln")) {

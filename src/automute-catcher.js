@@ -2,7 +2,7 @@ import { default as badWordsWithSpace } from "../res/automute/bad-words-with-spa
 import { default as badWords } from "../res/automute/bad-words.json";
 import { default as falsePositivesWithPolishLetters } from "../res/automute/false-positives-with-polish-letters.json";
 import { default as falsePositives } from "../res/automute/false-positives.json";
-import { CHANNELS, getSiMessageFormat } from "./chat.js";
+import { CHANNEL, getSiMessageFormat } from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";
 import { sendMessage, setNITipsInsideOf } from "./utility-functions.js";
@@ -38,7 +38,7 @@ function testMessage(originalMsg, caughtMsg) {
   const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length);
   let subMsg = copy.substring(start, end);
 
-  if (CHANNELS[subMsg.substring(0, 3)]) {
+  if (CHANNEL[subMsg.substring(0, 3)]) {
     subMsg = subMsg.substring(3);
   }
 

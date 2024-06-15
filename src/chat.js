@@ -1,4 +1,4 @@
-export const CHANNELS = {
+export const CHANNEL = {
   "/o ": "GLOBAL",
   "/l ": "LOCAL",
   "/h ": "TRADE",
@@ -12,6 +12,17 @@ export const CHANNEL_MAPPINGS = {
   Handlowy: "/h ",
   Grupowy: "/g ",
   Klanowy: "/k ",
+};
+
+export const CHANNEL_COMMAND_NAME = {
+  CLAN: "clan",
+  COMMERCIAL: "commercial",
+  GLOBAL: "global",
+  GROUP: "party",
+  LOCAL: "local",
+  PRIVATE: "personal",
+  SYSTEM: "system",
+  TRADE: "trade",
 };
 
 export function getSiMessageFormat(message) {
@@ -56,7 +67,7 @@ function getChannelSettingsFromMsg(msg) {
   if (msg.startsWith("/ln")) {
     messageStyle = "nar";
   }
-  const channelStart = CHANNELS[msg.substring(0, 3)];
+  const channelStart = CHANNEL[msg.substring(0, 3)];
   if (channelStart) {
     channel.name = channelStart;
   }
@@ -65,7 +76,12 @@ function getChannelSettingsFromMsg(msg) {
     privateReceiver = msg.split(" ")[0].substring(1);
   }
 
-  return [channel, privateReceiver, messageStyle, true];
+  return {
+    channel,
+    privateReceiver,
+    messageStyle,
+    ignoreCheckCardCanChoose: true,
+  };
 }
 
 export function getPrunedMessage(msg) {
@@ -73,7 +89,7 @@ export function getPrunedMessage(msg) {
     return msg.substring(4).trim();
   }
 
-  if (Object.keys(CHANNELS).includes(msg.substring(0, 3))) {
+  if (Object.keys(CHANNEL).includes(msg.substring(0, 3))) {
     return msg.substring(3).trim();
   }
 
@@ -89,49 +105,53 @@ export function getPrunedMessage(msg) {
  * @param msg {string} Message in SI format
  */
 export function sendMessage(msg) {
+  let chatInputWrapper;
   if (INTERFACE === "NI") {
-    const tempChannel = Engine.chatController
-      .getChatInputWrapper()
-      .getChannelName();
-    const tempPrivateReceiver = Engine.chatController
-      .getChatInputWrapper()
-      .getPrivateReceiver();
-    const tempMessageStyle = Engine.chatController
-      .getChatInputWrapper()
-      .getStyleMessage();
-
-    Engine.chatController
-      .getChatInputWrapper()
-      .setChannel(...getChannelSettingsFromMsg(msg));
-    Engine.chatController
-      .getChatInputWrapper()
-      .getDataAndSendRequest(getPrunedMessage(msg));
-
-    Engine.chatController
-      .getChatInputWrapper()
-      .setChannel(
-        { name: tempChannel },
-        tempPrivateReceiver,
-        tempMessageStyle,
-        true,
-      );
-    Engine.chatController.getChatInputWrapper().clearInput();
-    return;
+    chatInputWrapper = Engine.chatController.getChatInputWrapper();
+  } else {
+    chatInputWrapper = g.chatController.getChatInputWrapper();
   }
 
-  if (msg.startsWith("@")) {
-    const nick = msg.split(" ")[0].substring(1);
-    msg = msg.split(" ");
-    msg.shift();
-    msg = msg.join(" ");
-    window._g(`chat&channel=personal&receiver=${nick}`, false, { c: msg });
-    return;
+  const tempChannel = chatInputWrapper.getChannelName();
+  const tempPrivateReceiver = chatInputWrapper.getPrivateReceiver();
+  const tempMessageStyle = chatInputWrapper.getStyleMessage();
+
+  const channelSettings = getChannelSettingsFromMsg(msg);
+  chatInputWrapper.setChannel(Object.values(channelSettings));
+  sendMessageRequest(getPrunedMessage(msg), channelSettings);
+
+  chatInputWrapper.setChannel(
+    { name: tempChannel },
+    tempPrivateReceiver,
+    tempMessageStyle,
+    true,
+  );
+  chatInputWrapper.clearInput();
+}
+
+function sendMessageRequest(prunedMessage, settings) {
+  if (INTERFACE === "NI") {
+    Engine.chatController
+      .getChatInputWrapper()
+      .getDataAndSendRequest(prunedMessage);
+  } else {
+    // SI doesn't have `getDataAndSendRequest` method as public,
+    // So we need to re-implement it ourselves.
+    const channel = CHANNEL_COMMAND_NAME[settings.channel.name];
+    const receiver = settings.privateReceiver
+      ? settings.privateReceiver.replaceAll(" ", "_")
+      : "";
+    const style = settings.messageStyle ?? "";
+
+    _g(
+      "chat" +
+        `&channel=${channel}` +
+        (receiver ? `&receiver=${receiver}` : "") +
+        (style ? `&style=${style}` : ""),
+      false,
+      {
+        c: prunedMessage,
+      },
+    );
   }
-  if (CHANNELS[msg.substring(0, 3)]) {
-    window._g(`chat&channel=${CHANNELS[msg.substring(0, 3)]}`, false, {
-      c: msg.substring(3),
-    });
-    return;
-  }
-  window._g("chat&channel=local", false, { c: msg });
 }

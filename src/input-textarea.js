@@ -5,7 +5,7 @@ import { common } from "./main.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
-export let textarea;
+export const textarea = document.createElement("textarea");
 let background;
 const chatColors = {
   priv: "#fc0",
@@ -198,16 +198,17 @@ function loadAndApplyUserTheme() {
     applyCustomBackground(background);
   };
   // I haven't found a great way of knowing if user theme has loaded.
-  // For now it just checks stuff that it requires in one and two seconds after start
-  setTimeout(check, 1000);
-  setTimeout(check, 2000);
+  // Right now it just checks stuff that it requires in one and two seconds after start
+  setTimeout(check, 1_000);
+  setTimeout(check, 2_000);
 
-  // "Shair" theme is known for loading really long, so I added extra checks
+  // "Shair" theme is known for loading really long, so we add extra checks
   if (
     typeof window.shairModuleLoader !== "function" &&
     !document.getElementById("loading")
-  )
+  ) {
     return;
+  }
 
   const loading = document.getElementById("loading");
   if (
@@ -216,67 +217,29 @@ function loadAndApplyUserTheme() {
   ) {
     document.getElementById("textarea-background").style.left = "146px";
     document.getElementById("inpchat").style.left = "65px";
-    setTimeout(check, 3000);
-    setTimeout(check, 5000);
-    setTimeout(check, 20000);
+    setTimeout(check, 3_000);
+    setTimeout(check, 5_000);
+    setTimeout(check, 20_000);
   }
 }
 
-function replaceChatInput() {
-  if (INTERFACE === "NI") {
-    textarea.placeholder = "Naciśnij Enter, aby porozmawiać";
+function replaceChatInput(textarea) {
+  const bottomBar = document.getElementById("bottombar");
+  document.getElementById("inpchat").remove();
+  textarea.id = "inpchat";
 
-    const inputWrapper =
-      document.getElementsByClassName("chat-tpl")[0].children[5];
-    inputWrapper.style.zIndex = "200";
-    const inpchat = inputWrapper.children[0];
-    inpchat.style.opacity = "0";
-    inpchat.style.pointerEvents = "none";
+  background = document.createElement("div");
+  background.id = "textarea-background";
+  bottomBar.appendChild(background);
+  bottomBar.appendChild(textarea);
 
-    textarea.addEventListener(
-      "keypress",
-      function (e) {
-        if (e.key !== "Enter") return;
+  // Disable jQuery "click" events since .init() adds them back,
+  // and we would end up with 2 of the same events
+  $("#bchat").off("click");
+  g.chatController.getChatInputWrapper().init();
 
-        //TODO validate if it was really sent
-        textarea.blur();
-        if (textarea.value !== "")
-          //initSendButton
-          Engine.chat.sendMessage(textarea.value);
-      },
-      true,
-    );
-
-    //move focus to our textarea
-    inpchat.addEventListener("focusin", () => textarea.focus());
-
-    const backgroundUp = document.createElement("div");
-    backgroundUp.id = "textarea-background-up";
-    inputWrapper.prepend(backgroundUp);
-
-    background = document.createElement("div");
-    background.id = "textarea-background";
-    inputWrapper.prepend(background);
-
-    inputWrapper.prepend(textarea);
-
-    addInputToTextareaConvertor();
-    checkInputMsg();
-  } else {
-    const bottombar = document.getElementById("bottombar");
-    const inpchat = document.getElementById("inpchat");
-    // inpchat.parentNode.removeChild(inpchat)
-
-    background = document.createElement("div");
-    background.id = "textarea-background";
-    bottombar.appendChild(background);
-    bottombar.appendChild(textarea);
-
-    // This listener makes sure that unfolded textarea does not close immediately when clicked on.
-    textarea.addEventListener("click", (e) => e.stopPropagation(), true);
-    // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
-    textarea.addEventListener("mousedown", (e) => e.stopPropagation(), true);
-  }
+  // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
+  textarea.addEventListener("mousedown", (e) => e.stopPropagation(), true);
 }
 
 function loadLastSavedMessage() {
@@ -296,7 +259,6 @@ function handleChatSendAttempt(event) {
   for (const chatCheck of chatChecks) {
     const stop = chatCheck(event);
     if (stop) {
-      console.log("STOPPPP");
       event.preventDefault();
       event.stopImmediatePropagation();
       event.stopPropagation();
@@ -323,42 +285,17 @@ export function initInputTextarea() {
     true,
   );
 
-  // textarea = document.createElement('textarea')
-  // textarea.id = 'inpchat2'
-  // if (!settings.multiMsg) textarea.maxLength = 199
-  // replaceChatInput()
-  //
-  // // Fix for last available version of Firefox on Windows XP.
-  // // This fix is one of a kind, this script is not designed to work on older web browsers
-  // // It's only implemented because it's quick, easy and fixes massive problem.
-  // // (scrollbar that makes writing impossible)
-  // if (navigator.userAgent.endsWith('Firefox/52.0'))
-  //     textarea.style.overflowX = 'hidden'
-  //
-  //
-  // textarea.addEventListener('input', checkInputMsg, false)
-  // textarea.addEventListener('input', saveInputMsg, false)
-  //
-  // updateCommandsColors()
-  // loadLastSavedMessage()
-  //
-  // if (INTERFACE === 'SI')
-  // {
-  //     textarea.addEventListener('focusout', function ()
-  //     {
-  //         const inpchat = document.getElementById('inpchat')
-  //         if (inpchat.value === '')
-  //         {
-  //             document.getElementById('bottxt').style.display = 'block'
-  //             inpchat.style.opacity = '0'
-  //         }
-  //     }, false)
-  //     textarea.addEventListener('focusin', function ()
-  //     {
-  //         document.getElementById('bottxt').style.display = 'none'
-  //         document.getElementById('inpchat').style.opacity = '1'
-  //     }, false)
-  //
-  //     loadAndApplyUserTheme()
-  // }
+  if (INTERFACE === "SI") {
+    if (!settings.multiMsg) {
+      textarea.maxLength = 199;
+    }
+    replaceChatInput(textarea);
+
+    textarea.addEventListener("input", checkInputMsg, false);
+    textarea.addEventListener("input", saveInputMsg, false);
+    loadAndApplyUserTheme();
+
+    updateCommandsColors();
+    //loadLastSavedMessage();
+  }
 }

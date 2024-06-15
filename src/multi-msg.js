@@ -205,7 +205,5 @@ export function initMultiMsg() {
     toggleMultiMsg,
   );
 
-  if (INTERFACE === "NI") {
-    chatChecks.push(chatCheck);
-  }
+  chatChecks.push(chatCheck);
 }

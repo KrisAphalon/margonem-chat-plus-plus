@@ -1,22 +1,16 @@
 import { addCustomStyle, removeCustomStyle } from "./css-manager.js";
 import { textarea } from "./input-textarea.js";
 
+const MAX_SMALL_INPUT_LENGTH = 30;
+
 /**
  * Folds textarea hiding big message edit window
  */
 function foldTextarea() {
-  if (INTERFACE === "NI") {
-    document.getElementById("textarea-background").style.display = "none";
-    document.getElementById("textarea-background-up").style.display = "none";
-    textarea.classList.remove("unfolded");
-    document
-      .querySelector(".messages-wrapper > .scroll-pane")
-      .classList.remove("input-unfolded");
-  } else {
-    const bg = document.getElementById("textarea-background");
-    textarea.classList.remove("unfolded");
-    bg.classList.remove("unfolded");
-  }
+  const bg = document.getElementById("textarea-background");
+  textarea.classList.remove("unfolded");
+  bg.classList.remove("unfolded");
+
   addCustomStyle(
     "hideInputScrollbar",
     "#input {-ms-overflow-style: none;} #inpchat::-webkit-scrollbar { display: none;}",
@@ -24,47 +18,17 @@ function foldTextarea() {
 }
 
 /**
- * Unfolds textarea showing big message edit window
+ * Unfolds textarea showing a big message edit window
  */
 function unfoldTextarea() {
-  // fix for strange bug that doesn't fold when it should
-  if (textarea.value === "") {
-    foldTextarea(textarea);
-    return;
-  }
-
-  if (INTERFACE === "NI") {
-    const scrollPanel = document.querySelector(
-      ".messages-wrapper > .scroll-pane",
-    );
-    document.getElementById("textarea-background").style.display = "block";
-    document.getElementById("textarea-background-up").style.display = "block";
-    textarea.classList.add("unfolded");
-
-    if (
-      scrollPanel.scrollTop ===
-      scrollPanel.scrollHeight - scrollPanel.clientHeight
-    )
-      scrollPanel.scrollTop = scrollPanel.scrollHeight;
-
-    scrollPanel.classList.add("input-unfolded");
-  } else {
-    const bg = document.getElementById("textarea-background");
-    textarea.classList.add("unfolded");
-    bg.classList.add("unfolded");
-  }
+  const bg = document.getElementById("textarea-background");
+  textarea.classList.add("unfolded");
+  bg.classList.add("unfolded");
   removeCustomStyle("hideInputScrollbar");
 }
 
-function getMaxSmallInputLength() {
-  if (INTERFACE === "NI") return textarea.style.width === "466px" ? 45 : 20;
-  return 30;
-}
-
 function checkToUnfold() {
-  if (INTERFACE === "SI" && Number(g.chat.state) !== 3) return;
-
-  if (textarea.value.length > getMaxSmallInputLength()) {
+  if (textarea.value.length > MAX_SMALL_INPUT_LENGTH) {
     unfoldTextarea();
     return;
   }
@@ -77,37 +41,38 @@ function makeChatScalable(textarea) {
 }
 
 function revokeChatScalable(textarea) {
+  foldTextarea();
   textarea.removeEventListener("focusout", foldTextarea, false);
   textarea.removeEventListener("focusin", checkToUnfold, false);
 }
 
 function initChatScalableChange() {
-  window.g.chat.__state = window.g.chat.state;
-  Object.defineProperty(window.g.chat, "state", {
-    set(val) {
-      if (val === 3 || val === "3") makeChatScalable(textarea);
-      else revokeChatScalable(textarea);
-
-      this.__state = val;
-    },
-    get() {
-      return this.__state;
-    },
+  const chat = document.getElementById("chat");
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.target.classList.contains("left")) {
+        makeChatScalable(textarea);
+        return;
+      }
+      foldTextarea();
+      revokeChatScalable(textarea);
+    });
   });
+  observer.observe(chat, { attributeFilter: ["class"] });
 }
 
 export function initInputFolding() {
-  textarea.addEventListener("input", checkToUnfold, false);
   if (INTERFACE === "NI") {
-    makeChatScalable(textarea);
-    foldTextarea();
-  } else {
-    const state = window.g.chat.state;
-    if (state === 3 || state === "3") makeChatScalable(textarea);
-    else {
-      foldTextarea();
-      revokeChatScalable(textarea);
-    }
-    initChatScalableChange();
+    // NI has its own native text folding, we don't need to add it
+    return;
   }
+
+  textarea.addEventListener("input", checkToUnfold, false);
+  const state = g.chatController.getChatWindow().getChatSize();
+  if (state === 2) {
+    makeChatScalable(textarea);
+  } else {
+    revokeChatScalable(textarea);
+  }
+  initChatScalableChange();
 }

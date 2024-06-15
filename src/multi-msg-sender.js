@@ -125,7 +125,5 @@ function createMutationObserver() {
 }
 
 export function initMultiMsgSender() {
-  if (INTERFACE === "NI") {
-    createMutationObserver();
-  }
+  createMutationObserver();
 }

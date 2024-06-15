@@ -1,5 +1,6 @@
 import { initAutomuteCatcher } from "./automute-catcher.js";
 import { loadBasicStyles } from "./css-manager.js";
+import {initInputFolding} from './input-folding.js'
 import { initInputTextarea } from "./input-textarea.js";
 import { initMultiMsgSender } from "./multi-msg-sender.js";
 import { initMultiMsg } from "./multi-msg.js";
@@ -10,7 +11,7 @@ export function handleNoAnswer() {
 
   if (!sessionStorage.noAnwserMsgDisplayed) {
     window.message(
-      "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat. Kliknij PPM na koordynaty by przywrócić resztę niewysłanej wiadomości.\n Jeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
+      "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat.\nKliknij PPM na koordynaty, by przywrócić resztę niewysłanej wiadomości.\nJeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
     );
     sessionStorage.noAnwserMsgDisplayed = true;
   }
@@ -28,7 +29,7 @@ function start() {
   loadBasicStyles();
 
   initInputTextarea();
-  //initInputFolding()
+  initInputFolding()
   //initChatCleaner()
 
   initMultiMsgSender();

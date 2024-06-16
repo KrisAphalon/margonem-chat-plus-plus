@@ -1,6 +1,6 @@
 import { initAutomuteCatcher } from "./automute-catcher.js";
 import { loadBasicStyles } from "./css-manager.js";
-import {initInputFolding} from './input-folding.js'
+import { initInputFolding } from "./input-folding.js";
 import { initInputTextarea } from "./input-textarea.js";
 import { initMultiMsgSender } from "./multi-msg-sender.js";
 import { initMultiMsg } from "./multi-msg.js";
@@ -29,7 +29,7 @@ function start() {
   loadBasicStyles();
 
   initInputTextarea();
-  initInputFolding()
+  initInputFolding();
   //initChatCleaner()
 
   initMultiMsgSender();

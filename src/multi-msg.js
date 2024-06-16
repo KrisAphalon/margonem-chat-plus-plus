@@ -1,4 +1,9 @@
-import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
+import {
+  CHANNEL,
+  getPrunedMessage,
+  getSiMessageFormat,
+  sendMessage,
+} from "./chat.js";
 import { chatChecks } from "./input-textarea.js";
 import { common, handleNoAnswer } from "./main.js";
 import { addSettingToPanel } from "./panel.js";
@@ -20,11 +25,16 @@ function deconstructSendArrPart(part) {
   return split.join(" ");
 }
 
-function calcMargoLength(string) {
-  const match = string.match(polishLetters);
-  if (match) return string.length + match.length;
-
-  return string.length;
+/**
+ * @param msg {string} Message in SI format
+ */
+function calcMargoLength(msg) {
+  const prunedMsg = getPrunedMessage(msg);
+  const match = prunedMsg.match(polishLetters);
+  if (match) {
+    return prunedMsg.length + match.length;
+  }
+  return prunedMsg.length;
 }
 
 function restoreMsg(e) {

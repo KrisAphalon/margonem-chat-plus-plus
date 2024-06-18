@@ -271,7 +271,7 @@ export function initInputTextarea() {
   updateCommandsColors();
   let selector;
   if (INTERFACE === "NI") {
-    selector = ".magic-input-wrapper";
+    selector = ".magic-input-wrapper > .magic-input";
   } else {
     selector = "#bottombar";
   }
@@ -284,6 +284,17 @@ export function initInputTextarea() {
     },
     true,
   );
+
+  // Handle mobile "send message" button
+  if (INTERFACE === "NI") {
+    document
+      .querySelector(".send-mobile-message-wrapper > .button")
+      ?.addEventListener(
+        "click",
+        (event) => handleChatSendAttempt(event),
+        true,
+      );
+  }
 
   if (INTERFACE === "SI") {
     if (!settings.multiMsg) {

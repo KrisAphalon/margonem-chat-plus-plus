@@ -1,68 +1,100 @@
-// Recolors textarea to match it's color with color of command it starts with
+import { CHANNELS, CHAT_COMMAND_CLASSES } from "./chat-enums.js";
+import { CHANNEL_NAME } from "./chat.js";
 import { addCustomStyle } from "./css-manager.js";
-// If textarea doesn't start with any valid command, then it resets color to default
-import { common } from "./main.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
-export const textarea = document.createElement("textarea");
 let background;
-const chatColors = {
-  priv: "#fc0",
-  clant: "#ffa500",
-  team: "#b554ff",
-  sys_comm: "#f33",
-};
-const classList = ["priv", "sys_comm", "clant", "team"];
-const classListNI = [
-  "priv-in-general",
-  "chat-message sys_red",
-  "clan-message",
-  "group-message",
-];
 
-function addCommandsColorStyles() {
+function addCommandsColorStyles(chatColors) {
+  // TODO use CHANNELS enum
   addCustomStyle(
     "inputClasses",
     `
-#inpchat.priv { color: ${chatColors.priv}; }
-#inpchat.clant { color: ${chatColors.clant}; }
-#inpchat.team { color: ${chatColors.team}; }
-#inpchat.sys_comm { color: ${chatColors.sys_comm}; }
+#inpchat.priv { color: ${chatColors[CHANNEL_NAME.PRIVATE]}; }
+#inpchat.clant { color: ${chatColors[CHANNEL_NAME.CLAN]}; }
+#inpchat.team { color: ${chatColors[CHANNEL_NAME.GROUP]}; }
+#inpchat.sys_comm { color: ${chatColors[CHANNEL_NAME.SYSTEM]}; }
         `,
   );
 }
 
-/**
- * Changes chatColors object to have accurate colors as seen in chat
- */
-function updateCommandsColors() {
-  const chat = document.createElement("div");
+function getChannelColor(channelName) {
   if (INTERFACE === "NI") {
-    chat.className = "chat-message";
-  } else {
-    chat.id = "chattxt";
+    return Engine.chatController
+      .getChatConfig()
+      .getChannelColor(channelName, true);
   }
-  chat.style.display = "none";
-  const msg = document.createElement("div");
-  chat.appendChild(msg);
-  const chatmsg = document.createElement("span");
-  chatmsg.className = "chatmsg";
-  msg.appendChild(chatmsg);
-  document.body.appendChild(chat);
-
-  for (let i = 0; i < classList.length; i++) {
-    msg.className = INTERFACE === "NI" ? classListNI[i] : classList[i];
-    chatColors[classList[i]] = window.getComputedStyle(chatmsg).color;
-  }
-  document.body.removeChild(chat);
-
-  addCommandsColorStyles();
+  return g.chatController.getChatConfig().getChannelColor(channelName, true);
 }
 
 /**
- * Takes part of image that is used for chat and creates image for background.
- * With this function textarea's background should look nice on all user themes.
+ *  Changes chatColors object to have accurate colors as seen in chat
+ */
+function updateCommandsColors() {
+  const chatColors = {};
+  for (const channelName in CHANNELS) {
+    chatColors[channelName] = getChannelColor(channelName);
+  }
+
+  const customChatColors = getCustomChatColors(chatColors);
+  addCommandsColorStyles(customChatColors);
+}
+
+/**
+ *  Returns chatColors with changes made from custom user CSS
+ */
+function getCustomChatColors(chatColors) {
+  const chat = document.createElement("div");
+  chat.style.display = "none";
+  chat.innerHTML = `
+<div class="one-message-wrapper">
+  <div class="new-chat-message">
+    <span class="information-part">
+      <span class="ts-section"></span>
+      <span class="channel-section"></span>
+      <span class="author-section click-able"></span>
+      <span class="receiver-arrow-section">-&gt;</span>
+      <span class="receiver-section"></span>
+    </span>
+    <span class="message-part">
+      <span class="message-section">message</span>
+    </span>
+  </div>
+</div>
+    `;
+  document.body.appendChild(chat);
+
+  const wrapper = chat.querySelector(".one-message-wrapper");
+  const message = chat.querySelector(".new-chat-message");
+  const messageSection = chat.querySelector(".message-section");
+
+  // If the message has the same color as baseline,
+  // it means the theme did not change the color.
+  const baseColor = window.getComputedStyle(messageSection).color;
+
+  const baseWrapperClasses = wrapper.className;
+  const baseMessageClasses = message.className;
+  const customChatColors = {};
+  for (const channelName in chatColors) {
+    wrapper.classList.add(`${channelName}-message-wrapper`);
+    message.classList.add(`chat-${channelName}-message`);
+    const color = window.getComputedStyle(messageSection).color;
+    if (color !== baseColor) {
+      customChatColors[channelName] = color;
+    }
+
+    wrapper.className = baseWrapperClasses;
+    message.className = baseMessageClasses;
+  }
+  document.body.removeChild(chat);
+
+  return customChatColors;
+}
+
+/**
+ * Takes part of image that is used for chat and creates image for the background.
+ * With this function, a textarea background should look nice on all user themes.
  */
 function applyCustomBackground(backgroundElm) {
   const chat = document.createElement("div");
@@ -72,15 +104,20 @@ function applyCustomBackground(backgroundElm) {
   document.body.appendChild(chat);
   const newImg = window.getComputedStyle(chat).backgroundImage;
   document.body.removeChild(chat);
-  if (backgroundElm.style.backgroundImage !== newImg)
+  if (backgroundElm.style.backgroundImage !== newImg) {
     backgroundElm.style.backgroundImage = newImg;
+  }
 }
 
 /**
  * Saves last input msg
  */
-function saveInputMsg() {
-  localStorage.setItem("lastInputtedMsg", textarea.value);
+function saveInputMsg(inputElement) {
+  if (INTERFACE === "NI") {
+    localStorage.setItem("lastInputtedMsg", inputElement.innerText);
+  } else {
+    localStorage.setItem("lastInputtedMsg", inputElement.value);
+  }
 }
 
 function checkMaxLength(textarea) {
@@ -101,100 +138,75 @@ function checkMaxLength(textarea) {
   textarea.maxLength = 199 - polishLettersCount;
 }
 
-function checkInputMsg() {
-  const input = document.getElementById("inpchat");
-  let trueInputElement = INTERFACE === "NI" ? input : textarea;
+function checkInputMsg(inputElement) {
+  // check maxLength
+  if (!settings.multiMsg) {
+    checkMaxLength(inputElement);
+  }
 
-  //fixes bug when clicking enter to start chatting
-  trueInputElement.value = trueInputElement.value.replace(/\r?\n/gi, "");
-
-  //check maxLength
-  if (settings.multiMsg) trueInputElement.removeAttribute("maxLength");
-  else checkMaxLength(textarea);
-
-  //check colors
-  recolorTextarea();
-
-  if (!settings.multiMsg && trueInputElement !== input)
-    input.value = textarea.value;
-
-  return trueInputElement.value;
+  // check colors
+  recolorTextarea(inputElement);
 }
 
-const CHAT_COMMAND_CLASSES = {
-  "/g": "team",
-  "/k": "clant",
-  "*me": "me",
-  "/me": "me",
-  "*nar": "nar",
-  "*nar1": "nar",
-  "/nar": "nar",
-  "*nar2": "nar2",
-  "*nar3": "nar3",
-  "*nar6": "nar6",
-  "*dial": "dial1",
-  "*dial1": "dial1",
-  "*dial2": "dial2",
-  "*dial3": "dial3",
-  "*dial666": "dial666",
-  "*lang": "lang",
-};
+function getCurrentDefaultTextareaColor() {
+  if (INTERFACE === "NI") {
+    return document.querySelector(
+      ".new-chat-window .control-wrapper > .menu-card > .card-name",
+    ).style.color;
+  }
+  return "";
+}
 
-const SYS_COMMANDS = [
-  "*sys",
-  "*map",
-  "*light",
-  "*addGraf",
-  "*delGraf",
-  "*hide",
-  "*weather",
-];
+function getCurrentStyleTextareaClass() {
+  if (INTERFACE === "NI") {
+    const messageStyle = document.querySelector(
+      ".new-chat-window .control-wrapper > .style-message",
+    ).innerText;
+    switch (messageStyle) {
+      case "me":
+        return CHAT_COMMAND_CLASSES["/lm"];
+      case "nar":
+        return CHAT_COMMAND_CLASSES["/ln"];
+    }
+  }
+  return "";
+}
 
 /**
  * Recolors textarea's text color according to message inside of it
  */
-function recolorTextarea() {
-  const value = textarea.value.trim();
-  const command = value.split(" ")[0];
+function recolorTextarea(inputElement) {
+  let command;
+  if (INTERFACE === "NI") {
+    command = inputElement.innerText.trim().split(" ")[0];
+    inputElement.className = INTERFACE === "NI" ? "magic-input" : "";
+  } else {
+    command = inputElement.value.trim().split(" ")[0];
+    inputElement.style.color = "";
+    inputElement.className = inputElement.classList.contains("unfolded")
+      ? "unfolded"
+      : "";
+  }
+  inputElement.style.color = getCurrentDefaultTextareaColor();
 
-  if (textarea.classList.contains("unfolded")) textarea.className = "unfolded";
-  else textarea.className = "";
-  textarea.style.color = "";
-  if (command[0] === "@") {
-    textarea.style.color = chatColors.priv;
+  const styleClass = getCurrentStyleTextareaClass();
+  if (styleClass) {
+    inputElement.classList.add(styleClass);
     return;
   }
-  if (SYS_COMMANDS.includes(command)) {
-    textarea.style.color = chatColors.sys_comm;
+  if (command.startsWith("@")) {
+    inputElement.classList.add("priv");
     return;
   }
-  if (CHAT_COMMAND_CLASSES[command])
-    textarea.classList.add(CHAT_COMMAND_CLASSES[command]);
+  if (CHAT_COMMAND_CLASSES[command]) {
+    inputElement.classList.add(...CHAT_COMMAND_CLASSES[command].split(" "));
+  }
 }
 
-//Change value of textarea when something changes value of input
-function addInputToTextareaConvertor() {
-  const inpchat = document.querySelector(".chat-tpl > .input-wrapper > input");
-  const inpchat_value = inpchat.value;
-  Object.defineProperty(inpchat, "value", {
-    set(val) {
-      this.__value = val;
-      if (textarea.value !== inpchat.value && !common.blockTextareaChanging) {
-        textarea.value = inpchat.value;
-        recolorTextarea();
-      }
-    },
-    get() {
-      if (typeof this.__value === "undefined") return inpchat_value;
-      return this.__value;
-    },
-  });
-}
-
-function loadAndApplyUserTheme() {
+function loadAndApplyUserTheme(textarea, background) {
   const check = function () {
     updateCommandsColors();
-    recolorTextarea();
+    recolorTextarea(textarea);
     applyCustomBackground(background);
   };
   // I haven't found a great way of knowing if user theme has loaded.
@@ -223,10 +235,11 @@ function loadAndApplyUserTheme() {
   }
 }
 
-function replaceChatInput(textarea) {
+function replaceChatInput() {
+  const textarea = document.createElement("textarea");
+  textarea.id = "inpchat";
   const bottomBar = document.getElementById("bottombar");
   document.getElementById("inpchat").remove();
-  textarea.id = "inpchat";
 
   background = document.createElement("div");
   background.id = "textarea-background";
@@ -240,22 +253,32 @@ function replaceChatInput(textarea) {
 
   // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
   textarea.addEventListener("mousedown", (e) => e.stopPropagation(), true);
+
+  return {
+    textarea,
+    background,
+  };
 }
 
-function loadLastSavedMessage() {
+function loadLastSavedMessage(inputElement) {
   const savedMessage = localStorage.getItem("lastInputtedMsg");
-  if (savedMessage) {
-    textarea.value = savedMessage;
-    if (INTERFACE === "SI") {
-      document.getElementById("bottxt").style.display = "block";
-      textarea.style.opacity = "0";
-    }
+  if (!savedMessage) {
+    return;
   }
-  recolorTextarea();
+
+  if (INTERFACE === "NI") {
+    document.querySelector(".magic-input-placeholder").style.display = "none";
+    document.querySelector(".clear-cross").style.display = "block";
+    inputElement.innerText = savedMessage;
+  } else {
+    inputElement.value = savedMessage;
+    document.getElementById("bottxt").style.display = "none";
+  }
+
+  recolorTextarea(inputElement);
 }
 
 function handleChatSendAttempt(event) {
-  console.log(chatChecks);
   for (const chatCheck of chatChecks) {
     const stop = chatCheck(event);
     if (stop) {
@@ -275,7 +298,9 @@ export function initInputTextarea() {
   } else {
     selector = "#bottombar";
   }
-  document.querySelector(selector).addEventListener(
+
+  const chatInputEventHolder = document.querySelector(selector);
+  chatInputEventHolder.addEventListener(
     "keyup",
     (event) => {
       if (event.key === "Enter") {
@@ -285,8 +310,10 @@ export function initInputTextarea() {
     true,
   );
 
-  // Handle mobile "send message" button
+  let chatInput;
   if (INTERFACE === "NI") {
+    chatInput = chatInputEventHolder;
+    // Handle mobile "send message" button
     document
       .querySelector(".send-mobile-message-wrapper > .button")
       ?.addEventListener(
@@ -295,18 +322,16 @@ export function initInputTextarea() {
         true,
       );
   }
-
   if (INTERFACE === "SI") {
+    const { chatInput, background } = replaceChatInput();
     if (!settings.multiMsg) {
-      textarea.maxLength = 199;
+      chatInput.maxLength = 199;
     }
-    replaceChatInput(textarea);
-
-    textarea.addEventListener("input", checkInputMsg, false);
-    textarea.addEventListener("input", saveInputMsg, false);
-    loadAndApplyUserTheme();
-
-    updateCommandsColors();
-    //loadLastSavedMessage();
+    loadAndApplyUserTheme(chatInput, background);
   }
+  chatInput.addEventListener("input", () => checkInputMsg(chatInput), false);
+  chatInput.addEventListener("input", () => saveInputMsg(chatInput), false);
+
+  loadLastSavedMessage(chatInput);
+  return chatInput;
 }

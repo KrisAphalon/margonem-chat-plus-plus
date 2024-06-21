@@ -6,6 +6,16 @@ export const CHANNEL = {
   "/k ": "CLAN",
 };
 
+export const CHANNEL_NAME = {
+  GLOBAL: "GLOBAL",
+  LOCAL: "LOCAL",
+  TRADE: "TRADE",
+  GROUP: "GROUP",
+  CLAN: "CLAN",
+  PRIVATE: "PRIVATE",
+  SYSTEM: "SYSTEM",
+};
+
 export const CHANNEL_MAPPINGS = {
   Globalny: "/o ",
   Lokalny: "/l ",

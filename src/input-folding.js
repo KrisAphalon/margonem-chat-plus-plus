@@ -1,14 +1,13 @@
 import { addCustomStyle, removeCustomStyle } from "./css-manager.js";
-import { textarea } from "./input-textarea.js";
 
 const MAX_SMALL_INPUT_LENGTH = 30;
 
 /**
  * Folds textarea hiding big message edit window
  */
-function foldTextarea() {
+function foldTextarea(inputElement) {
   const bg = document.getElementById("textarea-background");
-  textarea.classList.remove("unfolded");
+  inputElement.classList.remove("unfolded");
   bg.classList.remove("unfolded");
 
   addCustomStyle(
@@ -20,59 +19,71 @@ function foldTextarea() {
 /**
  * Unfolds textarea showing a big message edit window
  */
-function unfoldTextarea() {
+function unfoldTextarea(inputElement) {
   const bg = document.getElementById("textarea-background");
-  textarea.classList.add("unfolded");
+  inputElement.classList.add("unfolded");
   bg.classList.add("unfolded");
   removeCustomStyle("hideInputScrollbar");
 }
 
-function checkToUnfold() {
-  if (textarea.value.length > MAX_SMALL_INPUT_LENGTH) {
-    unfoldTextarea();
+function checkToUnfold(inputElement) {
+  if (inputElement.value.length > MAX_SMALL_INPUT_LENGTH) {
+    unfoldTextarea(inputElement);
     return;
   }
+  foldTextarea(inputElement);
+}
+
+function makeChatScalable(inputElement) {
+  inputElement.addEventListener("focusout", foldTextarea, false);
+  inputElement.addEventListener(
+    "focusin",
+    () => checkToUnfold(inputElement),
+    false,
+  );
+}
+
+function revokeChatScalable(inputElement) {
   foldTextarea();
+  inputElement.removeEventListener("focusout", foldTextarea, false);
+  inputElement.removeEventListener(
+    "focusin",
+    () => checkToUnfold(inputElement),
+    false,
+  );
 }
 
-function makeChatScalable(textarea) {
-  textarea.addEventListener("focusout", foldTextarea, false);
-  textarea.addEventListener("focusin", checkToUnfold, false);
-}
-
-function revokeChatScalable(textarea) {
-  foldTextarea();
-  textarea.removeEventListener("focusout", foldTextarea, false);
-  textarea.removeEventListener("focusin", checkToUnfold, false);
-}
-
-function initChatScalableChange() {
+function initChatScalableChange(inputElement) {
   const chat = document.getElementById("chat");
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.target.classList.contains("left")) {
-        makeChatScalable(textarea);
+        makeChatScalable(inputElement);
         return;
       }
       foldTextarea();
-      revokeChatScalable(textarea);
+      revokeChatScalable(inputElement);
     });
   });
   observer.observe(chat, { attributeFilter: ["class"] });
 }
 
-export function initInputFolding() {
+export function initInputFolding(inputElement) {
   if (INTERFACE === "NI") {
     // NI has its own native text folding, we don't need to add it
     return;
   }
 
-  textarea.addEventListener("input", checkToUnfold, false);
+  inputElement.addEventListener(
+    "input",
+    () => checkToUnfold(inputElement),
+    false,
+  );
   const state = g.chatController.getChatWindow().getChatSize();
   if (state === 2) {
-    makeChatScalable(textarea);
+    makeChatScalable(inputElement);
   } else {
-    revokeChatScalable(textarea);
+    revokeChatScalable(inputElement);
   }
-  initChatScalableChange();
+  initChatScalableChange(inputElement);
 }

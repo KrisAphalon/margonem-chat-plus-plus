@@ -28,8 +28,8 @@ function start() {
   loadSettings();
   loadBasicStyles();
 
-  initInputTextarea();
-  initInputFolding();
+  const inputElement = initInputTextarea();
+  initInputFolding(inputElement);
   //initChatCleaner()
 
   initMultiMsgSender();

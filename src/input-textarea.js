@@ -1,5 +1,5 @@
 import { CHANNELS, CHAT_COMMAND_CLASSES } from "./chat-enums.js";
-import { CHANNEL_NAME } from "./chat.js";
+import { CHANNEL_NAME, getSiMessageFormat } from "./chat.js";
 import { addCustomStyle } from "./css-manager.js";
 import { settings } from "./settings.js";
 
@@ -114,7 +114,10 @@ function applyCustomBackground(backgroundElm) {
  */
 function saveInputMsg(inputElement) {
   if (INTERFACE === "NI") {
-    localStorage.setItem("lastInputtedMsg", inputElement.innerText);
+    localStorage.setItem(
+      "lastInputtedMsg",
+      getSiMessageFormat(inputElement.innerText),
+    );
   } else {
     localStorage.setItem("lastInputtedMsg", inputElement.value);
   }

@@ -162,14 +162,14 @@
 /* Panel */
 .cpp-panel {
   animation: fade 0.5s;
-  border-image: url(http://cronus.margonem.com/img/gui/tmp/window-frame.png) 32
+  border-image: url(https://cronus.margonem.com/img/gui/tmp/window-frame.png) 32
     20 repeat;
   border-style: solid;
   border-width: 34px 13px 10px 13px;
   color: #000;
   @if $INTERFACE == "NI" {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/1.png),
-      url(http://nerthus.margonem.pl/img/gui/cursor/1.cur), auto;
+    cursor: url(https://nerthus.margonem.pl/img/gui/cursor/1.png),
+      url(https://nerthus.margonem.pl/img/gui/cursor/1.cur), auto;
   }
   left: calc(50% - 204px);
   pointer-events: auto;
@@ -182,7 +182,7 @@
 
 .cpp-panel > .background {
   background-color: #f1deaa;
-  background-image: url(http://cronus.margonem.com/img/gui/content-redleather.jpg);
+  background-image: url(https://cronus.margonem.com/img/gui/content-redleather.jpg);
 }
 
 /* Panel - nav */
@@ -196,7 +196,7 @@
 }
 
 .cpp-panel .header-label {
-  background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi-naglowek.png);
+  background: url(https://cronus.margonem.com/img/gui/dialogue/dialogi-naglowek.png);
   display: inline-block;
   height: 28px;
   margin: 0 auto;
@@ -205,7 +205,7 @@
 
 .cpp-panel .header-label > .right-decor,
 .cpp-panel .header-label > .left-decor {
-  background: url(http://cronus.margonem.com/img/gui/dialogue/dialogi.png) -38px -2px;
+  background: url(https://cronus.margonem.com/img/gui/dialogue/dialogi.png) -38px -2px;
   height: 28px;
   left: -52px;
   position: absolute;
@@ -230,7 +230,7 @@
 }
 
 .cpp-panel > .close-decor {
-  background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -380px -55px;
+  background: url(https://cronus.margonem.com/img/gui/buttony.png?v=5) -380px -55px;
   height: 52px;
   pointer-events: none;
   position: absolute;
@@ -240,11 +240,11 @@
 }
 
 .cpp-panel .close-button {
-  background: url(http://cronus.margonem.com/img/gui/buttony.png?v=5) -263px -79px;
+  background: url(https://cronus.margonem.com/img/gui/buttony.png?v=5) -263px -79px;
   border: 0;
   @if $INTERFACE == "NI" {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
-      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+    cursor: url(https://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(https://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -281,8 +281,8 @@
 
 .cpp-panel .setting-label-text {
   @if $INTERFACE == "NI" {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
-      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+    cursor: url(https://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(https://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -300,8 +300,8 @@
   border-radius: 2px;
   box-sizing: border-box;
   @if $INTERFACE == "NI" {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
-      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+    cursor: url(https://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(https://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }
@@ -395,8 +395,8 @@
   box-sizing: border-box;
   color: #e6d6bf;
   @if $INTERFACE == "NI" {
-    cursor: url(http://nerthus.margonem.pl/img/gui/cursor/5.png),
-      url(http://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
+    cursor: url(https://nerthus.margonem.pl/img/gui/cursor/5.png),
+      url(https://nerthus.margonem.pl/img/gui/cursor/5.cur), pointer;
   } @else {
     cursor: pointer;
   }

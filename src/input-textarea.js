@@ -38,7 +38,7 @@ function updateCommandsColors() {
   }
 
   const customChatColors = getCustomChatColors(chatColors);
-  addCommandsColorStyles(customChatColors);
+  addCommandsColorStyles({ ...chatColors, ...customChatColors });
 }
 
 /**

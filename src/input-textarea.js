@@ -323,11 +323,12 @@ export function initInputTextarea() {
       );
   }
   if (INTERFACE === "SI") {
-    const { chatInput, background } = replaceChatInput();
+    const { textarea, background } = replaceChatInput();
+    loadAndApplyUserTheme(textarea, background);
+    chatInput = textarea;
     if (!settings.multiMsg) {
       chatInput.maxLength = 199;
     }
-    loadAndApplyUserTheme(chatInput, background);
   }
   chatInput.addEventListener("input", () => checkInputMsg(chatInput), false);
   chatInput.addEventListener("input", () => saveInputMsg(chatInput), false);

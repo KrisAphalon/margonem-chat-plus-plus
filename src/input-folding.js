@@ -44,7 +44,7 @@ function makeChatScalable(inputElement) {
 }
 
 function revokeChatScalable(inputElement) {
-  foldTextarea();
+  foldTextarea(inputElement);
   inputElement.removeEventListener("focusout", foldTextarea, false);
   inputElement.removeEventListener(
     "focusin",

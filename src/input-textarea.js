@@ -270,6 +270,14 @@ function loadLastSavedMessage(inputElement) {
     document.querySelector(".magic-input-placeholder").style.display = "none";
     document.querySelector(".clear-cross").style.display = "block";
     inputElement.innerText = savedMessage;
+
+    // Set the caret at the end
+    const range = document.createRange()
+    const sel = window.getSelection()
+    range.setStart(inputElement.childNodes[0], savedMessage.length - 1)
+    range.collapse(true)
+    sel.removeAllRanges()
+    sel.addRange(range)
   } else {
     inputElement.value = savedMessage;
     document.getElementById("bottxt").style.display = "none";

@@ -289,7 +289,17 @@ function loadLastSavedMessage(inputElement) {
   recolorTextarea(inputElement);
 }
 
-function handleChatSendAttempt(event) {
+function handleChatSendAttempt(chatInput, event) {
+  // Do not try to handle anything if it's just empty input
+  // (This de-focuses the chat window)
+  if (INTERFACE === "NI") {
+    if (chatInput.innerText === "") {
+      return;
+    }
+  } else if (chatInput.value === "") {
+    return;
+  }
+
   for (const chatCheck of chatChecks) {
     const stop = chatCheck(event);
     if (stop) {
@@ -312,10 +322,10 @@ export function initInputTextarea() {
 
   const chatInputEventHolder = document.querySelector(selector);
   chatInputEventHolder.addEventListener(
-    "keyup",
+    "keydown",
     (event) => {
       if (event.key === "Enter") {
-        handleChatSendAttempt(event);
+        handleChatSendAttempt(chatInputEventHolder, event);
       }
     },
     true,
@@ -329,7 +339,7 @@ export function initInputTextarea() {
       .querySelector(".send-mobile-message-wrapper > .button")
       ?.addEventListener(
         "click",
-        (event) => handleChatSendAttempt(event),
+        (event) => handleChatSendAttempt(chatInput, event),
         true,
       );
   }

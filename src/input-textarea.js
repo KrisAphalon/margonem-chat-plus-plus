@@ -294,10 +294,10 @@ function handleChatSendAttempt(chatInput, event) {
   // (This de-focuses the chat window)
   if (INTERFACE === "NI") {
     if (chatInput.innerText === "") {
-      return;
+      return false;
     }
   } else if (chatInput.value === "") {
-    return;
+    return false;
   }
 
   for (const chatCheck of chatChecks) {
@@ -306,9 +306,10 @@ function handleChatSendAttempt(chatInput, event) {
       event.preventDefault();
       event.stopImmediatePropagation();
       event.stopPropagation();
-      return;
+      return true;
     }
   }
+  return false;
 }
 
 export function initInputTextarea() {
@@ -320,12 +321,30 @@ export function initInputTextarea() {
     selector = "#bottombar";
   }
 
+  // We need to listen for keydown since it will only trigger
+  // when the message is supposed to be sent.
+  // (keyup will also trigger when clicking "Enter" to focus the chat)
+  // However, sending messages is on keyup event,
+  // and we need to block that one instead
+  let eventBlock = false;
   const chatInputEventHolder = document.querySelector(selector);
   chatInputEventHolder.addEventListener(
     "keydown",
     (event) => {
       if (event.key === "Enter") {
-        handleChatSendAttempt(chatInputEventHolder, event);
+        eventBlock = handleChatSendAttempt(chatInputEventHolder, event);
+      }
+    },
+    true,
+  );
+  chatInputEventHolder.addEventListener(
+    "keyup",
+    (event) => {
+      if (event.key === "Enter" && eventBlock) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+        eventBlock = false;
       }
     },
     true,

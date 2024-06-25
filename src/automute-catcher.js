@@ -2,10 +2,10 @@ import { default as badWordsWithSpace } from "../res/automute/bad-words-with-spa
 import { default as badWords } from "../res/automute/bad-words.json";
 import { default as falsePositivesWithPolishLetters } from "../res/automute/false-positives-with-polish-letters.json";
 import { default as falsePositives } from "../res/automute/false-positives.json";
-import { CHANNEL, getSiMessageFormat } from "./chat.js";
+import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";
-import { sendMessage, setNITipsInsideOf } from "./utility-functions.js";
+import { setNITipsInsideOf } from "./utility-functions.js";
 
 // removes duplicate letters from message
 // "teeeeeests" changes to "tests"
@@ -119,7 +119,11 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
   if (!ahoj) panel.querySelector(".cpp-mute-text").innerHTML = caughtMsg;
   const deletePanel = function () {
     document.body.removeChild(panel);
-    document.getElementById("inpchat").focus();
+    if (INTERFACE === "NI") {
+      document.querySelector(".magic-input").focus();
+    } else {
+      document.getElementById("inpchat").focus();
+    }
   };
   panel
     .querySelector("#cpp-automute-panel .close-button")

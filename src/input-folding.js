@@ -35,7 +35,11 @@ function checkToUnfold(inputElement) {
 }
 
 function makeChatScalable(inputElement) {
-  inputElement.addEventListener("focusout", () => foldTextarea(inputElement), false);
+  inputElement.addEventListener(
+    "focusout",
+    () => foldTextarea(inputElement),
+    false,
+  );
   inputElement.addEventListener(
     "focusin",
     () => checkToUnfold(inputElement),
@@ -45,7 +49,11 @@ function makeChatScalable(inputElement) {
 
 function revokeChatScalable(inputElement) {
   foldTextarea(inputElement);
-  inputElement.removeEventListener("focusout", () => foldTextarea(inputElement), false);
+  inputElement.removeEventListener(
+    "focusout",
+    () => foldTextarea(inputElement),
+    false,
+  );
   inputElement.removeEventListener(
     "focusin",
     () => checkToUnfold(inputElement),

@@ -262,12 +262,12 @@
 }
 
 .cpp-panel .settings-box {
-  height: 75px;
+  align-items: center;
   display: grid;
   grid-template-columns: 50% auto;
   grid-template-rows: 50% auto;
+  height: 75px;
   justify-items: center;
-  align-items: center;
   padding-top: 10px;
 }
 
@@ -275,8 +275,8 @@
   cursor: unset;
   height: 24px;
   position: relative;
-  width: 155px;
   user-select: none;
+  width: 155px;
 }
 
 .cpp-panel .setting-label-text {
@@ -482,18 +482,18 @@
   box-shadow:
     inset 0 0 1px 1px #cecece,
     inset 0 0 0 3px #0c0d0d;
+  color: black;
+  font-size: 25px;
   height: 35px;
   padding: 2px 0 0 0;
   position: absolute;
   right: 5px;
   width: 35px;
-  font-size: 25px;
-  color: black;
 }
 
 .cpp-panel .donate-button span {
-  top: -2px;
   position: relative;
+  top: -2px;
 }
 
 .cpp-panel .donate-button:hover {
@@ -501,22 +501,22 @@
 }
 
 .cpp-panel .donate-button::before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 3px;
-  bottom: 3px;
-  right: 3px;
-  box-shadow: inset 0 0 1px 1px rgba(237, 177, 117, 0.65);
-  border-radius: 4px;
-  transform: translateZ(0);
   backface-visibility: hidden;
+  border-radius: 4px;
+  bottom: 3px;
+  box-shadow: inset 0 0 1px 1px rgba(237, 177, 117, 0.65);
+  content: "";
+  left: 3px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  transform: translateZ(0);
 }
 
 #cpp-test-button {
-  position: absolute;
-  left: 20px;
   bottom: 20px;
+  left: 20px;
+  position: absolute;
   width: 77px;
 }
 
@@ -525,6 +525,6 @@
 }
 
 #cpp-automute-panel .donate-button {
-  right: 0;
   bottom: 3px;
+  right: 0;
 }

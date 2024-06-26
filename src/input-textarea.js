@@ -254,8 +254,16 @@ function replaceChatInput() {
   $("#bchat").off("click");
   g.chatController.getChatInputWrapper().init();
 
-  // This listener makes sure that user's char doesn't walk when selecting text on unfolded textarea.
+  // Make sure that user's char doesn't walk
+  // when selecting text on unfolded textarea.
   textarea.addEventListener("mousedown", (e) => e.stopPropagation(), true);
+  // Make sure that there are no newlines
+  // and no spaces at the start of the text
+  textarea.addEventListener(
+    "input",
+    () => (textarea.value = textarea.value.replace(/\r?\n/g, "").trimStart()),
+    true,
+  );
 
   return {
     textarea,

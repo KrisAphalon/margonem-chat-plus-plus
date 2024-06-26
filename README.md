@@ -9,15 +9,15 @@ Addon/extension for online MMORPG game: [Margonem](https://www.margonem.pl/), ad
 
 ##### Auto mute catcher
 
-- Addon catches any words or phrazes that would result in automatic mute from server, and displays warning before
-  allowing to send them.
+- Addon catches any words or phrases that would result in automatic mute from server,
+  and displays warning before allowing to send them.
 
 ##### 'Message too long' warning remover
 
-- Block sending single message that would exceed maximum allowed limit.
-- Maximum message length is 200, but every non ASCII character counts as 2. It is not accounted for in base game, so
-  warnings from server are common occurrence. This addon fixes it by recalculating max-length of message in real time,
-  even when pasting it.
+- Block sending a single message that would exceed the maximum allowed limit.
+- The maximum message length is 200, but every non-ASCII character counts as 2.
+  This is not accounted for in base game, so warnings from server are a common occurrence.
+  This addon fixes it by recalculating max-length of a message in real time, even when pasting it.
 
 ##### Sending really long messages
 
@@ -27,19 +27,19 @@ Addon/extension for online MMORPG game: [Margonem](https://www.margonem.pl/), ad
 
 ##### Extended chat window
 
-- Since writing really long messages with simple input element would be quite hard, this addon changes it to dynamically
-  adjustable textarea that pops up when text would start to cramp up.
+- Since writing really long messages with a basic input element would be quite hard,
+  this addon changes it to dynamically adjustable textarea that pops up when a text would start to cramp up.
 
 ##### Auto coloring messages when writing
 
-- Addon automatically colors messages based on what's being currently written.
-- For example it can color commands on red and priv messages on blue.
+- Addon automatically colors messages based on what is being currently written.
+- For example, it can color commands in red and priv messages in blue.
 - It contains commands from base game, as well as [Nerthus addon](https://github.com/nerthus-margonem/nerthusaddon)
 
 ##### Supports both interfaces
 
-- Margonem has two significantly different interfaces: old one and new one. This addon works on both of them without any
-  difficulties.
+- Margonem has two significantly different interfaces: old one and new one.
+  This addon works on both of them without any difficulties.
 
 ##### Private and clan chat hider
 
@@ -50,11 +50,11 @@ Addon/extension for online MMORPG game: [Margonem](https://www.margonem.pl/), ad
 
 - Addon nicely integrates with most of the custom themes you might have on an old interface.
 - It reuses visible assets after loading itself, so custom theme graphics or CSS are nicely integrated, without any need
-  for changes from theme author.
+  for changes from the theme author.
 
 ## Installation
 
 - Install [Tampermonkey](https://www.tampermonkey.net/) or similar browser extension that allows for external scripts.
-- Head to [install page](https://krisaphalon.github.io/margonem-chat-plus-plus/chat-plus-plus.user.js) and click
-  install.
+- Head to [install page](https://krisaphalon.github.io/margonem-chat-plus-plus/chat-plus-plus.user.js)
+  and click "install."
 - Installation should work regardless of interface type.

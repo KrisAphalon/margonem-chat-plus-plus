@@ -31,6 +31,7 @@ function parseMessageToChatForm(message) {
       case "/ln":
       case "*me":
       case "*nar":
+      case "*nar0":
       case "*nar1":
       case "*nar2":
       case "*nar3":

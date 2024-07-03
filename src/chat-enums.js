@@ -8,6 +8,7 @@ export const CHAT_COMMAND_CLASSES = {
   "/k": "clant",
   "*me": "special-style-2",
   "/lm": "special-style-2",
+  "*nar0": "special-style-nerthus-nar0",
   "*nar": "special-style-nerthus-nar1",
   "*nar1": "special-style-nerthus-nar1",
   "/ln": "special-style-nerthus-nar1",

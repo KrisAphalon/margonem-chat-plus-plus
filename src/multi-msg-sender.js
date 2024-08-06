@@ -40,6 +40,7 @@ function parseMessageToChatForm(message) {
         command = "";
         break;
       case "*dial":
+      case "*dial0":
       case "*dial1":
       case "*dial2":
       case "*dial3":

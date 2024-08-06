@@ -71,6 +71,3 @@ const buildNI = createBuild("NI", "production", "NI", resultNI);
 const buildSI = createBuild("SI", "production", "SI", resultSI);
 
 export default [buildNI, buildSI];
-// module.exports = [
-//
-// ]

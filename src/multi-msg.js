@@ -136,7 +136,13 @@ function splitAndFormatLines(msg, prefix, maxLength) {
 function divideMessageToParts(msg, prefix, maxLength) {
   if (msg === "") return;
 
-  msg = msg.substring(prefix.length);
+  // with *dial users can write the NPC message with or without the space
+  // this fixes "eating" the first letter of NPC if they right after `,`
+  const prefixLength = prefix.includes("*dial")
+    ? prefix.length - 1
+    : prefix.length;
+
+  msg = msg.substring(prefixLength).trim();
   const arr = splitAndFormatLines(msg, prefix, maxLength);
   console.log(arr);
   for (let msg of arr) {

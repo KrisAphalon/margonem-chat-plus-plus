@@ -289,6 +289,9 @@ function loadLastSavedMessage(inputElement) {
     range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
+
+    const keyUp = new KeyboardEvent("keyup", {});
+    inputElement.dispatchEvent(keyUp);
   } else {
     inputElement.value = savedMessage;
     document.getElementById("bottxt").style.display = "none";

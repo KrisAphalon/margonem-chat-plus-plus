@@ -34,7 +34,7 @@ function parseSingleMsgOnChat(elm, ch) {
   if (typeof common.sendArr[0] !== "undefined") common.sendArr.shift();
   if (common.sendArr.length > 0)
     setTimeout(function () {
-      if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
+      if (common.sendArr[0]?.match(NOT_ONLY_DOTS).length > 0)
         window.chatSendMsg(common.sendArr[0]);
     }, settings.sendMessageTimeout);
   if (common.sendArr.length > 1)

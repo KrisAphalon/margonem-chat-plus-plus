@@ -4,6 +4,7 @@ import { initInputFolding } from "./input-folding.js";
 import { initInputTextarea } from "./input-textarea.js";
 import { initMultiMsgSender } from "./multi-msg-sender.js";
 import { initMultiMsg } from "./multi-msg.js";
+import { initRestoreMessage } from "./restore-message.js";
 import { loadSettings } from "./settings.js";
 
 export function handleNoAnswer() {
@@ -11,7 +12,7 @@ export function handleNoAnswer() {
 
   if (!sessionStorage.noAnwserMsgDisplayed) {
     window.message(
-      "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat.\nKliknij PPM na koordynaty, by przywrócić resztę niewysłanej wiadomości.\nJeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
+      "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat.\nMożesz przywrócić ją klikając w białą strzałkę niedaleko pola do wpisywania wiadomości.\nJeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
     );
     sessionStorage.noAnwserMsgDisplayed = true;
   }
@@ -41,6 +42,8 @@ function start() {
     //initTextMerger()
     //initTextJustify()
   }
+
+  initRestoreMessage();
 
   //initPanel()
 }

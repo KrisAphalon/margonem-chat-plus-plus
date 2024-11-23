@@ -1,6 +1,7 @@
 import { CHANNELS, CHAT_COMMAND_CLASSES } from "./chat-enums.js";
 import { CHANNEL_NAME, getSiMessageFormat } from "./chat.js";
 import { addCustomStyle } from "./css-manager.js";
+import { restoreMessage } from "./restore-message.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
@@ -178,7 +179,7 @@ function getCurrentStyleTextareaClass() {
 /**
  * Recolors textarea's text color according to message inside of it
  */
-function recolorTextarea(inputElement) {
+export function recolorTextarea(inputElement) {
   let command;
   if (INTERFACE === "NI") {
     command = inputElement.innerText.trim().split(" ")[0];
@@ -271,40 +272,12 @@ function replaceChatInput() {
   };
 }
 
-function loadLastSavedMessage(inputElement) {
+function loadLastSavedMessage() {
   let savedMessage = localStorage.getItem("lastInputtedMsg");
   if (!savedMessage) {
     return;
   }
-
-  if (INTERFACE === "NI") {
-    document.querySelector(".magic-input-placeholder").style.display = "none";
-    document.querySelector(".clear-cross").style.display = "block";
-    inputElement.innerText = savedMessage;
-
-    // Set the caret at the end
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.setStart(inputElement.childNodes[0], savedMessage.length - 1);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-
-    const keyUp = new KeyboardEvent("keyup", {});
-    inputElement.dispatchEvent(keyUp);
-  } else {
-    if (
-      savedMessage.startsWith("/l /lm") ||
-      savedMessage.startsWith("/l /ln")
-    ) {
-      savedMessage = savedMessage.slice(3);
-    }
-
-    inputElement.value = savedMessage;
-    document.getElementById("bottxt").style.display = "none";
-  }
-
-  recolorTextarea(inputElement);
+  restoreMessage(savedMessage);
 }
 
 function handleChatSendAttempt(chatInput, event) {
@@ -391,6 +364,6 @@ export function initInputTextarea() {
   chatInput.addEventListener("input", () => checkInputMsg(chatInput), false);
   chatInput.addEventListener("input", () => saveInputMsg(chatInput), false);
 
-  loadLastSavedMessage(chatInput);
+  loadLastSavedMessage();
   return chatInput;
 }

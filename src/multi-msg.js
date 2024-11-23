@@ -7,23 +7,11 @@ import {
 import { chatChecks } from "./input-textarea.js";
 import { common, handleNoAnswer } from "./main.js";
 import { addSettingToPanel } from "./panel.js";
+import { sendArrayChanged } from "./restore-message.js";
 import { saveSettings, settings } from "./settings.js";
 import { regexIndexOf } from "./utility-functions.js";
 
 const polishLetters = /[ąćęłńóśźż@]/gi; // @ is strange, can't really test it
-function deconstructSendArrPart(part) {
-  if (!["/", "@", "*"].includes(part[0])) return part;
-
-  let split = part.split(" ");
-
-  if (part[0] === "*" && split[0].includes("dial")) {
-    split = part.split(",");
-  }
-  split.shift();
-  if (part[0] === "@") return deconstructSendArrPart(split.join(" "));
-
-  return split.join(" ");
-}
 
 /**
  * @param msg {string} Message in SI format
@@ -35,26 +23,6 @@ function calcMargoLength(msg) {
     return prunedMsg.length + match.length;
   }
   return prunedMsg.length;
-}
-
-function restoreMsg(e) {
-  e.preventDefault();
-  const inpchat = document.getElementById("inpchat");
-  let newChatValue = "";
-  const len = common.sendArr.length;
-  if (len === 0) return false;
-  else if (len >= 1) {
-    window.message("Przywracanie wiadomości...");
-    newChatValue = common.sendArr[0].trim();
-  }
-  if (len > 1)
-    for (let i = 1; i < len; i++) {
-      const part = deconstructSendArrPart(common.sendArr[i]).trim();
-      newChatValue += " " + part;
-    }
-  console.log(newChatValue);
-  inpchat.value = newChatValue;
-  return false;
 }
 
 function calculateAddOnStartAsterix(arr, commandIndex) {
@@ -148,13 +116,14 @@ function divideMessageToParts(msg, prefix, maxLength) {
   for (let msg of arr) {
     common.sendArr.push(msg);
   }
+  sendArrayChanged();
 }
 
 function sendMultiMsg(msg) {
   const addOnStart = calculateAddOnStart(msg);
   // Delete old sendArr if there was some problem (e.g., lost group chat)
   common.sendArr.splice(0);
-
+  sendArrayChanged();
   const maxLen = 197;
   if (calcMargoLength(msg) <= maxLen) {
     return false;

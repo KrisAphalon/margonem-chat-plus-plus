@@ -1,5 +1,6 @@
 import { sendMessage } from "./chat.js";
 import { common, handleNoAnswer } from "./main.js";
+import { sendArrayChanged } from "./restore-message.js";
 import { settings } from "./settings.js";
 
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
@@ -87,10 +88,11 @@ function handleAddedNode(node) {
   if (message === parseMessageToChatForm(common.sendArr[0])) {
     clearTimeout(common.sendTimeout);
     common.sendArr.shift();
+    sendArrayChanged();
     if (common.sendArr.length === 0) return;
 
     setTimeout(function () {
-      if (common.sendArr[0].match(NOT_ONLY_DOTS).length > 0)
+      if (common.sendArr[0]?.match(NOT_ONLY_DOTS).length > 0)
         sendMessage(common.sendArr[0]);
     }, settings.sendMessageTimeout);
 

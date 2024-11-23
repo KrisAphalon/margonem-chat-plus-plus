@@ -272,7 +272,7 @@ function replaceChatInput() {
 }
 
 function loadLastSavedMessage(inputElement) {
-  const savedMessage = localStorage.getItem("lastInputtedMsg");
+  let savedMessage = localStorage.getItem("lastInputtedMsg");
   if (!savedMessage) {
     return;
   }
@@ -293,6 +293,13 @@ function loadLastSavedMessage(inputElement) {
     const keyUp = new KeyboardEvent("keyup", {});
     inputElement.dispatchEvent(keyUp);
   } else {
+    if (
+      savedMessage.startsWith("/l /lm") ||
+      savedMessage.startsWith("/l /ln")
+    ) {
+      savedMessage = savedMessage.slice(3);
+    }
+
     inputElement.value = savedMessage;
     document.getElementById("bottxt").style.display = "none";
   }

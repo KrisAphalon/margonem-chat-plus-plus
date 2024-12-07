@@ -29,6 +29,7 @@ const buildGlobals = {
   CURRENT_MAP_ID: "readonly",
   FILE_PREFIX: "readonly",
   AVAILABLE_MAP_FILES: "readonly",
+  BASIC_CSS: "readonly",
 };
 
 export default [

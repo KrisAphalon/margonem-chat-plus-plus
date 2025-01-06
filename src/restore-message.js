@@ -60,14 +60,17 @@ export function restoreMessage(message) {
     document.querySelector(".magic-input-placeholder").style.display = "none";
     document.querySelector(".clear-cross").style.display = "block";
     inputElement.innerText = message;
-
-    // Set the caret at the end
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.setStart(inputElement.childNodes[0], message.length - 1);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
+    const lastElement =
+      inputElement.childNodes[inputElement.childNodes.length - 1];
+    if (lastElement) {
+      // Set the caret at the end
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setEndAfter(lastElement);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
 
     const keyUp = new KeyboardEvent("keyup", {});
     inputElement.dispatchEvent(keyUp);

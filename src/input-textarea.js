@@ -278,6 +278,9 @@ function loadLastSavedMessage() {
     return;
   }
   restoreMessage(savedMessage);
+  if (INTERFACE === "NI") {
+    Engine.chatController.getChatMessageWrapper().setScrollOnBottom();
+  }
 }
 
 function handleChatSendAttempt(chatInput, event) {

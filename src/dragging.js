@@ -2,19 +2,18 @@ let pos1, pos2, pos3, pos4;
 
 let currentDragElement;
 
-export function dragMouseDown(e) {
-  if (e.target === e.currentTarget) {
+export function dragMouseDown(event) {
+  if (event.target === event.currentTarget) {
     if (INTERFACE === "NI") {
       window.Engine.lock.add("cpp-dragging");
     } else {
       window.g.lock.add("cpp-dragging");
     }
-    e = e || window.event;
-    e.preventDefault();
+    event.preventDefault();
     // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    currentDragElement = e.target;
+    pos3 = event.clientX;
+    pos4 = event.clientY;
+    currentDragElement = event.target;
     document.addEventListener("mousemove", elementDrag);
     document.addEventListener("mouseup", closeDragElement);
   }
@@ -28,14 +27,13 @@ export function revokeDraggable(element) {
   element.removeEventListener("mousedown", dragMouseDown, false);
 }
 
-function elementDrag(e) {
-  e = e || window.event;
-  e.preventDefault();
+function elementDrag(event) {
+  event.preventDefault();
   // calculate the new cursor position:
-  pos1 = pos3 - e.clientX;
-  pos2 = pos4 - e.clientY;
-  pos3 = e.clientX;
-  pos4 = e.clientY;
+  pos1 = pos3 - event.clientX;
+  pos2 = pos4 - event.clientY;
+  pos3 = event.clientX;
+  pos4 = event.clientY;
   // set the element's new position:
   currentDragElement.style.top = currentDragElement.offsetTop - pos2 + "px";
   currentDragElement.style.left = currentDragElement.offsetLeft - pos1 + "px";

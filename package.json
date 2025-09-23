@@ -1,6 +1,6 @@
 {
   "name": "margonem-chat-plus-plus",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0-beta.3",
   "main": "/src/main.js",
   "type": "module",
   "browserslist": [

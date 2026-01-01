@@ -30,14 +30,22 @@ function testMessage(originalMsg, caughtMsg) {
   const arr = caughtMsg.match(
     /<span style='color: red; font-weight: bold'>(.*)<\/span>/,
   );
-  if (!arr?.[1])
+  if (!arr?.[1]) {
     return message(
-      "Coś poszło nie tak przy testowaniu. Wyślij wiadomość którą próbowałeś przetestować do Kris Aphalon na Discordzie",
+      "Coś poszło nie tak przy testowaniu. Wyślij wiadomość, którą próbowałeś przetestować do Kris Aphalon na Discordzie",
     );
+  }
 
   const match = arr[1];
-  const start = Math.max(copy.indexOf(match) - 20, 0);
-  const end = Math.min(copy.indexOf(match) + match.length + 20, copy.length);
+
+  let index = copy.indexOf(match);
+  if (index < 0) {
+    const caughtMessageWithoutHtml = caughtMsg.replaceAll(/<.+?>/g, "");
+    index = caughtMessageWithoutHtml.indexOf(match);
+  }
+
+  const start = Math.max(index - 20, 0);
+  const end = Math.min(index + match.length + 20, copy.length);
   let subMsg = copy.substring(start, end);
 
   if (CHANNEL[subMsg.substring(0, 3)]) {

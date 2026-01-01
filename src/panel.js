@@ -55,7 +55,7 @@ export function showPanel(e) {
   panel.innerHTML = PANEL_HTML;
   panel.querySelector(".settings-box").innerHTML = settingsElms.join("");
 
-  const deletePanel = () => document.body.removeChild(panel);
+  const deletePanel = () => panel.remove();
   panel
     .querySelector("#cpp-panel .close-button")
     .addEventListener("click", deletePanel);

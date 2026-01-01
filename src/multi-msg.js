@@ -156,8 +156,8 @@ function sendMultiMsg(msg) {
 function chatSendMsg(msg) {
   // replace hard spaces (alt + space) with normal one
   // eslint-disable-next-line no-irregular-whitespace
-  msg = msg.replace(/ /g, " ");
-  msg = msg.replace(/[«»]/g, "");
+  msg = msg.replaceAll(/ /g, " ");
+  msg = msg.replaceAll(/[«»]/g, "");
   msg = msg.trim();
 
   if (!settings.multiMsg || msg === "") {

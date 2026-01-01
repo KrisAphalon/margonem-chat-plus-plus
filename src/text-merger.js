@@ -4,7 +4,14 @@ import { saveSettings, settings } from "./settings.js";
 import { sanitizeText } from "./utility-functions.js";
 
 const messages = {};
-const ALLOWED_COMMANDS = ["nar", "nar2", "nar3", "nar6", "sys_comm", "me"];
+const ALLOWED_COMMANDS = new Set([
+  "nar",
+  "nar2",
+  "nar3",
+  "nar6",
+  "sys_comm",
+  "me",
+]);
 const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
 
 function destructureMessage(ch) {
@@ -69,7 +76,7 @@ function parser(ch) {
   const { tab, nick, text, time, command } = destructureMessage(ch);
 
   if (!settings.mergeMessages) return false;
-  if (!ALLOWED_COMMANDS.includes(command)) return false;
+  if (!ALLOWED_COMMANDS.has(command)) return false;
 
   const wasParsed = parseMessage(ch);
   if (wasParsed) return true;

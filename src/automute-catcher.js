@@ -118,7 +118,7 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
   panel.querySelector(".top-box").innerHTML = alertMsg;
   if (!ahoj) panel.querySelector(".cpp-mute-text").innerHTML = caughtMsg;
   const deletePanel = function () {
-    document.body.removeChild(panel);
+    panel.remove();
     if (INTERFACE === "NI") {
       document.querySelector(".magic-input").focus();
     } else {
@@ -170,15 +170,15 @@ function checkMessageForBadWords(msg, badWords) {
 
 function normalizeString(str) {
   return str
-    .replace(/[^a-zńąćśźżóęł ]/g, "")
-    .replace(/ą/g, "a")
-    .replace(/ę/g, "e")
-    .replace(/ł/g, "l")
-    .replace(/[żź]/g, "z")
-    .replace(/ó/g, "o")
-    .replace(/ń/g, "n")
-    .replace(/ć/g, "c")
-    .replace(/ś/g, "s");
+    .replaceAll(/[^a-zńąćśźżóęł ]/g, "")
+    .replaceAll(/[żź]/g, "z")
+    .replaceAll("ą", "a")
+    .replaceAll("ę", "e")
+    .replaceAll("ł", "l")
+    .replaceAll("ó", "o")
+    .replaceAll("ń", "n")
+    .replaceAll("ć", "c")
+    .replaceAll("ś", "s");
 }
 
 function removePhrases(str, phrasesToRemove) {
@@ -215,7 +215,7 @@ function messageContainsBadWords(msg) {
 
   copy = removePhrases(copy, falsePositives);
 
-  copy = copy.replace(/ /g, "");
+  copy = copy.replaceAll(" ", "");
   copy = removeDuplicates(copy);
 
   alertMsg = checkMessageForBadWords(copy, badWords);

@@ -26,20 +26,19 @@ function elementIsHidable(element) {
   if (INTERFACE === "SI") return classes.toHide.includes(element.className);
   if (classes.toHide.includes(element.classList[1])) return true;
 
-  for (let j = 0; j < element.children.length; j++) {
-    const child = element.children[j];
-    if (classes.toHide2.some((hide) => child.classList.contains(hide)))
+  for (const child of element.children) {
+    if (classes.toHide2.some((hide) => child.classList.contains(hide))) {
       return true;
+    }
   }
   return false;
 }
 
 function applyDisplayStyleIfHidable(elements, style) {
-  for (let i = 0; i < elements.length; i++) {
-    const element = elements[i];
-
-    if (!elementIsNeverHidable(element) && elementIsHidable(element))
+  for (const element of elements.length) {
+    if (!elementIsNeverHidable(element) && elementIsHidable(element)) {
       element.style.display = style;
+    }
   }
 }
 

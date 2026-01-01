@@ -23,7 +23,9 @@ function removeDuplicates(msg) {
 
 function testMessage(originalMsg, caughtMsg) {
   let copy = originalMsg;
-  if (copy[0] === "@") copy = copy.slice(copy.indexOf(" "));
+  if (copy[0] === "@") {
+    copy = copy.slice(copy.indexOf(" ") + 1);
+  }
 
   const arr = caughtMsg.match(
     /<span style='color: red; font-weight: bold'>(.*)<\/span>/,
@@ -191,7 +193,7 @@ function messageContainsBadWords(msg) {
 
   //don't parse nick
   if (copy[0] === "@") {
-    copy = copy.slice(copy.indexOf(" "));
+    copy = copy.slice(copy.indexOf(" ") + 1);
   }
 
   copy = removePhrases(copy, falsePositivesWithPolishLetters);

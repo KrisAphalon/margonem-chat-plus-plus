@@ -206,6 +206,12 @@ function messageContainsBadWords(msg) {
     return true;
   }
 
+  const zajebisciAlert = messageContainsBadZajebisci(copy);
+  if (zajebisciAlert) {
+    alertUser(getSiMessageFormat(msg), zajebisciAlert);
+    return true;
+  }
+
   //check for known phrases that get flagged as swear words
   let alertMsg = checkMessageForBadWords(copy, badWordsWithSpace);
   if (alertMsg) {
@@ -235,6 +241,29 @@ function chatCheck() {
     chatInputValue = document.querySelector("#inpchat").value;
   }
   return messageContainsBadWords(chatInputValue);
+}
+
+/**
+ * "zajebisci" is a weird case,
+ * since on its own it's not mutable,
+ * but if in the text you have another "za",
+ * it will flag the message.
+ */
+function messageContainsBadZajebisci(message) {
+  const zajebiscieRegex = /za.+?zajebisci/;
+
+  const badWordsFound = zajebiscieRegex.exec(message)?.[0];
+  if (!badWordsFound) {
+    return false;
+  }
+
+  return message
+    .split(badWordsFound)
+    .join(
+      "<span style='color: red; font-weight: bold'>" +
+        badWordsFound +
+        "</span>",
+    );
 }
 
 export function initAutomuteCatcher() {

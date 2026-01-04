@@ -1,6 +1,6 @@
-import * as childProcess from "child_process";
-import * as fs from "fs";
-import * as path from "path";
+import * as childProcess from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import * as sass from "sass";
 import webpack from "webpack";
 

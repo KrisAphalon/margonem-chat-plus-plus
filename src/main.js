@@ -1,11 +1,11 @@
-import { initAutomuteCatcher } from "./automute-catcher.js";
-import { loadBasicStyles } from "./css-manager.js";
-import { initInputFolding } from "./input-folding.js";
-import { initInputTextarea } from "./input-textarea.js";
-import { initMultiMsgSender } from "./multi-msg-sender.js";
-import { initMultiMsg } from "./multi-msg.js";
-import { initRestoreMessage } from "./restore-message.js";
-import { loadSettings } from "./settings.js";
+import { initAutomuteCatcher } from "./app/automute-catcher.js";
+import { loadBasicStyles } from "./app/css-manager.js";
+import { initInputFolding } from "./app/input-folding.js";
+import { initInputTextarea } from "./app/input-textarea.js";
+import { initMultiMsgSender } from "./app/multi-msg-sender.js";
+import { initMultiMsg } from "./app/multi-msg.js";
+import { initRestoreMessage } from "./app/restore-message.js";
+import { loadSettings } from "./app/settings.js";
 
 export function handleNoAnswer() {
   if (common.sendArr.length === 0) return;

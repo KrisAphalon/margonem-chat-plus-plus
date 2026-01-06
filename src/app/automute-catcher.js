@@ -1,7 +1,7 @@
-import { default as badWordsWithSpace } from "../res/automute/bad-words-with-space.json";
-import { default as badWords } from "../res/automute/bad-words.json";
-import { default as falsePositivesWithPolishLetters } from "../res/automute/false-positives-with-polish-letters.json";
-import { default as falsePositives } from "../res/automute/false-positives.json";
+import badWordsWithSpace from "../../res/automute/bad-words-with-space.json" with { type: "json" };
+import badWords from "../../res/automute/bad-words.json" with { type: "json" };
+import falsePositivesWithPolishLetters from "../../res/automute/false-positives-with-polish-letters.json" with { type: "json" };
+import falsePositives from "../../res/automute/false-positives.json" with { type: "json" };
 import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";

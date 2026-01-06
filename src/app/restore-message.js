@@ -1,5 +1,5 @@
 import { recolorTextarea } from "./input-textarea.js";
-import { common } from "./main.js";
+import { common } from "../main.js";
 import { setNITipsInsideOf } from "./utility-functions.js";
 
 function deconstructSendArrPart(part) {

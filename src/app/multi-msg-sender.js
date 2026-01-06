@@ -1,5 +1,5 @@
 import { sendMessage } from "./chat.js";
-import { common, handleNoAnswer } from "./main.js";
+import { common, handleNoAnswer } from "../main.js";
 import { sendArrayChanged } from "./restore-message.js";
 import { settings } from "./settings.js";
 

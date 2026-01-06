@@ -1,4 +1,4 @@
-import { common, handleNoAnswer } from "./main.js";
+import { common, handleNoAnswer } from "../main.js";
 import { addSettingToPanel } from "./panel.js";
 import { saveSettings, settings } from "./settings.js";
 import { sanitizeText } from "./utility-functions.js";

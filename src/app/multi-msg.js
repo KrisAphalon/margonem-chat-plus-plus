@@ -5,7 +5,7 @@ import {
   sendMessage,
 } from "./chat.js";
 import { chatChecks } from "./input-textarea.js";
-import { common, handleNoAnswer } from "./main.js";
+import { common, handleNoAnswer } from "../main.js";
 import { addSettingToPanel } from "./panel.js";
 import { sendArrayChanged } from "./restore-message.js";
 import { saveSettings, settings } from "./settings.js";

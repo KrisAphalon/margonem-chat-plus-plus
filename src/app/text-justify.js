@@ -7,10 +7,10 @@ let timeout;
 
 function onChatScroll() {
   clearTimeout(timeout);
-  scrollbar.style.opacity = 1;
+  scrollbar.style.opacity = "1";
   scrollbar.classList.add("moving");
   timeout = setTimeout(function () {
-    scrollbar.style.opacity = 0;
+    scrollbar.style.opacity = "0";
     scrollbar.classList.remove("moving");
   }, 1000);
 }

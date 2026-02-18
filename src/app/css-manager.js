@@ -27,7 +27,3 @@ export function toggleCustomStyle(styleName, styleContent) {
   if (styles[styleName]) removeCustomStyle(styleName);
   else addCustomStyle(styleName, styleContent);
 }
-
-export function loadBasicStyles() {
-  addCustomStyle("basic", BASIC_CSS);
-}

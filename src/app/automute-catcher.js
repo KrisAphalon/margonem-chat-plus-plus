@@ -52,7 +52,7 @@ function testMessage(originalMsg, caughtMsg) {
     subMsg = subMsg.substring(3);
   }
 
-  let heroNick = "";
+  let heroNick;
   if (INTERFACE === "NI") {
     heroNick = Engine.hero.d.nick;
   } else {

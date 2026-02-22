@@ -5,9 +5,9 @@ let currentDragElement;
 export function dragMouseDown(event) {
   if (event.target === event.currentTarget) {
     if (INTERFACE === "NI") {
-      window.Engine.lock.add("cpp-dragging");
+      Engine.lock.add("cpp-dragging");
     } else {
-      window.g.lock.add("cpp-dragging");
+      g.lock.add("cpp-dragging");
     }
     event.preventDefault();
     // get the mouse cursor position at startup:
@@ -41,9 +41,9 @@ function elementDrag(event) {
 
 function closeDragElement() {
   if (INTERFACE === "NI") {
-    window.Engine.lock.remove("cpp-dragging");
+    Engine.lock.remove("cpp-dragging");
   } else {
-    window.g.lock.remove("cpp-dragging");
+    g.lock.remove("cpp-dragging");
   }
   document.removeEventListener("mousemove", elementDrag);
   document.removeEventListener("mouseup", closeDragElement);

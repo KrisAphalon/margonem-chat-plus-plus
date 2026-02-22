@@ -16,3 +16,63 @@
  */
 
 declare const INTERFACE: "NI" | "SI";
+
+/**
+ * Engine global variable available in the new interface.
+ */
+declare const Engine: {
+  chatController: {
+    getChatConfig: () => {
+      getChannelColor(name: string, isHeroMessage: boolean): unknown;
+    };
+    getChatInputWrapper(): {
+      clearInput(): void;
+      getChannelName(): string;
+      getDataAndSendRequest(value: unknown): void;
+      getPrivateReceiver(): string | null;
+      getStyleMessage(): string | null;
+      setChannel(
+        channelData: unknown,
+        privateReceiver?: string,
+        messageStyle?: string,
+        ignoreChannelCheck?: boolean,
+      ): void;
+    };
+    getChatMessageWrapper(): {
+      setScrollOnBottom(): void;
+    };
+    getChatWindow(): {
+      getChatSize(): 0 | 1;
+    };
+  };
+  hero: {
+    nick: string;
+  };
+  lock: {
+    add(key: string): void;
+    remove(key: string): void;
+  };
+};
+
+/**
+ * Engine global variable available in the old interface.
+ */
+declare const g: {
+  chatController: {
+    getChatConfig(): {
+      getChannelColor(name: string, isHeroMessage: boolean): unknown;
+    };
+    getChatWindow(): { getChatSize(): 0 | 1 | 2 };
+  };
+  lock: {
+    add(key: string): void;
+    remove(key: string): void;
+  };
+};
+
+/**
+ * Hero global variable available in the old interface.
+ */
+declare const hero: {
+  nick: string;
+};

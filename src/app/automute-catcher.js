@@ -54,7 +54,7 @@ function testMessage(originalMsg, caughtMsg) {
 
   let heroNick;
   if (INTERFACE === "NI") {
-    heroNick = Engine.hero.d.nick;
+    heroNick = Engine.hero.nick;
   } else {
     heroNick = hero.nick;
   }

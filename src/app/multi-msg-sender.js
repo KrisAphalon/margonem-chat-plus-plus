@@ -83,7 +83,9 @@ function parseMessageToChatForm(message) {
 function handleAddedNode(node) {
   const message = node.children[1].innerText.trim();
 
-  if (typeof common.sendArr[0] === "undefined") return;
+  if (common.sendArr[0] === undefined){
+    return;
+  }
 
   if (message === parseMessageToChatForm(common.sendArr[0])) {
     clearTimeout(common.sendTimeout);

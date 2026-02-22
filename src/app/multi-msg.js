@@ -153,7 +153,7 @@ function sendMultiMsg(msg) {
  *
  * @param msg {string} Message in SI format
  */
-function chatSendMsg(msg) {
+export function chatSendMsg(msg) {
   // replace hard spaces (alt + space) with normal one
   // eslint-disable-next-line no-irregular-whitespace
   msg = msg.replaceAll(/ /g, " ");

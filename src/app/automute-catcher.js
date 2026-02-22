@@ -5,6 +5,8 @@ import falsePositives from "../../res/automute/false-positives.json" with { type
 import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";
+import { chatSendMsg } from "./multi-msg.js";
+import { settings } from "./settings.js";
 import { setNITipsInsideOf } from "./utility-functions.js";
 
 // removes duplicate letters from message
@@ -141,7 +143,11 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
   panel.querySelector(".bottom-close").addEventListener("click", deletePanel);
   panel.querySelector(".bottom-send").addEventListener("click", deletePanel);
   panel.querySelector(".bottom-send").addEventListener("click", () => {
-    sendMessage(originalMsg);
+    if (settings.multiMsg) {
+      chatSendMsg(originalMsg);
+    } else {
+      sendMessage(originalMsg);
+    }
     if (INTERFACE === "NI") {
       document.querySelector(".magic-input").innerText = "";
       document.querySelector(".magic-input-placeholder").style.display =

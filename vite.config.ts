@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
             gameInterface === "NI"
               ? "chat-plus-plus-NI.js"
               : "chat-plus-plus-SI.js",
-          format: 'iife'
+          format: "iife",
         },
       },
     },

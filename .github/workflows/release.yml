@@ -5,8 +5,7 @@ on:
     types:
       - published
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   build:
@@ -16,6 +15,9 @@ jobs:
     defaults:
       run:
         shell: sh
+
+    permissions:
+      contents: write # Needed to push changes to the repository
 
     strategy:
       matrix:

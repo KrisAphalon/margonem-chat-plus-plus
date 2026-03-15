@@ -5,8 +5,13 @@ const MAX_SMALL_INPUT_LENGTH = 30;
 /**
  * Folds textarea hiding big message edit window
  */
-function foldTextarea(inputElement) {
+function foldTextarea(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   const bg = document.getElementById("textarea-background");
+  if (!bg) {
+    return;
+  }
   inputElement.classList.remove("unfolded");
   bg.classList.remove("unfolded");
 
@@ -19,14 +24,21 @@ function foldTextarea(inputElement) {
 /**
  * Unfolds textarea showing a big message edit window
  */
-function unfoldTextarea(inputElement) {
+function unfoldTextarea(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   const bg = document.getElementById("textarea-background");
+  if (!bg) {
+    return;
+  }
   inputElement.classList.add("unfolded");
   bg.classList.add("unfolded");
   removeCustomStyle("hideInputScrollbar");
 }
 
-function checkToUnfold(inputElement) {
+function checkToUnfold(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   if (inputElement.value.length > MAX_SMALL_INPUT_LENGTH) {
     unfoldTextarea(inputElement);
     return;
@@ -34,7 +46,9 @@ function checkToUnfold(inputElement) {
   foldTextarea(inputElement);
 }
 
-function makeChatScalable(inputElement) {
+function makeChatScalable(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   inputElement.addEventListener(
     "focusout",
     () => foldTextarea(inputElement),
@@ -47,7 +61,9 @@ function makeChatScalable(inputElement) {
   );
 }
 
-function revokeChatScalable(inputElement) {
+function revokeChatScalable(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   foldTextarea(inputElement);
   inputElement.removeEventListener(
     "focusout",
@@ -61,11 +77,20 @@ function revokeChatScalable(inputElement) {
   );
 }
 
-function initChatScalableChange(inputElement) {
+function initChatScalableChange(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   const chat = document.getElementById("chat");
+  if (!chat) {
+    return;
+  }
+
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      if (mutation.target.classList.contains("left")) {
+      if (
+        mutation.target instanceof HTMLElement &&
+        mutation.target.classList.contains("left")
+      ) {
         makeChatScalable(inputElement);
         return;
       }
@@ -76,7 +101,9 @@ function initChatScalableChange(inputElement) {
   observer.observe(chat, { attributeFilter: ["class"] });
 }
 
-export function initInputFolding(inputElement) {
+export function initInputFolding(
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
+): void {
   if (INTERFACE === "NI") {
     // NI has its own native text folding, we don't need to add it
     return;

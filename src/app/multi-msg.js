@@ -113,8 +113,8 @@ function divideMessageToParts(msg, prefix, maxLength) {
   msg = msg.substring(prefixLength).trim();
   const arr = splitAndFormatLines(msg, prefix, maxLength);
   console.log(arr);
-  for (let msg of arr) {
-    common.sendArr.push(msg);
+  for (const line of arr) {
+    common.sendArr.push(line);
   }
   sendArrayChanged();
 }

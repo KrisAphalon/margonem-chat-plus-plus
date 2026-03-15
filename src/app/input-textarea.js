@@ -5,7 +5,6 @@ import { restoreMessage } from "./restore-message.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
-let background;
 
 function addCommandsColorStyles(chatColors) {
   // TODO use CHANNELS enum
@@ -245,7 +244,7 @@ function replaceChatInput() {
   const bottomBar = document.getElementById("bottombar");
   document.getElementById("inpchat").remove();
 
-  background = document.createElement("div");
+  const background = document.createElement("div");
   background.id = "textarea-background";
   bottomBar.appendChild(background);
   bottomBar.appendChild(textarea);

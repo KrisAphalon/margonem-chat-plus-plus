@@ -166,18 +166,20 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
 
 /**
  * @param {string} msg
- * @param {array} badWords
+ * @param {array} listOfBadWords
  * @returns {boolean|string} false or prepared HTML text with red matches
  */
-function checkMessageForBadWords(msg, badWords) {
+function checkMessageForBadWords(msg, listOfBadWords) {
   let innocent = true;
-  for (const e of badWords) {
-    if (!msg.includes(e)) continue;
+  for (const badWord of listOfBadWords) {
+    if (!msg.includes(badWord)) continue;
 
-    console.log("Wykryto zwrot który jest niemiły: " + e);
+    console.log("Wykryto zwrot który jest niemiły: " + badWord);
     msg = msg
-      .split(e)
-      .join("<span style='color: red; font-weight: bold'>" + e + "</span>");
+      .split(badWord)
+      .join(
+        "<span style='color: red; font-weight: bold'>" + badWord + "</span>",
+      );
     innocent = false;
   }
   if (innocent) return false;

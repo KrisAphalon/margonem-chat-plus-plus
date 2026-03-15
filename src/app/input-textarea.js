@@ -260,7 +260,8 @@ function replaceChatInput() {
   // and no spaces at the start of the text
   textarea.addEventListener(
     "input",
-    () => (textarea.value = textarea.value.replace(/\r?\n/g, "").trimStart()),
+    () =>
+      (textarea.value = textarea.value.replaceAll(/\r?\n/g, "").trimStart()),
     true,
   );
 

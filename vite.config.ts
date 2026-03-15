@@ -42,8 +42,8 @@ export default defineConfig(({ mode }) => {
           passes: 4,
         },
       },
-      rollupOptions: {
-        treeshake: "smallest",
+      rolldownOptions: {
+        treeshake: true,
         input: "src/main.js",
         output: {
           entryFileNames:

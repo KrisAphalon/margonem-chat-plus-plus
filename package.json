@@ -1,6 +1,6 @@
 {
   "name": "margonem-chat-plus-plus",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "main": "/src/main.js",
   "type": "module",
   "browserslist": [
@@ -9,22 +9,22 @@
   "dependencies": {
     "@tsconfig/recommended": "^1.0.13",
     "@tsconfig/strictest": "^2.0.8",
-    "@types/node": "^24.10.13",
-    "sass": "^1.97.3",
+    "@types/node": "^24.12.0",
+    "sass": "^1.98.0",
     "terser": "^5.46.0",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vite-plugin-css-injected-by-js": "^3.5.2"
+    "vite": "^8.0.0",
+    "vite-plugin-css-injected-by-js": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.0.1",
-    "globals": "^17.3.0",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
     "prettier": "^3.8.1"
   },
   "optionalDependencies": {
-    "sass-embedded": "^1.97.3"
+    "sass-embedded": "^1.98.0"
   },
   "scripts": {
     "build": "npm run build:ni & npm run build:si & wait",

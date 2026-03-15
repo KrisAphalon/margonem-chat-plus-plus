@@ -76,8 +76,10 @@ function parseMessageToChatForm(message) {
   if (surroundCharacter)
     message = `${surroundCharacter}${message}${surroundCharacter}`;
 
-  if (retry) return parseMessageToChatForm(message);
-  else return message;
+  if (retry) {
+    return parseMessageToChatForm(message);
+  }
+  return message;
 }
 
 function handleAddedNode(node) {

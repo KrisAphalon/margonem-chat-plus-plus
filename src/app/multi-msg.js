@@ -78,7 +78,7 @@ function getIdx(msg, maxLength) {
   for (let i = 0; i < maxLength; i++) {
     idx++;
     if (idx >= msg.length) break;
-    if (msg[idx].match(polishLetters)) i++;
+    if (polishLetters.test(msg[idx])) i++;
   }
   return idx;
 }

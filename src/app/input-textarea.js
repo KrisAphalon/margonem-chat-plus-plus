@@ -134,7 +134,7 @@ function checkMaxLength(textarea) {
   let polishLettersCount = 0;
   //calculate length every time, because we can change it inside for()
   for (const element of textarea.value)
-    if (element.match(polishLetters)) {
+    if (polishLetters.test(element)) {
       polishLettersCount++;
       textarea.value = textarea.value.substr(0, 199 - polishLettersCount);
     }

@@ -75,9 +75,7 @@ export function showPanel(e) {
 
 export function initPanel() {
   if (INTERFACE === "NI") {
-    document
-      .getElementsByClassName("lag")[0]
-      .addEventListener("contextmenu", showPanel);
+    document.querySelector(".lag").addEventListener("contextmenu", showPanel);
   } else {
     document.getElementById("bchat").addEventListener("contextmenu", showPanel);
   }

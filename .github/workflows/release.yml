@@ -75,7 +75,7 @@ jobs:
           RELEASE_TITLE=$(gh release view "${RELEASE_TAG_NAME}" --json name --template "{{.name}}")
           RELEASE_DESC=$(gh release view "${RELEASE_TAG_NAME}" --json body --template "{{.body}}")
 
-          git tag -f -a "${RELEASE_TAG_NAME}" -m "$RELEASE_TITLE" -m "$RELEASE_DESC"
+          git tag -f -a "${RELEASE_TAG_NAME}" -m "${RELEASE_TITLE}" -m "${RELEASE_DESC}"
         env:
           GITHUB_USER: <ORG>
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

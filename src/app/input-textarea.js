@@ -63,7 +63,7 @@ function getCustomChatColors(chatColors) {
   </div>
 </div>
     `;
-  document.body.appendChild(chat);
+  document.body.append(chat);
 
   const wrapper = chat.querySelector(".one-message-wrapper");
   const message = chat.querySelector(".new-chat-message");
@@ -101,7 +101,7 @@ function applyCustomBackground(backgroundElm) {
   chat.id = "chat";
   chat.className = "left";
   chat.style.display = "none";
-  document.body.appendChild(chat);
+  document.body.append(chat);
   const newImg = window.getComputedStyle(chat).backgroundImage;
   document.body.removeChild(chat);
   if (backgroundElm.style.backgroundImage !== newImg) {
@@ -246,8 +246,7 @@ function replaceChatInput() {
 
   const background = document.createElement("div");
   background.id = "textarea-background";
-  bottomBar.appendChild(background);
-  bottomBar.appendChild(textarea);
+  bottomBar.append(background, textarea);
 
   // Disable jQuery "click" events since .init() adds them back,
   // and we would end up with 2 of the same events

@@ -106,7 +106,7 @@ export function initRestoreMessage() {
     "Przerwij wysyłanie wiadomości i przywróć ją do pola wysyłania.",
   );
   button.addEventListener("click", restorePreviousMessage);
-  wrapper.appendChild(button);
+  wrapper.append(button);
 
   if (INTERFACE === "NI") {
     setNITipsInsideOf(wrapper);

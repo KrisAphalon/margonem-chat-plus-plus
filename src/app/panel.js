@@ -69,7 +69,7 @@ export function showPanel(e) {
     input.checked = settings[settingName];
     input.addEventListener("input", callbacks[settingName]);
   }
-  document.body.appendChild(panel);
+  document.body.append(panel);
   if (INTERFACE === "NI") setNITipsInsideOf(panel);
 }
 

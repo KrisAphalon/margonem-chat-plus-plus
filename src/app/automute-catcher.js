@@ -160,7 +160,7 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
     .querySelector(".bottom-test")
     .addEventListener("click", () => testMessage(originalMsg, caughtMsg));
 
-  document.body.appendChild(panel);
+  document.body.append(panel);
   if (INTERFACE === "NI") setNITipsInsideOf(panel);
 }
 

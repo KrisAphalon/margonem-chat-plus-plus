@@ -126,7 +126,7 @@ function saveInputMsg(inputElement) {
 function checkMaxLength(textarea) {
   //cut text when it was pasted
   if (textarea.value.length > 199)
-    textarea.value = textarea.value.substr(0, 199);
+    textarea.value = textarea.value.slice(0, 199);
 
   //letters and symbols that count as two when sending message to server
   const polishLetters = /[ąćęłńóśźż*@,. _]/gi;
@@ -136,7 +136,7 @@ function checkMaxLength(textarea) {
   for (const element of textarea.value)
     if (polishLetters.test(element)) {
       polishLettersCount++;
-      textarea.value = textarea.value.substr(0, 199 - polishLettersCount);
+      textarea.value = textarea.value.slice(0, 199 - polishLettersCount);
     }
   textarea.maxLength = 199 - polishLettersCount;
 }

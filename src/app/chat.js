@@ -77,13 +77,13 @@ function getChannelSettingsFromMsg(msg) {
   if (msg.startsWith("/ln")) {
     messageStyle = "nar";
   }
-  const channelStart = CHANNEL[msg.substring(0, 3)];
+  const channelStart = CHANNEL[msg.slice(0, 3)];
   if (channelStart) {
     channel.name = channelStart;
   }
   if (msg.startsWith("@")) {
     channel.name = "PRIVATE";
-    privateReceiver = msg.split(" ")[0].substring(1);
+    privateReceiver = msg.split(" ")[0].slice(1);
   }
 
   return {
@@ -95,12 +95,12 @@ function getChannelSettingsFromMsg(msg) {
 }
 
 export function getPrunedMessage(msg) {
-  if (["/lm ", "/ln "].includes(msg.substring(0, 4))) {
-    return msg.substring(4).trim();
+  if (["/lm ", "/ln "].includes(msg.slice(0, 4))) {
+    return msg.slice(4).trim();
   }
 
-  if (Object.keys(CHANNEL).includes(msg.substring(0, 3))) {
-    return msg.substring(3).trim();
+  if (Object.keys(CHANNEL).includes(msg.slice(0, 3))) {
+    return msg.slice(3).trim();
   }
 
   if (msg.startsWith("@")) {

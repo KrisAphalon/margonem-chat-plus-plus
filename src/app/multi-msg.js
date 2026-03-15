@@ -89,12 +89,12 @@ function splitAndFormatLines(msg, prefix, maxLength) {
   const ret = [];
   while (msg.length > 0) {
     const idx = getIdx(msg, maxLength);
-    const substr = msg.substring(0, idx);
+    const substr = msg.slice(0, idx);
     const split =
       calcMargoLength(msg) > maxLength
         ? getSplitCandidate(substr, idx, maxLength)
         : msg.length;
-    ret.push(prefix + substr.substring(0, split).trim());
+    ret.push(prefix + substr.slice(0, split).trim());
     msg = msg.slice(split);
   }
 
@@ -110,7 +110,7 @@ function divideMessageToParts(msg, prefix, maxLength) {
     ? prefix.length - 1
     : prefix.length;
 
-  msg = msg.substring(prefixLength).trim();
+  msg = msg.slice(prefixLength).trim();
   const arr = splitAndFormatLines(msg, prefix, maxLength);
   console.log(arr);
   for (const line of arr) {

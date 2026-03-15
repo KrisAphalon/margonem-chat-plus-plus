@@ -50,8 +50,8 @@ function testMessage(originalMsg, caughtMsg) {
   const end = Math.min(index + match.length + 20, copy.length);
   let subMsg = copy.substring(start, end);
 
-  if (CHANNEL[subMsg.substring(0, 3)]) {
-    subMsg = subMsg.substring(3);
+  if (CHANNEL[subMsg.slice(0, 3)]) {
+    subMsg = subMsg.slice(3);
   }
 
   let heroNick;

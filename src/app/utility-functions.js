@@ -9,7 +9,7 @@ export function setNITipsInsideOf(element) {
 }
 
 export function regexIndexOf(string, regex, startPos) {
-  const indexOf = string.substring(startPos || 0).search(regex);
+  const indexOf = string.slice(startPos || 0).search(regex);
   return indexOf >= 0 ? indexOf + (startPos || 0) : indexOf;
 }
 
@@ -25,16 +25,16 @@ export function sanitizeText(text) {
  */
 export function sendMessage(msg) {
   if (msg.startsWith("@")) {
-    const nick = msg.split(" ")[0].substring(1);
+    const nick = msg.split(" ")[0].slice(1);
     msg = msg.split(" ");
     msg.shift();
     msg = msg.join(" ");
     window._g(`chat&channel=personal&receiver=${nick}`, false, { c: msg });
     return;
   }
-  if (CHANNEL[msg.substring(0, 3)]) {
-    window._g(`chat&channel=${CHANNEL[msg.substring(0, 3)]}`, false, {
-      c: msg.substring(3),
+  if (CHANNEL[msg.slice(0, 3)]) {
+    window._g(`chat&channel=${CHANNEL[msg.slice(0, 3)]}`, false, {
+      c: msg.slice(3),
     });
     return;
   }

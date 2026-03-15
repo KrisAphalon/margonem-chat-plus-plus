@@ -12,8 +12,8 @@ function foldTextarea(
   if (!bg) {
     return;
   }
-  inputElement.classList.remove("unfolded");
   bg.classList.remove("unfolded");
+  inputElement.classList.remove("unfolded");
 
   addCustomStyle(
     "hideInputScrollbar",
@@ -31,50 +31,36 @@ function unfoldTextarea(
   if (!bg) {
     return;
   }
-  inputElement.classList.add("unfolded");
   bg.classList.add("unfolded");
+  inputElement.classList.add("unfolded");
   removeCustomStyle("hideInputScrollbar");
 }
 
-function checkToUnfold(
-  inputElement: HTMLInputElement | HTMLTextAreaElement,
-): void {
-  if (inputElement.value.length > MAX_SMALL_INPUT_LENGTH) {
-    unfoldTextarea(inputElement);
+function checkToFold(this: HTMLInputElement | HTMLTextAreaElement): void {
+  foldTextarea(this);
+}
+
+function checkToUnfold(this: HTMLInputElement | HTMLTextAreaElement): void {
+  if (this.value.length > MAX_SMALL_INPUT_LENGTH) {
+    unfoldTextarea(this);
     return;
   }
-  foldTextarea(inputElement);
+  foldTextarea(this);
 }
 
 function makeChatScalable(
   inputElement: HTMLInputElement | HTMLTextAreaElement,
 ): void {
-  inputElement.addEventListener(
-    "focusout",
-    () => foldTextarea(inputElement),
-    false,
-  );
-  inputElement.addEventListener(
-    "focusin",
-    () => checkToUnfold(inputElement),
-    false,
-  );
+  inputElement.addEventListener("focusout", checkToFold, false);
+  inputElement.addEventListener("focusin", checkToUnfold, false);
 }
 
 function revokeChatScalable(
   inputElement: HTMLInputElement | HTMLTextAreaElement,
 ): void {
   foldTextarea(inputElement);
-  inputElement.removeEventListener(
-    "focusout",
-    () => foldTextarea(inputElement),
-    false,
-  );
-  inputElement.removeEventListener(
-    "focusin",
-    () => checkToUnfold(inputElement),
-    false,
-  );
+  inputElement.removeEventListener("focusout", checkToFold, false);
+  inputElement.removeEventListener("focusin", checkToUnfold, false);
 }
 
 function initChatScalableChange(
@@ -109,11 +95,7 @@ export function initInputFolding(
     return;
   }
 
-  inputElement.addEventListener(
-    "input",
-    () => checkToUnfold(inputElement),
-    false,
-  );
+  inputElement.addEventListener("input", checkToUnfold, false);
   const state = g.chatController.getChatWindow().getChatSize();
   if (state === 2) {
     makeChatScalable(inputElement);

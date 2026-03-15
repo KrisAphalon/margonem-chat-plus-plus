@@ -19,6 +19,7 @@ jobs:
         node-version: [24.x]
 
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       - uses: actions/checkout@v6
 
       - name: Use Node.js ${{ matrix.node-version }}

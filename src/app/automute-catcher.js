@@ -48,7 +48,7 @@ function testMessage(originalMsg, caughtMsg) {
 
   const start = Math.max(index - 20, 0);
   const end = Math.min(index + match.length + 20, copy.length);
-  let subMsg = copy.substring(start, end);
+  let subMsg = copy.slice(start, end);
 
   if (CHANNEL[subMsg.slice(0, 3)]) {
     subMsg = subMsg.slice(3);

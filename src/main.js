@@ -23,7 +23,6 @@ export function handleNoAnswer() {
 export const common = {
   sendArr: [],
   sendTimeout: 0,
-  blockTextareaChanging: false,
 };
 
 function start() {

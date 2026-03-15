@@ -87,7 +87,7 @@ function getCustomChatColors(chatColors) {
     wrapper.className = baseWrapperClasses;
     message.className = baseMessageClasses;
   }
-  document.body.removeChild(chat);
+  chat.remove();
 
   return customChatColors;
 }
@@ -103,7 +103,7 @@ function applyCustomBackground(backgroundElm) {
   chat.style.display = "none";
   document.body.append(chat);
   const newImg = window.getComputedStyle(chat).backgroundImage;
-  document.body.removeChild(chat);
+  chat.remove();
   if (backgroundElm.style.backgroundImage !== newImg) {
     backgroundElm.style.backgroundImage = newImg;
   }

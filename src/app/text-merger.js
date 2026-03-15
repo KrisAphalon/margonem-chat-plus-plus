@@ -38,7 +38,7 @@ function parseSingleMsgOnChat(elm, ch) {
   log(sanitizeText(`[${tab}] ${nick} -> ${text}`));
 
   window.clearTimeout(common.sendTimeout);
-  if (typeof common.sendArr[0] !== "undefined") common.sendArr.shift();
+  if (common.sendArr[0] !== undefined) common.sendArr.shift();
   if (common.sendArr.length > 0)
     setTimeout(function () {
       if (common.sendArr[0]?.match(NOT_ONLY_DOTS).length > 0)
@@ -56,7 +56,7 @@ function parseSingleMsgOnChat(elm, ch) {
 function isMessageParseable(ch) {
   const { tab, nick, time, command } = destructureMessage(ch);
 
-  if (typeof messages[nick] === "undefined") return false;
+  if (messages[nick] === undefined) return false;
   if (messages[nick][0] !== tab || messages[nick][1] !== command) return false;
   if (time - messages[nick][3] > 5) return false;
   return true;

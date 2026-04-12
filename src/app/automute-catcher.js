@@ -143,11 +143,14 @@ function alertUser(originalMsg, caughtMsg, ahoj) {
   panel.querySelector(".bottom-close").addEventListener("click", deletePanel);
   panel.querySelector(".bottom-send").addEventListener("click", deletePanel);
   panel.querySelector(".bottom-send").addEventListener("click", () => {
+    let messageSent = false;
     if (settings.multiMsg) {
-      chatSendMsg(originalMsg);
-    } else {
+      messageSent = chatSendMsg(originalMsg);
+    }
+    if (!messageSent) {
       sendMessage(originalMsg);
     }
+
     if (INTERFACE === "NI") {
       document.querySelector(".magic-input").innerText = "";
       document.querySelector(".magic-input-placeholder").style.display =

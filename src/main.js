@@ -1,6 +1,7 @@
 import { initAutomuteCatcher } from "./app/automute-catcher.js";
 import { initInputFolding } from "./app/input-folding.js";
 import { initInputTextarea } from "./app/input-textarea.js";
+import { messageQueue } from "./app/message-queue.js";
 import { initMultiMsgSender } from "./app/multi-msg-sender.js";
 import { initMultiMsg } from "./app/multi-msg.js";
 import { initRestoreMessage } from "./app/restore-message.js";
@@ -9,7 +10,7 @@ import { loadSettings } from "./app/settings.js";
 import "../res/style.scss";
 
 export function handleNoAnswer() {
-  if (common.sendArr.length === 0) return;
+  if (messageQueue.length === 0) return;
 
   if (!sessionStorage.noAnwserMsgDisplayed) {
     window.message(
@@ -21,7 +22,6 @@ export function handleNoAnswer() {
 
 //TODO naming
 export const common = {
-  sendArr: [],
   sendTimeout: 0,
 };
 

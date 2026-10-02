@@ -1,8 +1,8 @@
 import { recolorTextarea } from "./input-textarea.js";
-import { common } from "../main.js";
+import { messageQueue } from "./message-queue.js";
 import { setNITipsInsideOf } from "./utility-functions.js";
 
-function deconstructSendArrPart(part) {
+function deconstructMessageQueuePart(part) {
   part = part.replace(/^\/.? /, "");
 
   if (!["/", "@", "*"].includes(part[0])) {
@@ -16,25 +16,25 @@ function deconstructSendArrPart(part) {
   }
   split.shift();
   if (part[0] === "@") {
-    return deconstructSendArrPart(split.join(" "));
+    return deconstructMessageQueuePart(split.join(" "));
   }
 
   return split.join(" ");
 }
 
-function getFullPreviousMessage(sendArray) {
-  const len = sendArray.length;
+function getFullPreviousMessage(msgQueue) {
+  const len = msgQueue.length;
   if (len === 0) {
     return "";
   }
 
   let newChatValue = "";
   if (len >= 1) {
-    newChatValue = sendArray[0].trim();
+    newChatValue = msgQueue[0].trim();
   }
   if (len > 1) {
     for (let i = 1; i < len; i++) {
-      const part = deconstructSendArrPart(sendArray[i]).trim();
+      const part = deconstructMessageQueuePart(msgQueue[i]).trim();
       newChatValue += " " + part;
     }
   }
@@ -43,14 +43,14 @@ function getFullPreviousMessage(sendArray) {
 
 function restorePreviousMessage(event) {
   event.preventDefault();
-  const newChatValue = getFullPreviousMessage(common.sendArr);
+  const newChatValue = getFullPreviousMessage(messageQueue);
   if (!newChatValue) {
     return;
   }
   window.message("Przywracanie wiadomości...");
   restoreMessage(newChatValue);
-  common.sendArr.splice(0);
-  sendArrayChanged();
+  messageQueue.splice(0);
+  messageQueueChanged();
 }
 
 export function restoreMessage(message) {
@@ -87,12 +87,12 @@ export function restoreMessage(message) {
   recolorTextarea(inputElement);
 }
 
-export function sendArrayChanged() {
+export function messageQueueChanged() {
   const restoreMessageButton = document.querySelector(
     ".restore-message-button",
   );
   restoreMessageButton.style.display =
-    common.sendArr.length === 0 ? "none" : "block";
+    messageQueue.length === 0 ? "none" : "block";
 }
 
 export function initRestoreMessage() {

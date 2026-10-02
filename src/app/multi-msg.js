@@ -6,8 +6,9 @@ import {
 } from "./chat.js";
 import { chatChecks } from "./input-textarea.js";
 import { common, handleNoAnswer } from "../main.js";
+import { messageQueue } from "./message-queue.js";
 import { addSettingToPanel } from "./panel.js";
-import { sendArrayChanged } from "./restore-message.js";
+import { messageQueueChanged } from "./restore-message.js";
 import { saveSettings, settings } from "./settings.js";
 import { regexIndexOf } from "./utility-functions.js";
 
@@ -114,16 +115,16 @@ function divideMessageToParts(msg, prefix, maxLength) {
   const arr = splitAndFormatLines(msg, prefix, maxLength);
   console.log(arr);
   for (const line of arr) {
-    common.sendArr.push(line);
+    messageQueue.push(line);
   }
-  sendArrayChanged();
+  messageQueueChanged();
 }
 
 function sendMultiMsg(msg) {
   const addOnStart = calculateAddOnStart(msg);
-  // Delete old sendArr if there was some problem (e.g., lost group chat)
-  common.sendArr.splice(0);
-  sendArrayChanged();
+  // Delete old message queue if there was some problem (e.g., lost group chat)
+  messageQueue.splice(0);
+  messageQueueChanged();
   const maxLen = 197;
   if (calcMargoLength(msg) <= maxLen) {
     return false;
@@ -133,14 +134,14 @@ function sendMultiMsg(msg) {
   // replace the *me prefix back to /lm for the first part
   // if a message started with /lm
   if (msg.startsWith("/lm")) {
-    common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, "/lm");
+    messageQueue[0] = messageQueue[0].replace(/^.{3}/, "/lm");
   }
   if (msg.startsWith("/ln")) {
-    common.sendArr[0] = common.sendArr[0].replace(/^.{3}/, "/nar");
+    messageQueue[0] = messageQueue[0].replace(/^.{3}/, "/nar");
   }
 
-  if (common.sendArr.length > 0) {
-    sendMessage(common.sendArr[0]);
+  if (messageQueue.length > 0) {
+    sendMessage(messageQueue[0]);
     common.sendTimeout = setTimeout(
       handleNoAnswer,
       settings.sendMessageTimeout * 3,

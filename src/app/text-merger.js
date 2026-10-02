@@ -1,4 +1,5 @@
 import { common, handleNoAnswer } from "../main.js";
+import { messageQueue } from "./message-queue.js";
 import { addSettingToPanel } from "./panel.js";
 import { saveSettings, settings } from "./settings.js";
 import { sanitizeText } from "./utility-functions.js";
@@ -38,13 +39,13 @@ function parseSingleMsgOnChat(elm, ch) {
   log(sanitizeText(`[${tab}] ${nick} -> ${text}`));
 
   window.clearTimeout(common.sendTimeout);
-  if (common.sendArr[0] !== undefined) common.sendArr.shift();
-  if (common.sendArr.length > 0)
+  if (messageQueue[0] !== undefined) messageQueue.shift();
+  if (messageQueue.length > 0)
     setTimeout(function () {
-      if (common.sendArr[0]?.match(NOT_ONLY_DOTS).length > 0)
-        window.chatSendMsg(common.sendArr[0]);
+      if (messageQueue[0]?.match(NOT_ONLY_DOTS).length > 0)
+        window.chatSendMsg(messageQueue[0]);
     }, settings.sendMessageTimeout);
-  if (common.sendArr.length > 1)
+  if (messageQueue.length > 1)
     common.sendTimeout = setTimeout(
       handleNoAnswer,
       settings.sendMessageTimeout * 3,

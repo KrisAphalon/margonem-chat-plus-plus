@@ -2,7 +2,12 @@ import badWordsWithSpace from "../../res/automute/bad-words-with-space.json" wit
 import badWords from "../../res/automute/bad-words.json" with { type: "json" };
 import falsePositivesWithPolishLetters from "../../res/automute/false-positives-with-polish-letters.json" with { type: "json" };
 import falsePositives from "../../res/automute/false-positives.json" with { type: "json" };
-import { CHANNEL, getSiMessageFormat, sendMessage } from "./chat.js";
+import {
+  CHANNEL,
+  getPrunedMessage,
+  getSiMessageFormat,
+  sendMessage,
+} from "./chat.js";
 import { setDraggable } from "./dragging.js";
 import { chatChecks } from "./input-textarea.js";
 import { chatSendMsg } from "./multi-msg.js";
@@ -208,7 +213,7 @@ function removePhrases(str, phrasesToRemove) {
 }
 
 function messageContainsBadWords(msg) {
-  let copy = msg.toLowerCase();
+  let copy = getPrunedMessage(msg.toLowerCase());
 
   //don't parse nick
   if (copy[0] === "@") {

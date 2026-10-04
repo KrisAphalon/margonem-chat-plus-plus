@@ -14,7 +14,7 @@
     "removeComments": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es2024",
+    "target": "es2025",
     "types": ["node"]
   }
 }

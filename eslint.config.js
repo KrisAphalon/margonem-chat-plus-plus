@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 
 const gameGlobals = {
@@ -28,7 +29,8 @@ const buildGlobals = {
   INTERFACE: "readonly",
 };
 
-export default [
+export default defineConfig([
+  globalIgnores(["dist/*"]),
   js.configs.recommended,
   {
     languageOptions: {
@@ -42,4 +44,4 @@ export default [
       },
     },
   },
-];
+]);

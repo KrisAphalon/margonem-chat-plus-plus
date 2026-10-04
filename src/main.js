@@ -3,7 +3,10 @@ import { initInputFolding } from "./app/input-folding.js";
 import { initInputTextarea } from "./app/input-textarea.js";
 import { initMultiMsgSender } from "./app/multi-msg-sender.js";
 import { initMultiMsg } from "./app/multi-msg.js";
-import { initRestoreMessage } from "./app/restore-message.js";
+import {
+  initRestoreMessage,
+  loadLastSavedMessage,
+} from "./app/restore-message.js";
 import { loadSettings } from "./app/settings.js";
 
 import "../res/style.scss";
@@ -12,6 +15,7 @@ function start() {
   loadSettings();
 
   const inputElement = initInputTextarea();
+  loadLastSavedMessage(inputElement);
   initInputFolding(inputElement);
   //initChatCleaner()
 

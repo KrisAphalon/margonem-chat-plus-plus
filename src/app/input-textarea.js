@@ -1,7 +1,6 @@
 import { CHANNELS, CHAT_COMMAND_CLASSES } from "./chat-enums.js";
 import { CHANNEL_NAME, getSiMessageFormat } from "./chat.js";
 import { addCustomStyle } from "./css-manager.js";
-import { restoreMessage } from "./restore-message.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
@@ -271,17 +270,6 @@ function replaceChatInput() {
   };
 }
 
-function loadLastSavedMessage() {
-  let savedMessage = localStorage.getItem("lastInputtedMsg");
-  if (!savedMessage) {
-    return;
-  }
-  restoreMessage(savedMessage);
-  if (INTERFACE === "NI") {
-    Engine.chatController.getChatMessageWrapper().setScrollOnBottom();
-  }
-}
-
 function handleChatSendAttempt(chatInput, event) {
   // Do not try to handle anything if it's just empty input
   // (This de-focuses the chat window)
@@ -366,6 +354,5 @@ export function initInputTextarea() {
   chatInput.addEventListener("input", () => checkInputMsg(chatInput), false);
   chatInput.addEventListener("input", () => saveInputMsg(chatInput), false);
 
-  loadLastSavedMessage();
   return chatInput;
 }

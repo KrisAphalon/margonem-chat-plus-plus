@@ -41,6 +41,13 @@ function getFullPreviousMessage(msgQueue) {
   return newChatValue;
 }
 
+function getInputElement() {
+  if (INTERFACE === "NI") {
+    return document.querySelector(".magic-input");
+  }
+  return document.querySelector("#inpchat");
+}
+
 function restorePreviousMessage(event) {
   event.preventDefault();
   const newChatValue = getFullPreviousMessage(messageQueue);
@@ -48,15 +55,24 @@ function restorePreviousMessage(event) {
     return;
   }
   window.message("Przywracanie wiadomości...");
-  restoreMessage(newChatValue);
+  restoreMessage(getInputElement(), newChatValue);
   messageQueue.splice(0);
   messageQueueChanged();
 }
 
-export function restoreMessage(message) {
-  let inputElement;
+export function loadLastSavedMessage(inputElement) {
+  const savedMessage = localStorage.getItem("lastInputtedMsg");
+  if (!savedMessage) {
+    return;
+  }
+  restoreMessage(inputElement, savedMessage);
   if (INTERFACE === "NI") {
-    inputElement = document.querySelector(".magic-input");
+    Engine.chatController.getChatMessageWrapper().setScrollOnBottom();
+  }
+}
+
+function restoreMessage(inputElement, message) {
+  if (INTERFACE === "NI") {
     document.querySelector(".magic-input-placeholder").style.display = "none";
     document.querySelector(".clear-cross").style.display = "block";
     inputElement.innerText = message;
@@ -75,7 +91,6 @@ export function restoreMessage(message) {
     const keyUp = new KeyboardEvent("keyup", {});
     inputElement.dispatchEvent(keyUp);
   } else {
-    inputElement = document.querySelector("#inpchat");
     if (message.startsWith("/l /lm") || message.startsWith("/l /ln")) {
       message = message.slice(3);
     }

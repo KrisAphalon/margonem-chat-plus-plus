@@ -16,10 +16,10 @@ function handleNoAnswer() {
     return;
   }
 
-  if (!sessionStorage["noAnwserMsgDisplayed"]) {
+  if (!sessionStorage["noAnswerMsgDisplayed"]) {
     message(
       "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat.\nMożesz przywrócić ją klikając w białą strzałkę niedaleko pola do wpisywania wiadomości.\nJeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
     );
-    sessionStorage["noAnwserMsgDisplayed"] = true;
+    sessionStorage["noAnswerMsgDisplayed"] = true;
   }
 }

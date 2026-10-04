@@ -30,7 +30,7 @@ const buildGlobals = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist/*"]),
+  globalIgnores(["dist/"]),
   js.configs.recommended,
   {
     languageOptions: {

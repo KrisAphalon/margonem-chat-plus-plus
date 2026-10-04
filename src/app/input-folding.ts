@@ -17,7 +17,7 @@ function foldTextarea(
 
   addCustomStyle(
     "hideInputScrollbar",
-    "#input {-ms-overflow-style: none;} #inpchat::-webkit-scrollbar { display: none;}",
+    "#inpchat::-webkit-scrollbar { display: none;}",
   );
 }
 

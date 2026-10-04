@@ -1,29 +1,12 @@
 import { initAutomuteCatcher } from "./app/automute-catcher.js";
 import { initInputFolding } from "./app/input-folding.js";
 import { initInputTextarea } from "./app/input-textarea.js";
-import { messageQueue } from "./app/message-queue.js";
 import { initMultiMsgSender } from "./app/multi-msg-sender.js";
 import { initMultiMsg } from "./app/multi-msg.js";
 import { initRestoreMessage } from "./app/restore-message.js";
 import { loadSettings } from "./app/settings.js";
 
 import "../res/style.scss";
-
-export function handleNoAnswer() {
-  if (messageQueue.length === 0) return;
-
-  if (!sessionStorage.noAnwserMsgDisplayed) {
-    window.message(
-      "Coś poszło nie tak i twoja wiadomość nie została wysłana na chat.\nMożesz przywrócić ją klikając w białą strzałkę niedaleko pola do wpisywania wiadomości.\nJeżeli wiadomość widnieje na chacie, zignoruj ten komunikat.",
-    );
-    sessionStorage.noAnwserMsgDisplayed = true;
-  }
-}
-
-//TODO naming
-export const common = {
-  sendTimeout: 0,
-};
 
 function start() {
   loadSettings();

@@ -5,8 +5,7 @@ import {
   sendMessage,
 } from "./chat.js";
 import { chatChecks } from "./input-textarea.js";
-import { common, handleNoAnswer } from "../main.js";
-import { messageQueue } from "./message-queue.js";
+import { messageQueue, startNoAnswerTimeout } from "./message-queue.js";
 import { addSettingToPanel } from "./panel.js";
 import { messageQueueChanged } from "./restore-message.js";
 import { saveSettings, settings } from "./settings.js";
@@ -142,10 +141,7 @@ function sendMultiMsg(msg) {
 
   if (messageQueue.length > 0) {
     sendMessage(messageQueue[0]);
-    common.sendTimeout = setTimeout(
-      handleNoAnswer,
-      settings.sendMessageTimeout * 3,
-    );
+    startNoAnswerTimeout(settings.sendMessageTimeout * 3);
   }
   return true;
 }

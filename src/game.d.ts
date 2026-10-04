@@ -76,3 +76,8 @@ declare const g: {
 declare const hero: {
   nick: string;
 };
+
+/**
+ * Message function available on both interfaces.
+ */
+declare const message: (message: string) => void;

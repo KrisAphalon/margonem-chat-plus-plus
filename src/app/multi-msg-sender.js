@@ -1,6 +1,9 @@
 import { sendMessage } from "./chat.js";
-import { common, handleNoAnswer } from "../main.js";
-import { messageQueue } from "./message-queue.js";
+import {
+  clearNoAnswerTimeout,
+  messageQueue,
+  startNoAnswerTimeout,
+} from "./message-queue.js";
 import { messageQueueChanged } from "./restore-message.js";
 import { settings } from "./settings.js";
 
@@ -91,7 +94,7 @@ function handleAddedNode(node) {
   }
 
   if (message === parseMessageToChatForm(messageQueue[0])) {
-    clearTimeout(common.sendTimeout);
+    clearNoAnswerTimeout();
     messageQueue.shift();
     messageQueueChanged();
     if (messageQueue.length === 0) return;
@@ -101,10 +104,7 @@ function handleAddedNode(node) {
         sendMessage(messageQueue[0]);
     }, settings.sendMessageTimeout);
 
-    common.sendTimeout = setTimeout(
-      handleNoAnswer,
-      settings.sendMessageTimeout * 3,
-    );
+    startNoAnswerTimeout(settings.sendMessageTimeout * 3);
   }
 }
 

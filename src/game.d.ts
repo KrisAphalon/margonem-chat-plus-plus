@@ -18,6 +18,23 @@
 declare const INTERFACE: "NI" | "SI";
 
 /**
+ * Chat input wrapper shared between the new and old interface.
+ */
+type ChatInputWrapper = {
+  init(): void;
+  clearInput(): void;
+  getChannelName(): string;
+  getPrivateReceiver(): string | null;
+  getStyleMessage(): string | null;
+  setChannel(
+    channelData: unknown,
+    privateReceiver?: string | null,
+    messageStyle?: string | null,
+    ignoreChannelCheck?: boolean,
+  ): void;
+};
+
+/**
  * Engine global variable available in the new interface.
  */
 declare const Engine: {
@@ -25,18 +42,12 @@ declare const Engine: {
     getChatConfig: () => {
       getChannelColor(name: string, isHeroMessage: boolean): unknown;
     };
-    getChatInputWrapper(): {
-      clearInput(): void;
-      getChannelName(): string;
+    getChatInputWrapper(): ChatInputWrapper & {
+      /**
+       * NI specifically also exports this method we use.
+       * SI doesn't export it.
+       */
       getDataAndSendRequest(value: unknown): void;
-      getPrivateReceiver(): string | null;
-      getStyleMessage(): string | null;
-      setChannel(
-        channelData: unknown,
-        privateReceiver?: string,
-        messageStyle?: string,
-        ignoreChannelCheck?: boolean,
-      ): void;
     };
     getChatMessageWrapper(): {
       setScrollOnBottom(): void;
@@ -63,6 +74,7 @@ declare const g: {
       getChannelColor(name: string, isHeroMessage: boolean): unknown;
     };
     getChatWindow(): { getChatSize(): 0 | 1 | 2 };
+    getChatInputWrapper(): ChatInputWrapper;
   };
   lock: {
     add(key: string): void;

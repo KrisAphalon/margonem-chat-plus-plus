@@ -1,9 +1,14 @@
-let pos1, pos2, pos3, pos4;
+let pos1: number;
+let pos2: number;
+let pos3: number;
+let pos4: number;
+let currentDragElement: HTMLElement;
 
-let currentDragElement;
-
-export function dragMouseDown(event) {
-  if (event.target === event.currentTarget) {
+function dragMouseDown(event: MouseEvent): void {
+  if (
+    event.target === event.currentTarget &&
+    event.currentTarget instanceof HTMLElement
+  ) {
     if (INTERFACE === "NI") {
       Engine.lock.add("cpp-dragging");
     } else {
@@ -13,21 +18,13 @@ export function dragMouseDown(event) {
     // get the mouse cursor position at startup:
     pos3 = event.clientX;
     pos4 = event.clientY;
-    currentDragElement = event.target;
+    currentDragElement = event.currentTarget;
     document.addEventListener("mousemove", elementDrag);
     document.addEventListener("mouseup", closeDragElement);
   }
 }
 
-export function setDraggable(element) {
-  element.addEventListener("mousedown", dragMouseDown, false);
-}
-
-export function revokeDraggable(element) {
-  element.removeEventListener("mousedown", dragMouseDown, false);
-}
-
-function elementDrag(event) {
+function elementDrag(event: MouseEvent): void {
   event.preventDefault();
   // calculate the new cursor position:
   pos1 = pos3 - event.clientX;
@@ -39,7 +36,7 @@ function elementDrag(event) {
   currentDragElement.style.left = currentDragElement.offsetLeft - pos1 + "px";
 }
 
-function closeDragElement() {
+function closeDragElement(): void {
   if (INTERFACE === "NI") {
     Engine.lock.remove("cpp-dragging");
   } else {
@@ -47,4 +44,12 @@ function closeDragElement() {
   }
   document.removeEventListener("mousemove", elementDrag);
   document.removeEventListener("mouseup", closeDragElement);
+}
+
+export function setDraggable(element: HTMLElement): void {
+  element.addEventListener("mousedown", dragMouseDown, false);
+}
+
+export function revokeDraggable(element: HTMLElement): void {
+  element.removeEventListener("mousedown", dragMouseDown, false);
 }

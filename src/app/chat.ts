@@ -4,7 +4,7 @@ export const CHANNEL = {
   "/h ": "TRADE",
   "/g ": "GROUP",
   "/k ": "CLAN",
-};
+} as const;
 
 export const CHANNEL_NAME = {
   GLOBAL: "GLOBAL",
@@ -14,7 +14,7 @@ export const CHANNEL_NAME = {
   CLAN: "CLAN",
   PRIVATE: "PRIVATE",
   SYSTEM: "SYSTEM",
-};
+} as const;
 
 export const CHANNEL_MAPPINGS = {
   Globalny: "/o ",
@@ -22,7 +22,7 @@ export const CHANNEL_MAPPINGS = {
   Handlowy: "/h ",
   Grupowy: "/g ",
   Klanowy: "/k ",
-};
+} as const;
 
 export const CHANNEL_COMMAND_NAME = {
   CLAN: "clan",
@@ -33,26 +33,43 @@ export const CHANNEL_COMMAND_NAME = {
   PRIVATE: "personal",
   SYSTEM: "system",
   TRADE: "trade",
-};
+} as const;
 
-export function getSiMessageFormat(message) {
+function isChannelPrefix(prefix: string): prefix is keyof typeof CHANNEL {
+  return Object.hasOwn(CHANNEL, prefix);
+}
+
+function isChannelMapping(name: string): name is keyof typeof CHANNEL_MAPPINGS {
+  return Object.hasOwn(CHANNEL_MAPPINGS, name);
+}
+
+type Channel = (typeof CHANNEL_NAME)[keyof typeof CHANNEL_NAME];
+
+interface ChannelSettings {
+  channel: { name: Channel };
+  privateReceiver: string | undefined;
+  messageStyle: string | undefined;
+  ignoreCheckCardCanChoose: boolean;
+}
+
+export function getSiMessageFormat(message: string): string {
   if (INTERFACE === "SI") {
     return message;
   }
 
-  const channelName = document.querySelector(
+  const channelName = document.querySelector<HTMLElement>(
     ".chat-input-wrapper .card-name",
-  ).innerText;
+  )?.innerText;
   if (channelName === "Prywatny") {
     const receiverName = document
-      .querySelector(".chat-input-wrapper .private-nick")
-      .innerText.replaceAll(" ", "_");
-    return `@${receiverName} ${message}`;
+      .querySelector<HTMLElement>(".chat-input-wrapper .private-nick")
+      ?.innerText.replaceAll(" ", "_");
+    return `@${receiverName ?? ""} ${message}`;
   }
   if (channelName === "Lokalny") {
-    const modifier = document.querySelector(
+    const modifier = document.querySelector<HTMLElement>(
       ".chat-input-wrapper .style-message",
-    ).innerText;
+    )?.innerText;
     if (modifier === "me") {
       return `/lm ${message}`;
     }
@@ -61,29 +78,30 @@ export function getSiMessageFormat(message) {
     }
   }
 
-  if (CHANNEL_MAPPINGS[channelName]) {
+  if (channelName && isChannelMapping(channelName)) {
     return `${CHANNEL_MAPPINGS[channelName]}${message}`;
   }
   return message;
 }
 
-function getChannelSettingsFromMsg(msg) {
-  let channel = { name: "LOCAL" };
-  let privateReceiver;
-  let messageStyle;
+function getChannelSettingsFromMsg(msg: string): ChannelSettings {
+  const channel: { name: Channel } = { name: CHANNEL_NAME.LOCAL };
+  let privateReceiver: string | undefined;
+  let messageStyle: string | undefined;
   if (msg.startsWith("/lm")) {
     messageStyle = "me";
   }
   if (msg.startsWith("/ln")) {
     messageStyle = "nar";
   }
-  const channelStart = CHANNEL[msg.slice(0, 3)];
-  if (channelStart) {
-    channel.name = channelStart;
+
+  const prefix = msg.slice(0, 3);
+  if (isChannelPrefix(prefix)) {
+    channel.name = CHANNEL[prefix];
   }
   if (msg.startsWith("@")) {
-    channel.name = "PRIVATE";
-    privateReceiver = msg.split(" ")[0].slice(1);
+    channel.name = CHANNEL_NAME.PRIVATE;
+    privateReceiver = msg.split(" ")[0]?.slice(1);
   }
 
   return {
@@ -94,12 +112,12 @@ function getChannelSettingsFromMsg(msg) {
   };
 }
 
-export function getPrunedMessage(msg) {
+export function getPrunedMessage(msg: string): string {
   if (["/lm ", "/ln "].includes(msg.slice(0, 4))) {
     return msg.slice(4).trim();
   }
 
-  if (Object.keys(CHANNEL).includes(msg.slice(0, 3))) {
+  if (isChannelPrefix(msg.slice(0, 3))) {
     return msg.slice(3).trim();
   }
 
@@ -111,10 +129,9 @@ export function getPrunedMessage(msg) {
 }
 
 /**
- *
- * @param msg {string} Message in SI format
+ * @param msg Message in SI format
  */
-export function sendMessage(msg) {
+export function sendMessage(msg: string): void {
   let chatInputWrapper;
   if (INTERFACE === "NI") {
     chatInputWrapper = Engine.chatController.getChatInputWrapper();
@@ -127,7 +144,12 @@ export function sendMessage(msg) {
   const tempMessageStyle = chatInputWrapper.getStyleMessage();
 
   const channelSettings = getChannelSettingsFromMsg(msg);
-  chatInputWrapper.setChannel(...Object.values(channelSettings));
+  chatInputWrapper.setChannel(
+    channelSettings.channel,
+    channelSettings.privateReceiver,
+    channelSettings.messageStyle,
+    channelSettings.ignoreCheckCardCanChoose,
+  );
   sendMessageRequest(getPrunedMessage(msg), channelSettings);
 
   chatInputWrapper.setChannel(
@@ -139,7 +161,10 @@ export function sendMessage(msg) {
   chatInputWrapper.clearInput();
 }
 
-function sendMessageRequest(prunedMessage, settings) {
+function sendMessageRequest(
+  prunedMessage: string,
+  settings: ChannelSettings,
+): void {
   if (INTERFACE === "NI") {
     Engine.chatController
       .getChatInputWrapper()

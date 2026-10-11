@@ -90,6 +90,8 @@ declare const hero: {
 };
 
 /**
- * Message function available on both interfaces.
+ * Global variables available on both interfaces.
  */
 declare const message: (message: string) => void;
+declare const log: (message: string) => void;
+declare const _g: (task: string, callback?: unknown, payload?: unknown) => void;

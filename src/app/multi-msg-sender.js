@@ -87,11 +87,11 @@ function parseMessageToChatForm(message) {
 }
 
 function handleAddedNode(node) {
-  const message = node.children[1].innerText.trim();
-
   if (messageQueue[0] === undefined) {
     return;
   }
+
+  const message = node.children[1].innerText.trim();
 
   if (message === parseMessageToChatForm(messageQueue[0])) {
     clearNoAnswerTimeout();

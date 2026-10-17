@@ -91,7 +91,14 @@ function handleAddedNode(node) {
     return;
   }
 
-  const message = node.children[1].innerText.trim();
+  if (!(node instanceof HTMLElement)) {
+    return;
+  }
+  const content = node.children[1];
+  if (!(content instanceof HTMLElement)) {
+    return;
+  }
+  const message = content.innerText.trim();
 
   if (message === parseMessageToChatForm(messageQueue[0])) {
     clearNoAnswerTimeout();

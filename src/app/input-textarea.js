@@ -178,31 +178,39 @@ function getCurrentStyleTextareaClass() {
  * Recolors textarea's text color according to message inside of it
  */
 export function recolorTextarea(inputElement) {
+  const color = getCurrentDefaultTextareaColor();
+  const className = getTextareaClasses(inputElement).join(" ");
+
+  inputElement.style.color = color;
+  inputElement.className = className;
+}
+
+function getTextareaClasses(inputElement) {
+  const classes = [];
   let command;
   if (INTERFACE === "NI") {
     command = inputElement.innerText.trim().split(" ")[0];
-    inputElement.className = INTERFACE === "NI" ? "magic-input" : "";
+    classes.push("magic-input");
   } else {
     command = inputElement.value.trim().split(" ")[0];
-    inputElement.style.color = "";
-    inputElement.className = inputElement.classList.contains("unfolded")
-      ? "unfolded"
-      : "";
+    if (inputElement.classList.contains("unfolded")) {
+      classes.push("unfolded");
+    }
   }
-  inputElement.style.color = getCurrentDefaultTextareaColor();
 
   const styleClass = getCurrentStyleTextareaClass();
   if (styleClass) {
-    inputElement.classList.add(styleClass);
-    return;
+    classes.push(styleClass);
+    return classes;
   }
   if (command.startsWith("@")) {
-    inputElement.classList.add("priv");
-    return;
+    classes.push("priv");
+    return classes;
   }
   if (CHAT_COMMAND_CLASSES[command]) {
-    inputElement.classList.add(...CHAT_COMMAND_CLASSES[command].split(" "));
+    classes.push(...CHAT_COMMAND_CLASSES[command].split(" "));
   }
+  return classes;
 }
 
 function loadAndApplyUserTheme(textarea, background) {

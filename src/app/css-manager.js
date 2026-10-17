@@ -10,7 +10,10 @@ export function addCustomStyle(styleName, styleContent) {
 }
 
 export function changeCustomStyle(styleName, styleContent) {
-  if (styles[styleName]) removeCustomStyle(styleName);
+  if (styles[styleName] === styleContent) {
+    return;
+  }
+  removeCustomStyle(styleName);
   addCustomStyle(styleName, styleContent);
 }
 

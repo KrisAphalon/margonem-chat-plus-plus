@@ -12,6 +12,7 @@ import { saveSettings, settings } from "./settings.js";
 import { regexIndexOf } from "./utility-functions.js";
 
 const polishLetters = /[ąćęłńóśźż@]/gi; // @ is strange, can't really test it
+const isPolishLetter = /[ąćęłńóśźż@]/i;
 
 /**
  * @param msg {string} Message in SI format
@@ -78,7 +79,7 @@ function getIdx(msg, maxLength) {
   for (let i = 0; i < maxLength; i++) {
     idx++;
     if (idx >= msg.length) break;
-    if (polishLetters.test(msg[idx])) i++;
+    if (isPolishLetter.test(msg[idx])) i++;
   }
   return idx;
 }

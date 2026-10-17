@@ -32,7 +32,7 @@ function parseSingleMsgOnChat(elm, ch) {
   const { tab, nick, text, time, command } = destructureMessage(ch);
 
   if (elm.innerHTML !== messages[nick][2]) return false;
-  const html_regexp = /(.*)<\/span>$/g;
+  const html_regexp = /(.*)<\/span>$/;
   const html_match = html_regexp.exec(messages[nick][2]);
   if (!html_match) return false;
 

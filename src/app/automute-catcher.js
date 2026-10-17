@@ -226,7 +226,7 @@ function messageContainsBadWords(msg) {
   copy = normalizeString(copy);
 
   //check weird 'ahoj'
-  const ahojRegex = /a(?=.*ahoj)(?!hoj.*ahoj)/g;
+  const ahojRegex = /a(?=.*ahoj)(?!hoj.*ahoj)/;
   if (ahojRegex.test(copy)) {
     alertUser(getSiMessageFormat(msg), "", true);
     return true;

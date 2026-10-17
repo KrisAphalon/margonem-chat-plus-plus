@@ -1,13 +1,13 @@
 import { CHANNELS, CHAT_COMMAND_CLASSES } from "./chat-enums.js";
 import { CHANNEL_NAME, getSiMessageFormat } from "./chat.js";
-import { addCustomStyle } from "./css-manager.js";
+import { changeCustomStyle } from "./css-manager.js";
 import { settings } from "./settings.js";
 
 export const chatChecks = [];
 
 function addCommandsColorStyles(chatColors) {
   // TODO use CHANNELS enum
-  addCustomStyle(
+  changeCustomStyle(
     "inputClasses",
     `
 #inpchat.priv { color: ${chatColors[CHANNEL_NAME.PRIVATE]}; }

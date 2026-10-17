@@ -59,17 +59,17 @@ export function getSiMessageFormat(message: string): string {
 
   const channelName = document.querySelector<HTMLElement>(
     ".chat-input-wrapper .card-name",
-  )?.innerText;
+  )?.textContent;
   if (channelName === "Prywatny") {
     const receiverName = document
       .querySelector<HTMLElement>(".chat-input-wrapper .private-nick")
-      ?.innerText.replaceAll(" ", "_");
+      ?.textContent.replaceAll(" ", "_");
     return `@${receiverName ?? ""} ${message}`;
   }
   if (channelName === "Lokalny") {
     const modifier = document.querySelector<HTMLElement>(
       ".chat-input-wrapper .style-message",
-    )?.innerText;
+    )?.textContent;
     if (modifier === "me") {
       return `/lm ${message}`;
     }

@@ -7,7 +7,7 @@ import {
 import { messageQueueChanged } from "./restore-message.js";
 import { settings } from "./settings.js";
 
-const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
+const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/;
 
 function parseMessageToChatForm(message) {
   message = message.trim();
@@ -107,8 +107,9 @@ function handleAddedNode(node) {
     if (messageQueue.length === 0) return;
 
     setTimeout(function () {
-      if (messageQueue[0]?.match(NOT_ONLY_DOTS).length > 0)
+      if (NOT_ONLY_DOTS.test(messageQueue[0] ?? "")) {
         sendMessage(messageQueue[0]);
+      }
     }, settings.sendMessageTimeout);
 
     startNoAnswerTimeout(settings.sendMessageTimeout * 3);

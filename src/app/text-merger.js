@@ -16,7 +16,7 @@ const ALLOWED_COMMANDS = new Set([
   "sys_comm",
   "me",
 ]);
-const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g;
+const NOT_ONLY_DOTS = /[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/;
 
 function destructureMessage(ch) {
   return {
@@ -45,8 +45,9 @@ function parseSingleMsgOnChat(elm, ch) {
   if (messageQueue[0] !== undefined) messageQueue.shift();
   if (messageQueue.length > 0)
     setTimeout(function () {
-      if (messageQueue[0]?.match(NOT_ONLY_DOTS).length > 0)
+      if (NOT_ONLY_DOTS.test(messageQueue[0] ?? "")) {
         window.chatSendMsg(messageQueue[0]);
+      }
     }, settings.sendMessageTimeout);
   if (messageQueue.length > 1)
     startNoAnswerTimeout(settings.sendMessageTimeout * 3);

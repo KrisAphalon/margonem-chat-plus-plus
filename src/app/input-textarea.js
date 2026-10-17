@@ -128,7 +128,7 @@ function checkMaxLength(textarea) {
     textarea.value = textarea.value.slice(0, 199);
 
   //letters and symbols that count as two when sending message to server
-  const polishLetters = /[ąćęłńóśźż*@,. _]/gi;
+  const polishLetters = /[ąćęłńóśźż*@,. _]/i;
 
   let polishLettersCount = 0;
   //calculate length every time, because we can change it inside for()
